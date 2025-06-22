@@ -177,7 +177,8 @@ fun ResultScreen(score: Int, onRetakeQuiz: () -> Unit) {
         ) {
             Button(
                 onClick = {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://988lifeline.org"))
+                    // open phone dialer with 988
+                    val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:988"))
                     context.startActivity(intent)
                 },
                 shape = RoundedCornerShape(20.dp),
@@ -212,7 +213,7 @@ fun ResultScreen(score: Int, onRetakeQuiz: () -> Unit) {
                     containerColor = MaterialTheme.colorScheme.surface
                 )
             ) {
-                Text("🔄 Retake the Quiz", color = MaterialTheme.colorScheme.onSurface)
+                Text("🔄 Return to Home", color = MaterialTheme.colorScheme.onSurface)
             }
         }
     }
