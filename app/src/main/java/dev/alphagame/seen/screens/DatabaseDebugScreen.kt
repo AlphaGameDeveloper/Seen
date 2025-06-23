@@ -28,6 +28,7 @@ fun DatabaseDebugScreen(
     val context = LocalContext.current
     val notesManager = remember { NotesManager(context) }
     val widgetMoodManager = remember { WidgetMoodManager(context) }
+    val preferencesManager = remember { PreferencesManager(context) }
     
     var notes by remember { mutableStateOf<List<Note>>(emptyList()) }
     var phq9Results by remember { mutableStateOf<List<PHQ9Result>>(emptyList()) }
@@ -78,7 +79,8 @@ fun DatabaseDebugScreen(
                 DatabaseOverviewCard(
                     notesCount = notes.size,
                     phq9Count = phq9Results.size,
-                    moodCount = moodEntries.size
+                    moodCount = moodEntries.size,
+                    preferencesManager = preferencesManager
                 )
             }
             
@@ -129,6 +131,16 @@ fun DatabaseDebugScreen(
                 }
             }
             
+            // Settings Section (SharedPreferences)
+            item {
+                Spacer(modifier = Modifier.height(8.dp))
+                SectionHeader("App Settings (SharedPreferences)")
+            }
+            
+            item {
+                SettingsDebugCard(preferencesManager = preferencesManager)
+            }
+            
             // Footer spacer
             item {
                 Spacer(modifier = Modifier.height(32.dp))
@@ -141,7 +153,8 @@ fun DatabaseDebugScreen(
 private fun DatabaseOverviewCard(
     notesCount: Int,
     phq9Count: Int,
-    moodCount: Int
+    moodCount: Int,
+    preferencesManager: PreferencesManager
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -194,6 +207,11 @@ private fun DatabaseOverviewCard(
                     )
                     Text(
                         text = "• Moods: $moodCount",
+                        fontSize = 13.sp,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
+                    )
+                    Text(
+                        text = "• Theme: ${preferencesManager.themeMode}",
                         fontSize = 13.sp,
                         color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
                     )
@@ -383,6 +401,59 @@ private fun MoodDebugCard(entry: MoodEntry) {
             
             Text(
                 text = "Timestamp: ${entry.timestamp.time} (${dateFormat.format(entry.timestamp)})",
+                fontSize = 11.sp,
+                fontFamily = FontFamily.Monospace,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+            )
+        }
+    }
+}
+
+@Composable
+private fun SettingsDebugCard(preferencesManager: PreferencesManager) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp)
+        ) {
+            Text(
+                text = "App Preferences",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.primary
+            )
+            
+            Spacer(modifier = Modifier.height(8.dp))
+            
+            // Theme Mode
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Theme Mode:",
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = preferencesManager.themeMode,
+                    fontSize = 13.sp,
+                    fontFamily = FontFamily.Monospace,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
+                )
+            }
+            
+            Spacer(modifier = Modifier.height(4.dp))
+            
+            // Preferences file location info
+            Text(
+                text = "Stored in: seen_preferences.xml",
                 fontSize = 11.sp,
                 fontFamily = FontFamily.Monospace,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
