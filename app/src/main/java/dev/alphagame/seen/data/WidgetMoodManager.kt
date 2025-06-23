@@ -26,7 +26,14 @@ class WidgetMoodManager(context: Context) {
     
     fun saveMood(mood: Mood) {
         val entries = getMoodEntries().toMutableList()
-        entries.add(0, MoodEntry(mood, Date())) // Add to beginning
+        val currentTime = Date()
+        val oneMinuteAgo = Date(currentTime.time - 60 * 1000) // 1 minute in milliseconds
+        
+        // Remove any entries from the last minute (they will be overwritten)
+        entries.removeAll { it.timestamp >= oneMinuteAgo }
+        
+        // Add the new mood entry at the beginning
+        entries.add(0, MoodEntry(mood, currentTime))
         
         // Keep only the most recent entries
         val trimmedEntries = if (entries.size > MAX_ENTRIES) {
