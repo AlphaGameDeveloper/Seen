@@ -11,7 +11,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -23,13 +25,22 @@ import dev.alphagame.seen.data.PreferencesManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(onBackToHome: () -> Unit) {
+fun SettingsScreen(
+    onBackToHome: () -> Unit,
+    onThemeChanged: (String) -> Unit = {}
+) {
     val context = LocalContext.current
+    val hapticFeedback = LocalHapticFeedback.current
     val preferencesManager = remember { PreferencesManager(context) }
     val databaseHelper = remember { DatabaseHelper(context) }
     
     var currentTheme by remember { mutableStateOf(preferencesManager.themeMode) }
     var showDeleteDialog by remember { mutableStateOf(false) }
+    
+    // Keep local state in sync with preference changes
+    LaunchedEffect(preferencesManager.themeMode) {
+        currentTheme = preferencesManager.themeMode
+    }
     
     Column(
         modifier = Modifier
@@ -167,8 +178,12 @@ fun SettingsScreen(onBackToHome: () -> Unit) {
                                 .selectable(
                                     selected = currentTheme == value,
                                     onClick = {
-                                        currentTheme = value
-                                        preferencesManager.themeMode = value
+                                        if (currentTheme != value) {
+                                            hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                                            currentTheme = value
+                                            preferencesManager.themeMode = value
+                                            onThemeChanged(value)
+                                        }
                                     },
                                     role = Role.RadioButton
                                 )

@@ -34,11 +34,6 @@ class MainActivity : ComponentActivity() {
             val preferencesManager = remember { PreferencesManager(context) }
             var themeMode by remember { mutableStateOf(preferencesManager.themeMode) }
             
-            // Listen for theme changes
-            LaunchedEffect(Unit) {
-                themeMode = preferencesManager.themeMode
-            }
-            
             val darkTheme = when (themeMode) {
                 PreferencesManager.THEME_DARK -> true
                 PreferencesManager.THEME_LIGHT -> false
@@ -119,7 +114,8 @@ fun SeenApplication(onThemeChanged: (String) -> Unit = {}) {
                 SettingsScreen(
                     onBackToHome = {
                         currentScreen = "welcome"
-                    }
+                    },
+                    onThemeChanged = onThemeChanged
                 )
             }
         }
