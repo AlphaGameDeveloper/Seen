@@ -8,7 +8,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     companion object {
         private const val DATABASE_NAME = "seen_database.db"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2
 
         // Notes table
         const val TABLE_NOTES = "notes"
@@ -21,6 +21,19 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         const val TABLE_PHQ9_RESULTS = "phq9_results"
         const val COLUMN_SCORE = "score"
         const val COLUMN_LEVEL = "level"
+
+        // PHQ9 detailed responses table
+        const val TABLE_PHQ9_RESPONSES = "phq9_responses"
+        const val COLUMN_Q1 = "q1"
+        const val COLUMN_Q2 = "q2"
+        const val COLUMN_Q3 = "q3"
+        const val COLUMN_Q4 = "q4"
+        const val COLUMN_Q5 = "q5"
+        const val COLUMN_Q6 = "q6"
+        const val COLUMN_Q7 = "q7"
+        const val COLUMN_Q8 = "q8"
+        const val COLUMN_Q9 = "q9"
+        const val COLUMN_TOTAL = "total"
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -44,20 +57,57 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             )
         """.trimIndent()
 
+        // Create PHQ9 detailed responses table
+        val createPhq9ResponsesTable = """
+            CREATE TABLE $TABLE_PHQ9_RESPONSES (
+                $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                $COLUMN_Q1 INTEGER NOT NULL,
+                $COLUMN_Q2 INTEGER NOT NULL,
+                $COLUMN_Q3 INTEGER NOT NULL,
+                $COLUMN_Q4 INTEGER NOT NULL,
+                $COLUMN_Q5 INTEGER NOT NULL,
+                $COLUMN_Q6 INTEGER NOT NULL,
+                $COLUMN_Q7 INTEGER NOT NULL,
+                $COLUMN_Q8 INTEGER NOT NULL,
+                $COLUMN_Q9 INTEGER NOT NULL,
+                $COLUMN_TOTAL INTEGER NOT NULL,
+                $COLUMN_TIMESTAMP INTEGER NOT NULL
+            )
+        """.trimIndent()
+
         db.execSQL(createNotesTable)
         db.execSQL(createPhq9Table)
+        db.execSQL(createPhq9ResponsesTable)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_NOTES")
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_PHQ9_RESULTS")
-        onCreate(db)
+        if (oldVersion < 2) {
+            // Add PHQ9 detailed responses table for version 2
+            val createPhq9ResponsesTable = """
+                CREATE TABLE $TABLE_PHQ9_RESPONSES (
+                    $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    $COLUMN_Q1 INTEGER NOT NULL,
+                    $COLUMN_Q2 INTEGER NOT NULL,
+                    $COLUMN_Q3 INTEGER NOT NULL,
+                    $COLUMN_Q4 INTEGER NOT NULL,
+                    $COLUMN_Q5 INTEGER NOT NULL,
+                    $COLUMN_Q6 INTEGER NOT NULL,
+                    $COLUMN_Q7 INTEGER NOT NULL,
+                    $COLUMN_Q8 INTEGER NOT NULL,
+                    $COLUMN_Q9 INTEGER NOT NULL,
+                    $COLUMN_TOTAL INTEGER NOT NULL,
+                    $COLUMN_TIMESTAMP INTEGER NOT NULL
+                )
+            """.trimIndent()
+            db.execSQL(createPhq9ResponsesTable)
+        }
     }
 
     fun clearAllData() {
         val db = writableDatabase
         db.execSQL("DELETE FROM $TABLE_NOTES")
         db.execSQL("DELETE FROM $TABLE_PHQ9_RESULTS")
+        db.execSQL("DELETE FROM $TABLE_PHQ9_RESPONSES")
         db.close()
     }
 }

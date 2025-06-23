@@ -36,13 +36,13 @@ class MainActivity : ComponentActivity() {
             val context = LocalContext.current
             val preferencesManager = remember { PreferencesManager(context) }
             var themeMode by remember { mutableStateOf(preferencesManager.themeMode) }
-            
+
             val darkTheme = when (themeMode) {
                 PreferencesManager.THEME_DARK -> true
                 PreferencesManager.THEME_LIGHT -> false
                 else -> isSystemInDarkTheme()
             }
-            
+
             SeenTheme(darkTheme = darkTheme) {
                 SeenApplication(
                     onThemeChanged = { newTheme ->
@@ -64,7 +64,7 @@ fun SeenApplication(onThemeChanged: (String) -> Unit = {}) {
     var currentQuestion by remember { mutableStateOf(0) }
     val scores = remember { mutableStateListOf<Int>() }
     val navigationStack = remember { mutableStateListOf<String>() }
-    
+
     // Helper function to navigate to a new screen
     fun navigateTo(screen: String) {
         if (currentScreen != screen) {
@@ -72,7 +72,7 @@ fun SeenApplication(onThemeChanged: (String) -> Unit = {}) {
             currentScreen = screen
         }
     }
-    
+
     // Helper function to go back to previous screen
     fun navigateBack() {
         if (navigationStack.isNotEmpty()) {
@@ -93,12 +93,12 @@ fun SeenApplication(onThemeChanged: (String) -> Unit = {}) {
         ) {
             navigateBack()
         }
-        
+
         // Main content
         when (currentScreen) {
             "welcome" -> {
                 WelcomeScreen(
-                    onStartQuiz = { 
+                    onStartQuiz = {
                         navigateTo("quiz")
                         currentQuestion = 0
                         scores.clear()
@@ -128,7 +128,7 @@ fun SeenApplication(onThemeChanged: (String) -> Unit = {}) {
                     )
                 } else {
                     ResultScreen(
-                        score = scores.sum(),
+                        scores = scores,
                         onRetakeQuiz = {
                             navigationStack.clear()
                             currentScreen = "welcome"
@@ -168,7 +168,7 @@ fun SeenApplication(onThemeChanged: (String) -> Unit = {}) {
                 )
             }
         }
-        
+
         // Settings button - only show on welcome screen
         if (currentScreen == "welcome") {
             IconButton(

@@ -29,18 +29,20 @@ fun DatabaseDebugScreen(
     val notesManager = remember { NotesManager(context) }
     val widgetMoodManager = remember { WidgetMoodManager(context) }
     val preferencesManager = remember { PreferencesManager(context) }
-    
+
     var notes by remember { mutableStateOf<List<Note>>(emptyList()) }
     var phq9Results by remember { mutableStateOf<List<PHQ9Result>>(emptyList()) }
+    var phq9Responses by remember { mutableStateOf<List<PHQ9Response>>(emptyList()) }
     var moodEntries by remember { mutableStateOf<List<MoodEntry>>(emptyList()) }
-    
+
     // Load all data
     LaunchedEffect(Unit) {
         notes = notesManager.getAllNotes()
         phq9Results = notesManager.getPHQ9History()
+        phq9Responses = notesManager.getPHQ9Responses()
         moodEntries = widgetMoodManager.getMoodEntries()
     }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -67,7 +69,7 @@ fun DatabaseDebugScreen(
                 containerColor = MaterialTheme.colorScheme.surface
             )
         )
-        
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -79,16 +81,17 @@ fun DatabaseDebugScreen(
                 DatabaseOverviewCard(
                     notesCount = notes.size,
                     phq9Count = phq9Results.size,
+                    phq9ResponsesCount = phq9Responses.size,
                     moodCount = moodEntries.size,
                     preferencesManager = preferencesManager
                 )
             }
-            
+
             // Notes Section
             item {
                 SectionHeader("SQLite Notes Table (${notes.size} entries)")
             }
-            
+
             if (notes.isEmpty()) {
                 item {
                     EmptyStateCard("No notes in database")
@@ -98,13 +101,13 @@ fun DatabaseDebugScreen(
                     NoteDebugCard(note = note)
                 }
             }
-            
+
             // PHQ-9 Results Section
             item {
                 Spacer(modifier = Modifier.height(8.dp))
                 SectionHeader("SQLite PHQ-9 Results Table (${phq9Results.size} entries)")
             }
-            
+
             if (phq9Results.isEmpty()) {
                 item {
                     EmptyStateCard("No PHQ-9 results in database")
@@ -114,13 +117,29 @@ fun DatabaseDebugScreen(
                     PHQ9DebugCard(result = result)
                 }
             }
-            
+
+            // PHQ-9 Detailed Responses Section
+            item {
+                Spacer(modifier = Modifier.height(8.dp))
+                SectionHeader("SQLite PHQ-9 Detailed Responses Table (${phq9Responses.size} entries)")
+            }
+
+            if (phq9Responses.isEmpty()) {
+                item {
+                    EmptyStateCard("No PHQ-9 detailed responses in database")
+                }
+            } else {
+                items(phq9Responses) { response ->
+                    PHQ9ResponseDebugCard(response = response)
+                }
+            }
+
             // Mood Entries Section (SharedPreferences)
             item {
                 Spacer(modifier = Modifier.height(8.dp))
                 SectionHeader("SharedPreferences Mood Entries (${moodEntries.size} entries)")
             }
-            
+
             if (moodEntries.isEmpty()) {
                 item {
                     EmptyStateCard("No mood entries in SharedPreferences")
@@ -130,17 +149,17 @@ fun DatabaseDebugScreen(
                     MoodDebugCard(entry = entry)
                 }
             }
-            
+
             // Settings Section (SharedPreferences)
             item {
                 Spacer(modifier = Modifier.height(8.dp))
                 SectionHeader("App Settings (SharedPreferences)")
             }
-            
+
             item {
                 SettingsDebugCard(preferencesManager = preferencesManager)
             }
-            
+
             // Footer spacer
             item {
                 Spacer(modifier = Modifier.height(32.dp))
@@ -153,6 +172,7 @@ fun DatabaseDebugScreen(
 private fun DatabaseOverviewCard(
     notesCount: Int,
     phq9Count: Int,
+    phq9ResponsesCount: Int,
     moodCount: Int,
     preferencesManager: PreferencesManager
 ) {
@@ -172,9 +192,9 @@ private fun DatabaseOverviewCard(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -196,8 +216,13 @@ private fun DatabaseOverviewCard(
                         fontSize = 13.sp,
                         color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
                     )
+                    Text(
+                        text = "• PHQ-9 Responses: $phq9ResponsesCount",
+                        fontSize = 13.sp,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
+                    )
                 }
-                
+
                 Column {
                     Text(
                         text = "SharedPreferences:",
@@ -260,7 +285,7 @@ private fun EmptyStateCard(message: String) {
 @Composable
 private fun NoteDebugCard(note: Note) {
     val dateFormat = remember { SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()) }
-    
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -288,17 +313,17 @@ private fun NoteDebugCard(note: Note) {
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(4.dp))
-            
+
             Text(
                 text = note.content,
                 fontSize = 13.sp,
                 color = MaterialTheme.colorScheme.onSurface
             )
-            
+
             Spacer(modifier = Modifier.height(4.dp))
-            
+
             Text(
                 text = "Timestamp: ${note.timestamp} (${dateFormat.format(Date(note.timestamp))})",
                 fontSize = 11.sp,
@@ -312,7 +337,7 @@ private fun NoteDebugCard(note: Note) {
 @Composable
 private fun PHQ9DebugCard(result: PHQ9Result) {
     val dateFormat = remember { SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()) }
-    
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -341,9 +366,9 @@ private fun PHQ9DebugCard(result: PHQ9Result) {
                     color = MaterialTheme.colorScheme.onSurface
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(4.dp))
-            
+
             Text(
                 text = "Timestamp: ${result.timestamp} (${dateFormat.format(Date(result.timestamp))})",
                 fontSize = 11.sp,
@@ -355,9 +380,65 @@ private fun PHQ9DebugCard(result: PHQ9Result) {
 }
 
 @Composable
+private fun PHQ9ResponseDebugCard(response: PHQ9Response) {
+    val dateFormat = remember { SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()) }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Top
+            ) {
+                Text(
+                    text = "ID: ${response.id}",
+                    fontSize = 12.sp,
+                    fontFamily = FontFamily.Monospace,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = "Total: ${response.total}",
+                    fontSize = 12.sp,
+                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Display individual question responses in a grid
+            Text(
+                text = "Responses: Q1:${response.q1} Q2:${response.q2} Q3:${response.q3} Q4:${response.q4} Q5:${response.q5} Q6:${response.q6} Q7:${response.q7} Q8:${response.q8} Q9:${response.q9}",
+                fontSize = 11.sp,
+                fontFamily = FontFamily.Monospace,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = "Timestamp: ${response.timestamp} (${dateFormat.format(Date(response.timestamp))})",
+                fontSize = 11.sp,
+                fontFamily = FontFamily.Monospace,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+            )
+        }
+    }
+}
+
+@Composable
 private fun MoodDebugCard(entry: MoodEntry) {
     val dateFormat = remember { SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()) }
-    
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -388,7 +469,7 @@ private fun MoodDebugCard(entry: MoodEntry) {
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
-                
+
                 Text(
                     text = "ID: ${entry.mood.id}",
                     fontSize = 12.sp,
@@ -396,9 +477,9 @@ private fun MoodDebugCard(entry: MoodEntry) {
                     color = MaterialTheme.colorScheme.primary
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(4.dp))
-            
+
             Text(
                 text = "Timestamp: ${entry.timestamp.time} (${dateFormat.format(entry.timestamp)})",
                 fontSize = 11.sp,
@@ -427,9 +508,9 @@ private fun SettingsDebugCard(preferencesManager: PreferencesManager) {
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.primary
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             // Theme Mode
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -448,9 +529,30 @@ private fun SettingsDebugCard(preferencesManager: PreferencesManager) {
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(4.dp))
-            
+
+            // PHQ-9 Data Storage Setting
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "PHQ-9 Data Storage:",
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = if (preferencesManager.isPhq9DataStorageEnabled) "Enabled" else "Disabled",
+                    fontSize = 13.sp,
+                    fontFamily = FontFamily.Monospace,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(4.dp))
+
             // Preferences file location info
             Text(
                 text = "Stored in: seen_preferences.xml",

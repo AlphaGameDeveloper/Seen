@@ -214,6 +214,62 @@ fun SettingsScreen(
                 }
             }
 
+            // Privacy & Assessment Settings Section
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
+            ) {
+                Column(
+                    modifier = Modifier.padding(20.dp)
+                ) {
+                    Text(
+                        text = "Assessment Settings",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(
+                                text = "Save PHQ-9 Assessment Data",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = "Store detailed question responses locally for tracking progress",
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                                lineHeight = 16.sp
+                            )
+                        }
+
+                        var phq9DataStorageEnabled by remember { mutableStateOf(preferencesManager.isPhq9DataStorageEnabled) }
+
+                        Switch(
+                            checked = phq9DataStorageEnabled,
+                            onCheckedChange = { enabled ->
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                                phq9DataStorageEnabled = enabled
+                                preferencesManager.isPhq9DataStorageEnabled = enabled
+                            }
+                        )
+                    }
+                }
+            }
+
             // Data Management Section
             Card(
                 modifier = Modifier.fillMaxWidth(),

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,10 +17,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.alphagame.seen.MainActivity
+import dev.alphagame.seen.data.NotesManager
+import dev.alphagame.seen.data.PreferencesManager
 
 @Composable
-fun ResultScreen(score: Int, onRetakeQuiz: () -> Unit) {
+fun ResultScreen(scores: List<Int>, onRetakeQuiz: () -> Unit) {
     val context = LocalContext.current
+    val notesManager = remember { NotesManager(context) }
+    val preferencesManager = remember { PreferencesManager(context) }
+
     val buttonModifier = Modifier
         .border(
             width = 1.dp,
@@ -27,12 +33,21 @@ fun ResultScreen(score: Int, onRetakeQuiz: () -> Unit) {
         )
         .fillMaxWidth()
 
+    val totalScore = scores.sum()
     val (level, color) = when {
-        score <= 4 -> "Minimal" to Color(0xFF6ECB63)
-        score <= 9 -> "Mild" to Color(0xFFFFD700)
-        score <= 14 -> "Moderate" to Color(0xFFFFA500)
-        score <= 19 -> "Moderately Severe" to Color(0xFFFF6347)
+        totalScore <= 4 -> "Minimal" to Color(0xFF6ECB63)
+        totalScore <= 9 -> "Mild" to Color(0xFFFFD700)
+        totalScore <= 14 -> "Moderate" to Color(0xFFFFA500)
+        totalScore <= 19 -> "Moderately Severe" to Color(0xFFFF6347)
         else -> "Severe" to Color(0xFFFF3C38)
+    }
+
+    // Save PHQ-9 data if enabled in settings
+    if (preferencesManager.isPhq9DataStorageEnabled) {
+        // Save summary result
+        notesManager.savePHQ9Result(totalScore, level)
+        // Save detailed responses
+        notesManager.savePHQ9Responses(scores)
     }
 
     Column(
@@ -44,9 +59,9 @@ fun ResultScreen(score: Int, onRetakeQuiz: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text("Your PHQ-9 Score:", fontSize = 20.sp, color = MaterialTheme.colorScheme.onBackground)
-        Text("$score", fontSize = 64.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
+        Text("$totalScore", fontSize = 64.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
         Text("Depression Level: $level", fontSize = 20.sp, color = color)
-
+        Text("Individual scores: ${scores.joinToString(", ")}", fontSize = 16.sp, color = MaterialTheme.colorScheme.onBackground)
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.fillMaxWidth()
