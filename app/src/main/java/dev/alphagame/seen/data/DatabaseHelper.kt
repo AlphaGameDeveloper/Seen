@@ -53,4 +53,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         db.execSQL("DROP TABLE IF EXISTS $TABLE_PHQ9_RESULTS")
         onCreate(db)
     }
+
+    fun clearAllData() {
+        val db = writableDatabase
+        db.execSQL("DELETE FROM $TABLE_NOTES")
+        db.execSQL("DELETE FROM $TABLE_PHQ9_RESULTS")
+        db.close()
+    }
 }
