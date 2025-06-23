@@ -34,9 +34,6 @@ data class OnboardingPage(
 fun OnboardingScreen(
     onOnboardingComplete: () -> Unit
 ) {
-    val pagerState = rememberPagerState(pageCount = { 4 })
-    val coroutineScope = rememberCoroutineScope()
-
     val pages = listOf(
         OnboardingPage(
             title = "Welcome to Seen",
@@ -57,8 +54,18 @@ fun OnboardingScreen(
             title = "Privacy First",
             description = "Your data stays on your device. We don't collect, store, or share any of your personal information.",
             emoji = "🔒"
+        ),
+        OnboardingPage(
+            title = "No Advertisements",
+            description = "Enjoy a distraction-free experience. This app is completely free and will never show any advertisements.",
+            emoji = "🚫"
         )
     )
+
+    val pagerState = rememberPagerState(pageCount = { pages.size })
+    val coroutineScope = rememberCoroutineScope()
+
+
 
     Column(
         modifier = Modifier
@@ -68,7 +75,9 @@ fun OnboardingScreen(
     ) {
         // Skip button
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .statusBarsPadding(),
             horizontalArrangement = Arrangement.End
         ) {
             TextButton(
