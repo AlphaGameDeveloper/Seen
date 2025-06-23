@@ -197,6 +197,15 @@ fun SeenApplication(onThemeChanged: (String) -> Unit = {}) {
                     }
                 }
             }
+            // text in the bottom right corner with version info
+            Text(
+                text = "Version: ${BuildConfig.VERSION_FULL}",
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(20.dp),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+            )
         }
     }
 }
