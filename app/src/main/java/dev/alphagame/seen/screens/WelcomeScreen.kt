@@ -17,14 +17,14 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun WelcomeScreen(
-    onStartQuiz: () -> Unit, 
+    onStartQuiz: () -> Unit,
     onGoToNotes: () -> Unit,
     onGoToMoodHistory: () -> Unit = {},
     onSecretDebugScreen: () -> Unit = {}
 ) {
     val context = LocalContext.current
     var clickCount by remember { mutableStateOf(0) }
-    
+
     // Reset click count after 30 seconds of inactivity
     LaunchedEffect(clickCount) {
         if (clickCount > 0 && clickCount < 10) {
@@ -32,7 +32,7 @@ fun WelcomeScreen(
             clickCount = 0
         }
     }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -50,7 +50,7 @@ fun WelcomeScreen(
             textAlign = TextAlign.Center,
             modifier = Modifier.clickable {
                 clickCount++
-                
+
                 when {
                     clickCount >= 10 -> {
                         // Open secret debug screen
@@ -62,20 +62,20 @@ fun WelcomeScreen(
                         val remaining = 10 - clickCount
                         // Cancel any existing toast
                         Toast.makeText(context, "", Toast.LENGTH_SHORT).cancel()
-                        
+
                         // Show new toast
                         Toast.makeText(
-                            context, 
-                            "🔧 Press $remaining more times to view the internal database", 
+                            context,
+                            "🔧 Press $remaining more times to view the internal database",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
                 }
             }
         )
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         // Subtitle
         Text(
             text = "Mental Health Matters",
@@ -83,7 +83,7 @@ fun WelcomeScreen(
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
             textAlign = TextAlign.Center
         )
-        
+
         Spacer(modifier = Modifier.height(48.dp))
         /* <----------- PHQ-9 DESCRIPTION CARD
         // Description
@@ -96,7 +96,7 @@ fun WelcomeScreen(
                 containerColor = MaterialTheme.colorScheme.surface
             )
         ) {
-            
+
             Column(
                 modifier = Modifier.padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -106,9 +106,9 @@ fun WelcomeScreen(
                     fontSize = 48.sp,
                     textAlign = TextAlign.Center
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 Text(
                     text = "PHQ-9 Assessment",
                     fontSize = 24.sp,
@@ -116,9 +116,9 @@ fun WelcomeScreen(
                     color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center
                 )
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 Text(
                     text = "A confidential questionnaire to help assess your mental health and well-being over the past two weeks.",
                     fontSize = 16.sp,
@@ -130,7 +130,7 @@ fun WelcomeScreen(
         }
         <----------- PHQ-9 DESCRIPTION CARD > */
         Spacer(modifier = Modifier.height(48.dp))
-        
+
         // Start Button
         Button(
             onClick = onStartQuiz,
@@ -150,9 +150,9 @@ fun WelcomeScreen(
                 fontWeight = FontWeight.SemiBold
             )
         }
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         // Notes Button
         Button(
             onClick = onGoToNotes,
@@ -172,9 +172,9 @@ fun WelcomeScreen(
                 fontWeight = FontWeight.SemiBold
             )
         }
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         // Mood History Button
         Button(
             onClick = onGoToMoodHistory,
@@ -194,9 +194,9 @@ fun WelcomeScreen(
                 fontWeight = FontWeight.SemiBold
             )
         }
-        
+        /*
         Spacer(modifier = Modifier.height(24.dp))
-        
+
         // Disclaimer
         Text(
             text = "This assessment is not a substitute for professional medical advice. If you're experiencing a mental health crisis, please contact emergency services or a mental health professional.\n\nApplication by Damien Boisvert & Alexander Cameron",
@@ -205,6 +205,6 @@ fun WelcomeScreen(
             textAlign = TextAlign.Center,
             lineHeight = 18.sp,
             modifier = Modifier.padding(horizontal = 16.dp)
-        )
+        ) */
     }
 }

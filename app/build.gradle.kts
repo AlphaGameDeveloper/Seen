@@ -1,27 +1,27 @@
 /*
  * Git Tag-Based Versioning Strategy
  * ==================================
- * 
+ *
  * This build configuration automatically derives version information from git tags:
- * 
+ *
  * - versionName: Extracted from the latest git tag (removes 'v' prefix if present)
  * - versionCode: Generated from version name using format: major*10000 + minor*100 + patch
- * 
+ *
  * Examples:
  * - Git tag "v1.2.3" → versionName: "1.2.3", versionCode: 10203
  * - Git tag "2.0.0" → versionName: "2.0.0", versionCode: 20000
- * 
+ *
  * Additional build info available in BuildConfig:
  * - GIT_TAG: The original git tag (e.g., "v1.1.0")
  * - GIT_COMMIT_HASH: Short commit hash (e.g., "cfb785f")
  * - GIT_BRANCH: Current branch name (e.g., "main")
  * - BUILD_TIME: UTC timestamp of build
  * - VERSION_FULL: Combined version with commit hash (e.g., "1.1.0-cfb785f")
- * 
+ *
  * To create a new version:
  * 1. Create and push a git tag: git tag v1.2.0 && git push origin v1.2.0
  * 2. Build the app - it will automatically use the new version
- * 
+ *
  * Use './gradlew printVersionInfo' to display current version information.
  */
 
@@ -114,6 +114,18 @@ fun getGitBranch(): String {
     }
 }
 
+fun getGitCommitMessage(): String {
+    return try {
+        val process = ProcessBuilder("git", "log", "-1", "--pretty=%B")
+            .directory(rootDir)
+            .start()
+        val result = process.inputStream.bufferedReader().readText().trim()
+        if (process.waitFor() == 0 && result.isNotEmpty()) result else "No commit message"
+    } catch (e: Exception) {
+        "No commit message"
+    }
+}
+
 android {
     namespace = "dev.alphagame.seen"
     compileSdk = 35
@@ -126,13 +138,14 @@ android {
         versionName = getVersionName()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        
+
         // Add build config fields for dynamic versioning
         buildConfigField("String", "GIT_COMMIT_HASH", "\"${getGitCommitHash()}\"")
         buildConfigField("String", "BUILD_TIME", "\"${getBuildTime()}\"")
         buildConfigField("String", "GIT_BRANCH", "\"${getGitBranch()}\"")
         buildConfigField("String", "GIT_TAG", "\"${getLatestGitTag()}\"")
         buildConfigField("String", "VERSION_FULL", "\"${getVersionName()}-${getGitCommitHash()}\"")
+        buildConfigField("String", "GIT_COMMIT_MESSAGE", "\"${getGitCommitMessage()}\"")
     }
 
     lint {
@@ -195,6 +208,7 @@ tasks.register("printVersionInfo") {
         println("Git Branch: ${getGitBranch()}")
         println("Build Time: ${getBuildTime()}")
         println("Full Version: ${getVersionName()}-${getGitCommitHash()}")
+        println("Git Commit Message: ${getGitCommitMessage()}")
         println("============================")
     }
 }

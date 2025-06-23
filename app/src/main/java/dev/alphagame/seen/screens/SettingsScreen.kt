@@ -35,15 +35,15 @@ fun SettingsScreen(
     val hapticFeedback = LocalHapticFeedback.current
     val preferencesManager = remember { PreferencesManager(context) }
     val databaseHelper = remember { DatabaseHelper(context) }
-    
+
     var currentTheme by remember { mutableStateOf(preferencesManager.themeMode) }
     var showDeleteDialog by remember { mutableStateOf(false) }
-    
+
     // Keep local state in sync with preference changes
     LaunchedEffect(preferencesManager.themeMode) {
         currentTheme = preferencesManager.themeMode
     }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -72,7 +72,7 @@ fun SettingsScreen(
                 navigationIconContentColor = MaterialTheme.colorScheme.onSurface
             )
         )
-        
+
         // Settings Content
         Column(
             modifier = Modifier
@@ -98,28 +98,28 @@ fun SettingsScreen(
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    
+
                     Spacer(modifier = Modifier.height(12.dp))
-                    
+
                     Text(
                         text = "Seen - Mental Health Assessment",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    
+
                     Text(
                         text = "Version ${AppVersionInfo.getVersionFull()}",
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     )
-                    
+
                     Text(
                         text = "Built on ${AppVersionInfo.getBuildTime()}",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )
-                    
+
                     val gitBranch = AppVersionInfo.getGitBranch()
                     if (gitBranch != "unknown" && gitBranch != "dynamic") {
                         Text(
@@ -128,9 +128,15 @@ fun SettingsScreen(
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                         )
                     }
-                    
+
+                    Text(
+                        text = "Commit Message: ${AppVersionInfo.GIT_COMMIT_MESSAGE}",
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    )
+
                     Spacer(modifier = Modifier.height(8.dp))
-                    
+
                     Text(
                         text = "Created by Damien Boisvert & Alexander Cameron",
                         fontSize = 14.sp,
@@ -138,7 +144,7 @@ fun SettingsScreen(
                     )
                 }
             }
-            
+
             // Theme Settings Section
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -156,24 +162,24 @@ fun SettingsScreen(
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Text(
                         text = "Color Scheme",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    
+
                     Spacer(modifier = Modifier.height(8.dp))
-                    
+
                     val themeOptions = listOf(
                         "auto" to "Auto (System)",
                         "light" to "Light",
                         "dark" to "Dark"
                     )
-                    
+
                     themeOptions.forEach { (value, label) ->
                         Row(
                             modifier = Modifier
@@ -207,7 +213,7 @@ fun SettingsScreen(
                     }
                 }
             }
-            
+
             // Data Management Section
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -225,9 +231,9 @@ fun SettingsScreen(
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     OutlinedButton(
                         onClick = { showDeleteDialog = true },
                         modifier = Modifier.fillMaxWidth(),
@@ -247,9 +253,9 @@ fun SettingsScreen(
                             fontWeight = FontWeight.Medium
                         )
                     }
-                    
+
                     Spacer(modifier = Modifier.height(8.dp))
-                    
+
                     Text(
                         text = "This will permanently delete all your notes and assessment results. This action cannot be undone.",
                         fontSize = 12.sp,
@@ -258,7 +264,7 @@ fun SettingsScreen(
                     )
                 }
             }
-            
+
             // Privacy Section
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -276,9 +282,9 @@ fun SettingsScreen(
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    
+
                     Spacer(modifier = Modifier.height(12.dp))
-                    
+
                     Text(
                         text = "• All data is stored locally on your device\n• No personal information is shared with third parties\n• Assessment results remain completely private\n• You can delete your data at any time",
                         fontSize = 14.sp,
@@ -287,7 +293,7 @@ fun SettingsScreen(
                     )
                 }
             }
-            
+
             // Disclaimer Section
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -305,9 +311,9 @@ fun SettingsScreen(
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.error
                     )
-                    
+
                     Spacer(modifier = Modifier.height(12.dp))
-                    
+
                     Text(
                         text = "This app is not a substitute for professional medical advice, diagnosis, or treatment. If you're experiencing a mental health crisis, please contact emergency services or consult with a qualified healthcare provider immediately.",
                         fontSize = 14.sp,
@@ -318,7 +324,7 @@ fun SettingsScreen(
             }
         }
     }
-    
+
     // Delete confirmation dialog
     if (showDeleteDialog) {
         AlertDialog(
