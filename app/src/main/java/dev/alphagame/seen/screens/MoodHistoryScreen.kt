@@ -39,6 +39,7 @@ fun MoodHistoryScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .statusBarsPadding()
             .padding(16.dp)
     ) {
         // Top bar
@@ -47,19 +48,29 @@ fun MoodHistoryScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = onBackClick) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack, 
+                    contentDescription = "Back",
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
             }
             Text(
                 text = "Mood History",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.weight(1f)
             )
             IconButton(
                 onClick = { showDeleteDialog = true },
                 enabled = moodEntries.isNotEmpty()
             ) {
-                Icon(Icons.Default.Delete, contentDescription = "Clear History")
+                Icon(
+                    Icons.Default.Delete, 
+                    contentDescription = "Clear History",
+                    tint = if (moodEntries.isNotEmpty()) MaterialTheme.colorScheme.onSurface 
+                           else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                )
             }
         }
         
