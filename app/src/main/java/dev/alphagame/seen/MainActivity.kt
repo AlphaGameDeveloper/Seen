@@ -25,6 +25,7 @@ import dev.alphagame.seen.screens.ResultScreen
 import dev.alphagame.seen.screens.NotesScreen
 import dev.alphagame.seen.screens.SettingsScreen
 import dev.alphagame.seen.screens.MoodHistoryScreen
+import dev.alphagame.seen.screens.DatabaseDebugScreen
 import dev.alphagame.seen.ui.theme.SeenTheme
 
 class MainActivity : ComponentActivity() {
@@ -107,6 +108,9 @@ fun SeenApplication(onThemeChanged: (String) -> Unit = {}) {
                     },
                     onGoToMoodHistory = {
                         navigateTo("mood_history")
+                    },
+                    onSecretDebugScreen = {
+                        navigateTo("debug_database")
                     }
                 )
             }
@@ -151,6 +155,13 @@ fun SeenApplication(onThemeChanged: (String) -> Unit = {}) {
             }
             "mood_history" -> {
                 MoodHistoryScreen(
+                    onBackClick = {
+                        navigateBack()
+                    }
+                )
+            }
+            "debug_database" -> {
+                DatabaseDebugScreen(
                     onBackClick = {
                         navigateBack()
                     }

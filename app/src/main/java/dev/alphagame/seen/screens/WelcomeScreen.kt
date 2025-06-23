@@ -1,12 +1,15 @@
 package dev.alphagame.seen.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -16,8 +19,20 @@ import androidx.compose.ui.unit.sp
 fun WelcomeScreen(
     onStartQuiz: () -> Unit, 
     onGoToNotes: () -> Unit,
-    onGoToMoodHistory: () -> Unit = {}
+    onGoToMoodHistory: () -> Unit = {},
+    onSecretDebugScreen: () -> Unit = {}
 ) {
+    val context = LocalContext.current
+    var clickCount by remember { mutableStateOf(0) }
+    
+    // Reset click count after 30 seconds of inactivity
+    LaunchedEffect(clickCount) {
+        if (clickCount > 0 && clickCount < 10) {
+            kotlinx.coroutines.delay(30000) // 30 seconds
+            clickCount = 0
+        }
+    }
+    
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -32,7 +47,27 @@ fun WelcomeScreen(
             fontSize = 64.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            modifier = Modifier.clickable {
+                clickCount++
+                
+                when {
+                    clickCount >= 10 -> {
+                        // Open secret debug screen
+                        onSecretDebugScreen()
+                        clickCount = 0
+                    }
+                    clickCount >= 6 -> {
+                        // Show toast for remaining clicks
+                        val remaining = 10 - clickCount
+                        Toast.makeText(
+                            context, 
+                            "🔧 Press $remaining more times to view the internal database", 
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
         )
         
         Spacer(modifier = Modifier.height(16.dp))
