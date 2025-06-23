@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import dev.alphagame.seen.data.AppVersionInfo
 import dev.alphagame.seen.data.DatabaseHelper
 import dev.alphagame.seen.data.PreferencesManager
+import dev.alphagame.seen.data.WidgetMoodManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,12 +36,15 @@ fun SettingsScreen(
     val hapticFeedback = LocalHapticFeedback.current
     val preferencesManager = remember { PreferencesManager(context) }
     val databaseHelper = remember { DatabaseHelper(context) }
+    val widgetMoodManager = remember { WidgetMoodManager(context) }
 
     var currentTheme by remember { mutableStateOf(preferencesManager.themeMode) }
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var showDeleteConfirmationDialog by remember { mutableStateOf(false) }
+    var refreshKey by remember { mutableStateOf(0) } // Force refresh after data deletion
 
     // Keep local state in sync with preference changes
-    LaunchedEffect(preferencesManager.themeMode) {
+    LaunchedEffect(preferencesManager.themeMode, refreshKey) {
         currentTheme = preferencesManager.themeMode
     }
 
@@ -256,7 +260,7 @@ fun SettingsScreen(
                             )
                         }
 
-                        var phq9DataStorageEnabled by remember { mutableStateOf(preferencesManager.isPhq9DataStorageEnabled) }
+                        var phq9DataStorageEnabled by remember(refreshKey) { mutableStateOf(preferencesManager.isPhq9DataStorageEnabled) }
 
                         Switch(
                             checked = phq9DataStorageEnabled,
@@ -313,7 +317,7 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = "This will permanently delete all your notes and assessment results. This action cannot be undone.",
+                        text = "This will permanently delete all your notes, assessment results, mood entries, and reset all app settings to defaults. This action cannot be undone.",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                         lineHeight = 16.sp
@@ -393,15 +397,30 @@ fun SettingsScreen(
             },
             text = {
                 Text(
-                    text = "This will permanently delete all your notes and assessment results. This action cannot be undone.\n\nAre you sure you want to continue?",
+                    text = "This will permanently delete all your notes, assessment results, mood entries, and app settings. All data will be cleared and settings will be reset to default values. This action cannot be undone.\n\nAre you sure you want to continue?",
                     lineHeight = 20.sp
                 )
             },
             confirmButton = {
                 Button(
                     onClick = {
+                        // Clear all data from database
                         databaseHelper.clearAllData()
+
+                        // Clear mood widget data
+                        widgetMoodManager.clearAllMoods()
+
+                        // Clear all preferences and reinitialize with defaults
+                        preferencesManager.clearAllPreferences()
+
+                        // Update local state with defaults after clearing
+                        currentTheme = PreferencesManager.THEME_AUTO
+
+                        // Force refresh of the UI to reflect default values
+                        refreshKey += 1
+
                         showDeleteDialog = false
+                        showDeleteConfirmationDialog = true
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.error,
@@ -416,6 +435,44 @@ fun SettingsScreen(
                     onClick = { showDeleteDialog = false }
                 ) {
                     Text("Cancel")
+                }
+            }
+        )
+    }
+
+    // Delete confirmation dialog (shows after deletion is complete)
+    if (showDeleteConfirmationDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                showDeleteConfirmationDialog = false
+                onBackToHome()
+            },
+            title = {
+                Text(
+                    text = "Data Deleted Successfully",
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            },
+            text = {
+                Text(
+                    text = "All your data has been permanently deleted and settings have been reset to defaults. The application will now close.",
+                    lineHeight = 20.sp
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showDeleteConfirmationDialog = false
+                        // close the app
+                        android.os.Process.killProcess(android.os.Process.myPid())
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
+                ) {
+                    Text("Continue")
                 }
             }
         )
