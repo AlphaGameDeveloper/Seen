@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.alphagame.seen.data.AppVersionInfo
 import dev.alphagame.seen.data.DatabaseHelper
 import dev.alphagame.seen.data.PreferencesManager
 
@@ -94,10 +95,25 @@ fun SettingsScreen(onBackToHome: () -> Unit) {
                     )
                     
                     Text(
-                        text = "Version 1.0.0",
+                        text = "Version ${AppVersionInfo.getVersionFull()}",
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     )
+                    
+                    Text(
+                        text = "Built on ${AppVersionInfo.getBuildTime()}",
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    )
+                    
+                    val gitBranch = AppVersionInfo.getGitBranch()
+                    if (gitBranch != "unknown" && gitBranch != "dynamic") {
+                        Text(
+                            text = "Branch: $gitBranch",
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                        )
+                    }
                     
                     Spacer(modifier = Modifier.height(8.dp))
                     

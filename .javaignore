@@ -1,0 +1,5 @@
+# Exclude generated files from Java analysis
+**/generated/
+**/build/
+**/BuildConfig.java
+**/.gradle/

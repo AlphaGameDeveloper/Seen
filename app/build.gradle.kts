@@ -4,6 +4,42 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
+import java.time.ZonedDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+
+// Function to get git commit hash
+fun getGitCommitHash(): String {
+    return try {
+        val process = ProcessBuilder("git", "rev-parse", "--short", "HEAD")
+            .directory(rootDir)
+            .start()
+        val result = process.inputStream.bufferedReader().readText().trim()
+        if (process.waitFor() == 0 && result.isNotEmpty()) result else "unknown"
+    } catch (e: Exception) {
+        "unknown"
+    }
+}
+
+// Function to get build timestamp
+fun getBuildTime(): String {
+    return ZonedDateTime.now(ZoneOffset.UTC)
+        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss 'UTC'"))
+}
+
+// Function to get git branch name
+fun getGitBranch(): String {
+    return try {
+        val process = ProcessBuilder("git", "rev-parse", "--abbrev-ref", "HEAD")
+            .directory(rootDir)
+            .start()
+        val result = process.inputStream.bufferedReader().readText().trim()
+        if (process.waitFor() == 0 && result.isNotEmpty()) result else "unknown"
+    } catch (e: Exception) {
+        "unknown"
+    }
+}
+
 android {
     namespace = "dev.alphagame.seen"
     compileSdk = 35
@@ -13,9 +49,15 @@ android {
         minSdk = 24
         targetSdk = 35
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        
+        // Add build config fields for dynamic versioning
+        buildConfigField("String", "GIT_COMMIT_HASH", "\"${getGitCommitHash()}\"")
+        buildConfigField("String", "BUILD_TIME", "\"${getBuildTime()}\"")
+        buildConfigField("String", "GIT_BRANCH", "\"${getGitBranch()}\"")
+        buildConfigField("String", "VERSION_FULL", "\"${defaultConfig.versionName}-${getGitCommitHash()}\"")
     }
 
     lint {
@@ -40,6 +82,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
