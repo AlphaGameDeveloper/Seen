@@ -22,14 +22,14 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             SeenTheme {
-                PHQ9App()
+                SeenApplication()
             }
         }
     }
 }
 
 @Composable
-fun PHQ9App() {
+fun SeenApplication() {
     val questions = PHQ9Data.questions
     val options = PHQ9Data.options
 
