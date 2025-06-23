@@ -26,6 +26,7 @@ import dev.alphagame.seen.screens.NotesScreen
 import dev.alphagame.seen.screens.SettingsScreen
 import dev.alphagame.seen.screens.MoodHistoryScreen
 import dev.alphagame.seen.screens.DatabaseDebugScreen
+import dev.alphagame.seen.screens.OnboardingScreen
 import dev.alphagame.seen.ui.theme.SeenTheme
 
 class MainActivity : ComponentActivity() {
@@ -57,10 +58,17 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun SeenApplication(onThemeChanged: (String) -> Unit = {}) {
+    val context = LocalContext.current
+    val preferencesManager = remember { PreferencesManager(context) }
+    
     val questions = PHQ9Data.questions
     val options = PHQ9Data.options
 
-    var currentScreen by remember { mutableStateOf("welcome") }
+    var currentScreen by remember { 
+        mutableStateOf(
+            if (preferencesManager.isOnboardingCompleted) "welcome" else "onboarding"
+        ) 
+    }
     var currentQuestion by remember { mutableStateOf(0) }
     val scores = remember { mutableStateListOf<Int>() }
     val navigationStack = remember { mutableStateListOf<String>() }
@@ -89,13 +97,21 @@ fun SeenApplication(onThemeChanged: (String) -> Unit = {}) {
     ) {
         // Handle Android back button
         BackHandler(
-            enabled = currentScreen != "welcome"
+            enabled = currentScreen != "welcome" && currentScreen != "onboarding"
         ) {
             navigateBack()
         }
 
         // Main content
         when (currentScreen) {
+            "onboarding" -> {
+                OnboardingScreen(
+                    onOnboardingComplete = {
+                        preferencesManager.isOnboardingCompleted = true
+                        currentScreen = "welcome"
+                    }
+                )
+            }
             "welcome" -> {
                 WelcomeScreen(
                     onStartQuiz = {
