@@ -120,9 +120,12 @@ fun getGitCommitMessage(): String {
             .directory(rootDir)
             .start()
         val result = process.inputStream.bufferedReader().readText().trim()
-        if (process.waitFor() == 0 && result.isNotEmpty()) result else "No commit message"
+        if (process.waitFor() == 0 && result.isNotEmpty()) {
+            // Escape newlines and quotes for proper string literal formatting
+            result.replace("\n", "\\n").replace("\"", "\\\"")
+        } else "\"No commit message\""
     } catch (e: Exception) {
-        "No commit message"
+        "\"No commit message\""
     }
 }
 
