@@ -2,6 +2,7 @@ package dev.alphagame.seen
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -60,23 +61,48 @@ fun SeenApplication(onThemeChanged: (String) -> Unit = {}) {
     var currentScreen by remember { mutableStateOf("welcome") }
     var currentQuestion by remember { mutableStateOf(0) }
     val scores = remember { mutableStateListOf<Int>() }
+    val navigationStack = remember { mutableStateListOf<String>() }
+    
+    // Helper function to navigate to a new screen
+    fun navigateTo(screen: String) {
+        if (currentScreen != screen) {
+            navigationStack.add(currentScreen)
+            currentScreen = screen
+        }
+    }
+    
+    // Helper function to go back to previous screen
+    fun navigateBack() {
+        if (navigationStack.isNotEmpty()) {
+            currentScreen = navigationStack.removeLastOrNull() ?: "welcome"
+        } else {
+            currentScreen = "welcome"
+        }
+    }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
+        // Handle Android back button
+        BackHandler(
+            enabled = currentScreen != "welcome"
+        ) {
+            navigateBack()
+        }
+        
         // Main content
         when (currentScreen) {
             "welcome" -> {
                 WelcomeScreen(
                     onStartQuiz = { 
-                        currentScreen = "quiz"
+                        navigateTo("quiz")
                         currentQuestion = 0
                         scores.clear()
                     },
                     onGoToNotes = {
-                        currentScreen = "notes"
+                        navigateTo("notes")
                     }
                 )
             }
@@ -96,6 +122,7 @@ fun SeenApplication(onThemeChanged: (String) -> Unit = {}) {
                     ResultScreen(
                         score = scores.sum(),
                         onRetakeQuiz = {
+                            navigationStack.clear()
                             currentScreen = "welcome"
                             currentQuestion = 0
                             scores.clear()
@@ -106,14 +133,14 @@ fun SeenApplication(onThemeChanged: (String) -> Unit = {}) {
             "notes" -> {
                 NotesScreen(
                     onBackToHome = {
-                        currentScreen = "welcome"
+                        navigateBack()
                     }
                 )
             }
             "settings" -> {
                 SettingsScreen(
                     onBackToHome = {
-                        currentScreen = "welcome"
+                        navigateBack()
                     },
                     onThemeChanged = onThemeChanged
                 )
@@ -123,7 +150,7 @@ fun SeenApplication(onThemeChanged: (String) -> Unit = {}) {
         // Settings button - only show on welcome screen
         if (currentScreen == "welcome") {
             IconButton(
-                onClick = { currentScreen = "settings" },
+                onClick = { navigateTo("settings") },
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(16.dp)
