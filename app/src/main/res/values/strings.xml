@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Seen</string>
+    <string name="widget_description">Quick mood tracker with emoji buttons</string>
 </resources>

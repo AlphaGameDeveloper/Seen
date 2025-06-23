@@ -13,7 +13,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun WelcomeScreen(onStartQuiz: () -> Unit, onGoToNotes: () -> Unit) {
+fun WelcomeScreen(
+    onStartQuiz: () -> Unit, 
+    onGoToNotes: () -> Unit,
+    onGoToMoodHistory: () -> Unit = {}
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -124,6 +128,28 @@ fun WelcomeScreen(onStartQuiz: () -> Unit, onGoToNotes: () -> Unit) {
         ) {
             Text(
                 text = "📝 My Notes",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        // Mood History Button
+        Button(
+            onClick = onGoToMoodHistory,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .padding(horizontal = 32.dp),
+            shape = RoundedCornerShape(28.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.tertiary,
+                contentColor = MaterialTheme.colorScheme.onTertiary
+            )
+        ) {
+            Text(
+                text = "😊 Mood History",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold
             )

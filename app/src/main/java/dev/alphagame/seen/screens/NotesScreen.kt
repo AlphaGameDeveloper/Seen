@@ -39,7 +39,7 @@ fun NotesScreen(onBackToHome: () -> Unit) {
     // Screen dimensions for responsive design
     val screenWidth = configuration.screenWidthDp.dp
     val isCompact = screenWidth < 600.dp
-    
+
     // Responsive padding and sizing
     val horizontalPadding = if (isCompact) 16.dp else 32.dp
     val verticalPadding = if (isCompact) 8.dp else 16.dp
@@ -77,7 +77,7 @@ fun NotesScreen(onBackToHome: () -> Unit) {
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
-                
+
                 Text(
                     text = "My Notes",
                     fontSize = titleSize,
@@ -86,9 +86,9 @@ fun NotesScreen(onBackToHome: () -> Unit) {
                     modifier = Modifier.weight(1f),
                     textAlign = TextAlign.Center
                 )
-                
+
                 // Add note FAB as icon button in header for compact screens
-                if (isCompact) {
+                if (isCompact && false) { // alexander doesn't like it
                     IconButton(
                         onClick = { isAddingNote = !isAddingNote }
                     ) {
@@ -138,7 +138,7 @@ fun NotesScreen(onBackToHome: () -> Unit) {
                         )
                     }
                 }
-                
+
                 // Notes
                 items(notes) { note ->
                     NoteItem(
@@ -206,7 +206,7 @@ private fun AddNoteCard(
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.primary
                 )
-                
+
                 onCancel?.let {
                     TextButton(onClick = it) {
                         Text("Cancel")
@@ -223,9 +223,9 @@ private fun AddNoteCard(
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                 fontWeight = FontWeight.Medium
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                 modifier = Modifier.fillMaxWidth()
@@ -233,7 +233,7 @@ private fun AddNoteCard(
                 items(Mood.values()) { mood ->
                     FilterChip(
                         onClick = { onMoodSelected(mood) },
-                        label = { 
+                        label = {
                             Text(
                                 text = if (isCompact) mood.emoji else "${mood.emoji} ${mood.label}",
                                 fontSize = if (isCompact) 14.sp else 12.sp

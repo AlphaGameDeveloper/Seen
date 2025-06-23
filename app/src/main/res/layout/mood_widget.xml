@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="@drawable/widget_background">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="How are you feeling?"
+        android:textSize="14sp"
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="sans-serif-medium" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_weight="1">
+
+        <Button
+            android:id="@+id/btn_anxious"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="2dp"
+            android:text="😰"
+            android:textSize="24sp"
+            android:background="@drawable/widget_button_background"
+            android:contentDescription="Anxious" />
+
+        <Button
+            android:id="@+id/btn_sad"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="2dp"
+            android:text="😞"
+            android:textSize="24sp"
+            android:background="@drawable/widget_button_background"
+            android:contentDescription="Sad" />
+
+        <Button
+            android:id="@+id/btn_happy"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="2dp"
+            android:text="😊"
+            android:textSize="24sp"
+            android:background="@drawable/widget_button_background"
+            android:contentDescription="Happy" />
+
+        <Button
+            android:id="@+id/btn_very_happy"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="2dp"
+            android:text="😄"
+            android:textSize="24sp"
+            android:background="@drawable/widget_button_background"
+            android:contentDescription="Very Happy" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_last_mood"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tap to log your mood"
+        android:textSize="10sp"
+        android:textColor="#CCFFFFFF"
+        android:gravity="center"
+        android:layout_marginTop="4dp" />
+
+</LinearLayout>

@@ -180,6 +180,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation("androidx.activity:activity-compose:1.8.2")
     implementation("androidx.compose.material3:material3:1.2.0")
+    implementation("com.google.code.gson:gson:2.10.1")
 
 }
 
