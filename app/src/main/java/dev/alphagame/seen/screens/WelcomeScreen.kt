@@ -60,6 +60,10 @@ fun WelcomeScreen(
                     clickCount >= 6 -> {
                         // Show toast for remaining clicks
                         val remaining = 10 - clickCount
+                        // Cancel any existing toast
+                        Toast.makeText(context, "", Toast.LENGTH_SHORT).cancel()
+                        
+                        // Show new toast
                         Toast.makeText(
                             context, 
                             "🔧 Press $remaining more times to view the internal database", 
@@ -81,7 +85,7 @@ fun WelcomeScreen(
         )
         
         Spacer(modifier = Modifier.height(48.dp))
-        
+        /* <----------- PHQ-9 DESCRIPTION CARD
         // Description
         Card(
             modifier = Modifier
@@ -92,6 +96,7 @@ fun WelcomeScreen(
                 containerColor = MaterialTheme.colorScheme.surface
             )
         ) {
+            
             Column(
                 modifier = Modifier.padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -123,7 +128,7 @@ fun WelcomeScreen(
                 )
             }
         }
-        
+        <----------- PHQ-9 DESCRIPTION CARD > */
         Spacer(modifier = Modifier.height(48.dp))
         
         // Start Button
