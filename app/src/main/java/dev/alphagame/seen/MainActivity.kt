@@ -13,6 +13,7 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -20,6 +21,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -62,6 +64,9 @@ fun PHQ9App() {
                         currentScreen = "quiz"
                         currentQuestion = 0
                         scores.clear()
+                    },
+                    onGoToNotes = {
+                        currentScreen = "notes"
                     }
                 )
             }
@@ -88,6 +93,13 @@ fun PHQ9App() {
                     )
                 }
             }
+            "notes" -> {
+                NotesScreen(
+                    onBackToHome = {
+                        currentScreen = "welcome"
+                    }
+                )
+            }
         }
     }
 }
@@ -101,6 +113,13 @@ fun QuestionScreen(
     options: List<Pair<String, Int>>,
     onAnswerSelected: (Int) -> Unit
 ) {
+    val buttonModifier = Modifier
+        .border(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+        )
+        .fillMaxWidth()
+
     AnimatedContent(
         targetState = question,
         transitionSpec = {
@@ -133,8 +152,8 @@ fun QuestionScreen(
                     Button(
                         onClick = { onAnswerSelected(value) },
                         shape = RoundedCornerShape(20.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
+                        modifier = buttonModifier
+                            .height(56.dp)
                             .padding(horizontal = 16.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.surface
@@ -151,6 +170,13 @@ fun QuestionScreen(
 @Composable
 fun ResultScreen(score: Int, onRetakeQuiz: () -> Unit) {
     val context = LocalContext.current
+    val buttonModifier = Modifier
+        .border(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+        )
+        .fillMaxWidth()
+
     val (level, color) = when {
         score <= 4 -> "Minimal" to Color(0xFF6ECB63)
         score <= 9 -> "Mild" to Color(0xFFFFD700)
@@ -182,7 +208,7 @@ fun ResultScreen(score: Int, onRetakeQuiz: () -> Unit) {
                     context.startActivity(intent)
                 },
                 shape = RoundedCornerShape(20.dp),
-                modifier = Modifier.fillMaxWidth(),
+                modifier = buttonModifier,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.surface
                 )
@@ -196,7 +222,7 @@ fun ResultScreen(score: Int, onRetakeQuiz: () -> Unit) {
                     context.startActivity(intent)
                 },
                 shape = RoundedCornerShape(20.dp),
-                modifier = Modifier.fillMaxWidth(),
+                modifier = buttonModifier,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.surface
                 )
@@ -208,7 +234,7 @@ fun ResultScreen(score: Int, onRetakeQuiz: () -> Unit) {
             Button(
                 onClick = onRetakeQuiz,
                 shape = RoundedCornerShape(20.dp),
-                modifier = Modifier.fillMaxWidth(),
+                modifier = buttonModifier,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.surface
                 )
@@ -220,7 +246,7 @@ fun ResultScreen(score: Int, onRetakeQuiz: () -> Unit) {
 }
 
 @Composable
-fun WelcomeScreen(onStartQuiz: () -> Unit) {
+fun WelcomeScreen(onStartQuiz: () -> Unit, onGoToNotes: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -314,16 +340,106 @@ fun WelcomeScreen(onStartQuiz: () -> Unit) {
             )
         }
         
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        // Notes Button
+        Button(
+            onClick = onGoToNotes,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .padding(horizontal = 32.dp),
+            shape = RoundedCornerShape(28.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary
+            )
+        ) {
+            Text(
+                text = "📝 My Notes",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
+        
         Spacer(modifier = Modifier.height(24.dp))
         
         // Disclaimer
         Text(
-            text = "This assessment is not a substitute for professional medical advice. If you're experiencing a mental health crisis, please contact emergency services or a mental health professional.",
+            text = "This assessment is not a substitute for professional medical advice. If you're experiencing a mental health crisis, please contact emergency services or a mental health professional.\n\nApplication by Damien Boisvert & Alexander Cameron",
             fontSize = 12.sp,
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
             textAlign = TextAlign.Center,
             lineHeight = 18.sp,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
+    }
+}
+
+@Composable
+fun NotesScreen(onBackToHome: () -> Unit) {
+    /*
+    Screen where users can log how they feel
+     */
+    var noteText by remember { mutableStateOf("") }
+    
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(32.dp)
+            .background(MaterialTheme.colorScheme.background),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "Notes",
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary,
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+        // text area to write notes (pls implement)
+        TextField(
+            value = noteText,
+            onValueChange = { noteText = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .padding(16.dp),
+            placeholder = {
+                Text(
+                    text = "Write your notes here...",
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
+                )
+            },
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+            )
+        )
+
+        Spacer(modifier = Modifier.height(48.dp))
+        Button(
+            onClick = onBackToHome,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .padding(horizontal = 32.dp),
+            shape = RoundedCornerShape(28.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            )
+        ) {
+            Text(
+                text = "Back to Home",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
     }
 }
