@@ -21,7 +21,6 @@ import dev.alphagame.seen.data.WidgetMoodManager
 import java.text.SimpleDateFormat
 import java.util.*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoodHistoryScreen(
     onBackClick: () -> Unit
@@ -30,12 +29,12 @@ fun MoodHistoryScreen(
     val widgetMoodManager = remember { WidgetMoodManager(context) }
     var moodEntries by remember { mutableStateOf<List<MoodEntry>>(emptyList()) }
     var showDeleteDialog by remember { mutableStateOf(false) }
-    
+
     // Load mood entries
     LaunchedEffect(Unit) {
         moodEntries = widgetMoodManager.getMoodEntries()
     }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -49,7 +48,7 @@ fun MoodHistoryScreen(
         ) {
             IconButton(onClick = onBackClick) {
                 Icon(
-                    Icons.AutoMirrored.Filled.ArrowBack, 
+                    Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Back",
                     tint = MaterialTheme.colorScheme.onSurface
                 )
@@ -66,22 +65,22 @@ fun MoodHistoryScreen(
                 enabled = moodEntries.isNotEmpty()
             ) {
                 Icon(
-                    Icons.Default.Delete, 
+                    Icons.Default.Delete,
                     contentDescription = "Clear History",
-                    tint = if (moodEntries.isNotEmpty()) MaterialTheme.colorScheme.onSurface 
+                    tint = if (moodEntries.isNotEmpty()) MaterialTheme.colorScheme.onSurface
                            else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                 )
             }
         }
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         // Statistics
         if (moodEntries.isNotEmpty()) {
             MoodStatistics(moodEntries = moodEntries)
             Spacer(modifier = Modifier.height(16.dp))
         }
-        
+
         // Mood entries list
         if (moodEntries.isEmpty()) {
             Box(
@@ -97,13 +96,19 @@ fun MoodHistoryScreen(
         } else {
             LazyColumn {
                 items(moodEntries) { entry ->
-                    MoodEntryItem(entry = entry)
+                    MoodEntryItem(
+                        entry = entry,
+                        onDeleteClick = { entryToDelete ->
+                            widgetMoodManager.deleteMoodEntry(entryToDelete.timestamp)
+                            moodEntries = widgetMoodManager.getMoodEntries()
+                        }
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
         }
     }
-    
+
     // Delete confirmation dialog
     if (showDeleteDialog) {
         AlertDialog(
@@ -139,10 +144,10 @@ private fun MoodStatistics(moodEntries: List<MoodEntry>) {
         today.set(Calendar.SECOND, 0)
         today.set(Calendar.MILLISECOND, 0)
         val startOfDay = today.time
-        
+
         moodEntries.filter { it.timestamp >= startOfDay }
     }
-    
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -158,7 +163,7 @@ private fun MoodStatistics(moodEntries: List<MoodEntry>) {
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -166,7 +171,7 @@ private fun MoodStatistics(moodEntries: List<MoodEntry>) {
                 Text("Entries today: ${todaysMoods.size}")
                 Text("Total entries: ${moodEntries.size}")
             }
-            
+
             if (todaysMoods.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -179,9 +184,13 @@ private fun MoodStatistics(moodEntries: List<MoodEntry>) {
 }
 
 @Composable
-private fun MoodEntryItem(entry: MoodEntry) {
+private fun MoodEntryItem(
+    entry: MoodEntry,
+    onDeleteClick: (MoodEntry) -> Unit
+) {
     val dateFormat = remember { SimpleDateFormat("MMM dd, yyyy 'at' HH:mm", Locale.getDefault()) }
-    
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -199,8 +208,10 @@ private fun MoodEntryItem(entry: MoodEntry) {
                 fontSize = 32.sp,
                 modifier = Modifier.padding(end = 16.dp)
             )
-            
-            Column {
+
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
                 Text(
                     text = entry.mood.label,
                     fontSize = 16.sp,
@@ -212,6 +223,42 @@ private fun MoodEntryItem(entry: MoodEntry) {
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
+
+            IconButton(
+                onClick = { showDeleteDialog = true }
+            ) {
+                Icon(
+                    Icons.Default.Delete,
+                    contentDescription = "Delete this mood entry",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
+    }
+
+    // Individual delete confirmation dialog
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Delete Mood Entry") },
+            text = {
+                Text("Are you sure you want to delete this ${entry.mood.label} mood entry from ${dateFormat.format(entry.timestamp)}?")
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onDeleteClick(entry)
+                        showDeleteDialog = false
+                    }
+                ) {
+                    Text("Delete")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
     }
 }

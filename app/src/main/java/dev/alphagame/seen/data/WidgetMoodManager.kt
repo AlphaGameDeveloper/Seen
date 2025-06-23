@@ -91,4 +91,12 @@ class WidgetMoodManager(context: Context) {
     fun clearAllMoods() {
         prefs.edit().remove(KEY_MOOD_ENTRIES).apply()
     }
+    
+    fun deleteMoodEntry(timestamp: Date) {
+        val entries = getMoodEntries().toMutableList()
+        entries.removeAll { it.timestamp == timestamp }
+        
+        val json = gson.toJson(entries)
+        prefs.edit().putString(KEY_MOOD_ENTRIES, json).apply()
+    }
 }
