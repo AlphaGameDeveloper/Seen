@@ -7,10 +7,6 @@ on:
 
 permissions:
   contents: write
-  packages: write
-  issues: write
-  pull-requests: write
-  deployments: write
 
 jobs:
   release:
@@ -37,12 +33,29 @@ jobs:
         id: find_apk
         run: echo "apk_path=$(find app/build/outputs/apk/release -name '*.apk' | head -n 1)" >> $GITHUB_OUTPUT
 
-      - name: 🚀 Create GitHub Release
+      - name: 🔐 Decode keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > my-release-key.jks
+
+      - name: 🔏 Sign the APK
+        run: |
+          $ANDROID_HOME/build-tools/34.0.0/apksigner sign \
+            --ks my-release-key.jks \
+            --ks-key-alias ${{ secrets.KEY_ALIAS }} \
+            --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} \
+            --key-pass pass:${{ secrets.KEY_PASSWORD }} \
+            ${{ steps.find_apk.outputs.apk_path }}
+
+      - name: ✅ Verify APK
+        run: |
+          $ANDROID_HOME/build-tools/34.0.0/apksigner verify \
+            ${{ steps.find_apk.outputs.apk_path }}
+
+      - name: 📤 Release signed APK
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
           name: "Seen ${{ github.ref_name }}"
-          body: "✨ Automated release of the Application APK"
+          body: "✨ Automated release of the signed APK"
           files: ${{ steps.find_apk.outputs.apk_path }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
