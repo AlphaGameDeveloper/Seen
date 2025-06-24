@@ -36,7 +36,7 @@ fun OnboardingScreen(
     onOnboardingComplete: () -> Unit
 ) {
     val translation = rememberTranslation()
-    
+
     val pages = listOf(
         OnboardingPage(
             title = translation.onboardingWelcomeTitle,

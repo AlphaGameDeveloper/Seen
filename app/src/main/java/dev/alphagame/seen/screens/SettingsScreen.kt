@@ -9,6 +9,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,12 +22,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.alphagame.seen.components.UpdateDialog
 import dev.alphagame.seen.data.AppVersionInfo
 import dev.alphagame.seen.data.DatabaseHelper
 import dev.alphagame.seen.data.PreferencesManager
+import dev.alphagame.seen.data.UpdateChecker
+import dev.alphagame.seen.data.UpdateInfo
+import dev.alphagame.seen.data.WidgetMoodManager
 import dev.alphagame.seen.translations.Translation
 import dev.alphagame.seen.translations.rememberTranslation
-import dev.alphagame.seen.data.WidgetMoodManager
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,13 +45,20 @@ fun SettingsScreen(
     val preferencesManager = remember { PreferencesManager(context) }
     val databaseHelper = remember { DatabaseHelper(context) }
     val widgetMoodManager = remember { WidgetMoodManager(context) }
+    val updateChecker = remember { UpdateChecker(context) }
     val translation = rememberTranslation()
+    val scope = rememberCoroutineScope()
 
     var currentTheme by remember { mutableStateOf(preferencesManager.themeMode) }
     var currentLanguage by remember { mutableStateOf(preferencesManager.language) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showDeleteConfirmationDialog by remember { mutableStateOf(false) }
     var refreshKey by remember { mutableStateOf(0) } // Force refresh after data deletion
+
+    // Update check state
+    var updateInfo by remember { mutableStateOf<UpdateInfo?>(null) }
+    var showUpdateDialog by remember { mutableStateOf(false) }
+    var isCheckingForUpdates by remember { mutableStateOf(false) }
 
     // Keep local state in sync with preference changes
     LaunchedEffect(preferencesManager.themeMode, preferencesManager.language, refreshKey) {
@@ -152,6 +164,51 @@ fun SettingsScreen(
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    OutlinedButton(
+                        onClick = {
+                            scope.launch {
+                                isCheckingForUpdates = true
+                                try {
+                                    val update = updateChecker.checkForUpdates()
+                                    if (update != null && update.isUpdateAvailable) {
+                                        updateInfo = update
+                                        showUpdateDialog = true
+                                    } else {
+                                        // Show snackbar or toast that app is up to date
+                                        hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    }
+                                    preferencesManager.lastUpdateCheckTime = System.currentTimeMillis()
+                                } catch (e: Exception) {
+                                    // Handle error - could show error message
+                                    android.util.Log.e("UpdateCheck", "Manual update check failed", e)
+                                } finally {
+                                    isCheckingForUpdates = false
+                                }
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !isCheckingForUpdates
+                    ) {
+                        if (isCheckingForUpdates) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(16.dp),
+                                strokeWidth = 2.dp
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Checking for Updates...")
+                        } else {
+                            Icon(
+                                imageVector = Icons.Default.Refresh,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Check for Updates")
+                        }
+                    }
                 }
             }
 
@@ -535,6 +592,22 @@ fun SettingsScreen(
                     )
                 ) {
                     Text(translation.continueButton)
+                }
+            }
+        )
+    }
+
+    // Update Dialog
+    if (showUpdateDialog && updateInfo != null) {
+        UpdateDialog(
+            updateInfo = updateInfo!!,
+            onDismiss = {
+                showUpdateDialog = false
+            },
+            onUpdateLater = {
+                // Remember that user skipped this version (unless it's a force update)
+                if (!updateInfo!!.isForceUpdate) {
+                    preferencesManager.skippedVersion = updateInfo!!.latestVersion
                 }
             }
         )

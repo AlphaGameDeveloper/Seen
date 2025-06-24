@@ -8,21 +8,21 @@ abstract class Translation {
     abstract val about: String
     abstract val back: String
     abstract val info: String
-    
+
     // Welcome Screen
     abstract val welcomeTitle: String
     abstract val welcomeSubtitle: String
     abstract val startQuiz: String
     abstract val viewNotes: String
     abstract val viewMoodHistory: String
-    
+
     // PHQ-9 Questions
     abstract val phq9Questions: List<String>
     abstract val phq9Options: List<String>
-    
+
     // Quiz/Question Screen
     abstract val questionProgress: String // "Question {0} of {1}"
-    
+
     // Result Screen
     abstract val resultTitle: String
     abstract val resultScore: String
@@ -37,7 +37,7 @@ abstract class Translation {
     abstract val talkToSomeone: String
     abstract val learnAboutDepression: String
     abstract val returnToHome: String
-    
+
     // Settings Screen
     abstract val appearance: String
     abstract val colorScheme: String
@@ -51,7 +51,7 @@ abstract class Translation {
     abstract val cancel: String
     abstract val delete: String
     abstract val createdBy: String
-    
+
     // Notes Screen
     abstract val notes: String
     abstract val addNote: String
@@ -61,7 +61,7 @@ abstract class Translation {
     abstract val save: String
     abstract val howAreYouFeeling: String
     abstract val saveNote: String
-    
+
     // Mood History Screen
     abstract val moodHistory: String
     abstract val noMoodData: String
@@ -76,7 +76,7 @@ abstract class Translation {
     abstract val entriesToday: String
     abstract val totalEntries: String
     abstract val todaysMoods: String
-    
+
     // Onboarding Screen
     abstract val onboardingTitle: String
     abstract val onboardingDescription: String
@@ -94,7 +94,7 @@ abstract class Translation {
     abstract val onboardingNoAdsTitle: String
     abstract val onboardingNoAdsDesc: String
     abstract val next: String
-    
+
     // Settings Screen - Additional
     abstract val appTitle: String
     abstract val builtOn: String
@@ -115,25 +115,25 @@ abstract class Translation {
     abstract val dataDeletedTitle: String
     abstract val dataDeletedText: String
     abstract val continueButton: String
-    
+
     // Common
     abstract val yes: String
     abstract val no: String
     abstract val ok: String
     abstract val error: String
     abstract val loading: String
-    
+
     companion object {
         const val ENGLISH = "en"
         const val FRENCH = "fr"
         const val SPANISH = "es"
-        
+
         fun getAvailableLanguages(): List<Pair<String, String>> = listOf(
             ENGLISH to "English",
             FRENCH to "Français",
             SPANISH to "Español"
         )
-        
+
         fun getTranslation(languageCode: String): Translation = when (languageCode) {
             FRENCH -> FrenchTranslation()
             SPANISH -> SpanishTranslation()

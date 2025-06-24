@@ -30,7 +30,7 @@ fun QuestionScreen(
     onAnswerSelected: (Int) -> Unit
 ) {
     val translation = rememberTranslation()
-    
+
     val buttonModifier = Modifier
         .border(
             width = 1.dp,

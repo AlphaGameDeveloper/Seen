@@ -18,8 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import dev.alphagame.seen.components.UpdateDialog
 import dev.alphagame.seen.data.PHQ9Data
 import dev.alphagame.seen.data.PreferencesManager
+import dev.alphagame.seen.data.UpdateChecker
+import dev.alphagame.seen.data.UpdateInfo
 import dev.alphagame.seen.screens.WelcomeScreen
 import dev.alphagame.seen.screens.QuestionScreen
 import dev.alphagame.seen.screens.ResultScreen
@@ -31,6 +34,7 @@ import dev.alphagame.seen.screens.OnboardingScreen
 import dev.alphagame.seen.ui.theme.SeenTheme
 import dev.alphagame.seen.translations.TranslationProvider
 import dev.alphagame.seen.translations.rememberTranslation
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,6 +80,12 @@ fun SeenApplication(
     val context = LocalContext.current
     val preferencesManager = remember { PreferencesManager(context) }
     val translation = rememberTranslation()
+    val updateChecker = remember { UpdateChecker(context) }
+    val scope = rememberCoroutineScope()
+
+    // Update check state
+    var updateInfo by remember { mutableStateOf<UpdateInfo?>(null) }
+    var showUpdateDialog by remember { mutableStateOf(false) }
 
     val questions = PHQ9Data.questions
     val options = PHQ9Data.options
@@ -88,6 +98,49 @@ fun SeenApplication(
     var currentQuestion by remember { mutableStateOf(0) }
     val scores = remember { mutableStateListOf<Int>() }
     val navigationStack = remember { mutableStateListOf<String>() }
+
+    // Check for updates on startup
+    LaunchedEffect(Unit) {
+        scope.launch {
+            android.util.Log.d("UpdateCheck", "Starting update check...")
+            android.util.Log.d("UpdateCheck", "Should check for updates: ${preferencesManager.shouldCheckForUpdates()}")
+            android.util.Log.d("UpdateCheck", "Last check time: ${preferencesManager.lastUpdateCheckTime}")
+            android.util.Log.d("UpdateCheck", "Current time: ${System.currentTimeMillis()}")
+
+            // For debugging - always check for updates (remove the shouldCheckForUpdates condition temporarily)
+            // if (preferencesManager.shouldCheckForUpdates()) {
+                try {
+                    android.util.Log.d("UpdateCheck", "Calling updateChecker.checkForUpdates()...")
+                    val update = updateChecker.checkForUpdates()
+                    android.util.Log.d("UpdateCheck", "Update result: $update")
+
+                    if (update != null && update.isUpdateAvailable) {
+                        android.util.Log.d("UpdateCheck", "Update available: ${update.latestVersion}")
+                        // Don't show dialog if user already skipped this version (unless it's a force update)
+                        val skippedVersion = preferencesManager.skippedVersion
+                        android.util.Log.d("UpdateCheck", "Skipped version: $skippedVersion")
+
+                        if (update.isForceUpdate || skippedVersion != update.latestVersion) {
+                            android.util.Log.d("UpdateCheck", "Showing update dialog")
+                            updateInfo = update
+                            showUpdateDialog = true
+                        } else {
+                            android.util.Log.d("UpdateCheck", "Update skipped (user already dismissed this version)")
+                            android.util.Log.d("UpdateCheck", "but fuck that - showing anyway")
+                            updateInfo = update
+                            showUpdateDialog = true
+                        }
+                    } else {
+                        android.util.Log.d("UpdateCheck", "No update available")
+                    }
+                    preferencesManager.lastUpdateCheckTime = System.currentTimeMillis()
+                } catch (e: Exception) {
+                    // Silently fail update check - don't interrupt user experience
+                    android.util.Log.e("UpdateCheck", "Failed to check for updates", e)
+                }
+            // }
+        }
+    }
 
     // Helper function to navigate to a new screen
     fun navigateTo(screen: String) {
@@ -275,6 +328,24 @@ fun SeenApplication(
                     .padding(20.dp),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+            )
+        }
+
+        // Update Dialog
+        android.util.Log.d("UpdateCheck", "Rendering UI - showUpdateDialog: $showUpdateDialog, updateInfo: $updateInfo")
+        if (showUpdateDialog && updateInfo != null) {
+            android.util.Log.d("UpdateCheck", "Showing UpdateDialog")
+            UpdateDialog(
+                updateInfo = updateInfo!!,
+                onDismiss = {
+                    showUpdateDialog = false
+                },
+                onUpdateLater = {
+                    // Remember that user skipped this version (unless it's a force update)
+                    if (!updateInfo!!.isForceUpdate) {
+                        preferencesManager.skippedVersion = updateInfo!!.latestVersion
+                    }
+                }
             )
         }
     }

@@ -25,11 +25,11 @@ fun NoteItem(note: Note, onDelete: () -> Unit) {
     val configuration = LocalConfiguration.current
     val isCompact = configuration.screenWidthDp.dp < 600.dp
     val dateFormat = SimpleDateFormat(
-        if (isCompact) "MMM dd, HH:mm" else "MMM dd, yyyy 'at' HH:mm", 
+        if (isCompact) "MMM dd, HH:mm" else "MMM dd, yyyy 'at' HH:mm",
         Locale.getDefault()
     )
     val mood = note.mood?.let { Mood.fromLabel(it) }
-    
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(if (isCompact) 12.dp else 16.dp),
@@ -70,7 +70,7 @@ fun NoteItem(note: Note, onDelete: () -> Unit) {
                         )
                     }
                 } ?: Spacer(modifier = Modifier.weight(1f))
-                
+
                 IconButton(
                     onClick = onDelete,
                     modifier = Modifier.size(if (isCompact) 32.dp else 40.dp)
@@ -83,11 +83,11 @@ fun NoteItem(note: Note, onDelete: () -> Unit) {
                     )
                 }
             }
-            
+
             if (mood != null) {
                 Spacer(modifier = Modifier.height(8.dp))
             }
-            
+
             // Note content
             Text(
                 text = note.content,
@@ -96,9 +96,9 @@ fun NoteItem(note: Note, onDelete: () -> Unit) {
                 lineHeight = if (isCompact) 20.sp else 22.sp,
                 fontWeight = FontWeight.Normal
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             // Timestamp
             Text(
                 text = dateFormat.format(Date(note.timestamp)),

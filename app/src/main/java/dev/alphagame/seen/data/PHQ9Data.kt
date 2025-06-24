@@ -29,7 +29,7 @@ object PHQ9Data {
         PHQ9Option(2),
         PHQ9Option(3)
     )
-    
+
     fun getQuestionText(index: Int, translation: Translation): String {
         return if (index < translation.phq9Questions.size) {
             translation.phq9Questions[index]
@@ -37,7 +37,7 @@ object PHQ9Data {
             "Question not found"
         }
     }
-    
+
     fun getOptionText(index: Int, translation: Translation): String {
         return if (index < translation.phq9Options.size) {
             translation.phq9Options[index]

@@ -7,14 +7,14 @@ class FrenchTranslation : Translation() {
     override val about = "À propos"
     override val back = "Retour"
     override val info = "Info"
-    
+
     // Welcome Screen
     override val welcomeTitle = "Bienvenue sur Seen"
     override val welcomeSubtitle = "Prenez un moment pour faire le point sur vous-même"
     override val startQuiz = "Commencer l'évaluation"
     override val viewNotes = "Voir les notes"
     override val viewMoodHistory = "Voir l'historique de l'humeur"
-    
+
     // PHQ-9 Questions
     override val phq9Questions = listOf(
         "Peu d'intérêt ou de plaisir à faire les choses?",
@@ -27,17 +27,17 @@ class FrenchTranslation : Translation() {
         "Bouger ou parler lentement ou être agité(e)/nerveux(se)?",
         "Pensées que vous seriez mieux mort(e) ou de vous faire du mal?"
     )
-    
+
     override val phq9Options = listOf(
         "😐 Jamais",
         "😕 Plusieurs jours",
         "😞 Plus de la moitié des jours",
         "😢 Presque tous les jours"
     )
-    
+
     // Quiz/Question Screen
     override val questionProgress = "Question %d sur %d"
-    
+
     // Result Screen
     override val resultTitle = "Évaluation terminée"
     override val resultScore = "Votre score : %d"
@@ -52,7 +52,7 @@ class FrenchTranslation : Translation() {
     override val talkToSomeone = "📞 Parler à quelqu'un – 988"
     override val learnAboutDepression = "📚 En savoir plus sur la dépression"
     override val returnToHome = "🔄 Retour à l'accueil"
-    
+
     // Settings Screen
     override val appearance = "Apparence"
     override val colorScheme = "Schéma de couleurs"
@@ -66,7 +66,7 @@ class FrenchTranslation : Translation() {
     override val cancel = "Annuler"
     override val delete = "Supprimer"
     override val createdBy = "Créé par Damien Boisvert & Alexander Cameron"
-    
+
     // Settings Screen - Additional
     override val appTitle = "Seen - Évaluation de la santé mentale"
     override val builtOn = "Construit le"
@@ -87,7 +87,7 @@ class FrenchTranslation : Translation() {
     override val dataDeletedTitle = "Données supprimées avec succès"
     override val dataDeletedText = "Toutes vos données ont été définitivement supprimées et les paramètres ont été réinitialisés aux valeurs par défaut. L'application va maintenant se fermer."
     override val continueButton = "Continuer"
-    
+
     // Notes Screen
     override val notes = "Notes"
     override val addNote = "Ajouter une note"
@@ -97,7 +97,7 @@ class FrenchTranslation : Translation() {
     override val save = "Sauvegarder"
     override val howAreYouFeeling = "Comment vous sentez-vous ?"
     override val saveNote = "💾 Sauvegarder la note"
-    
+
     // Mood History Screen
     override val moodHistory = "Historique de l'humeur"
     override val noMoodData = "Aucune entrée d'humeur pour le moment.\nUtilisez le widget pour commencer le suivi !"
@@ -112,7 +112,7 @@ class FrenchTranslation : Translation() {
     override val entriesToday = "Entrées aujourd'hui : %d"
     override val totalEntries = "Total des entrées : %d"
     override val todaysMoods = "Humeurs d'aujourd'hui : %s"
-    
+
     // Onboarding Screen
     override val onboardingTitle = "Bienvenue sur Seen"
     override val onboardingDescription = "Seen est un outil d'évaluation de la santé mentale qui vous aide à suivre votre humeur et votre bien-être au fil du temps en utilisant le questionnaire PHQ-9."
@@ -130,7 +130,7 @@ class FrenchTranslation : Translation() {
     override val onboardingNoAdsTitle = "Pas de publicités"
     override val onboardingNoAdsDesc = "Profitez d'une expérience sans distractions. Cette application est entièrement gratuite et n'affichera jamais de publicités."
     override val next = "Suivant"
-    
+
     // Common
     override val yes = "Oui"
     override val no = "Non"

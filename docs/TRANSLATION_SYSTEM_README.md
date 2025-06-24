@@ -57,7 +57,7 @@ The Seen app now fully supports multiple languages through a comprehensive abstr
 @Composable
 fun MyScreen() {
     val translation = rememberTranslation()
-    
+
     Text(text = translation.welcomeTitle)
     Button(onClick = {}) {
         Text(translation.startQuiz)
@@ -80,12 +80,12 @@ class GermanTranslation : Translation() {
 ```kotlin
 companion object {
     const val GERMAN = "de"
-    
+
     fun getAvailableLanguages(): List<Pair<String, String>> = listOf(
         // ... existing languages
         GERMAN to "Deutsch"
     )
-    
+
     fun getTranslation(languageCode: String): Translation = when (languageCode) {
         // ... existing cases
         GERMAN -> GermanTranslation()
@@ -104,7 +104,7 @@ companion object {
 
 ### Supported Languages
 - **English** (en) - Default - 100% Complete
-- **French** (fr) - Français - 100% Complete  
+- **French** (fr) - Français - 100% Complete
 - **Spanish** (es) - Español - 100% Complete
 
 ### Translated Categories
@@ -163,7 +163,7 @@ companion object {
 ### Core Translation System
 - ✅ `Translation.kt` - Abstract base with all string definitions
 - ✅ `EnglishTranslation.kt` - Complete English implementation
-- ✅ `FrenchTranslation.kt` - Complete French implementation  
+- ✅ `FrenchTranslation.kt` - Complete French implementation
 - ✅ `SpanishTranslation.kt` - Complete Spanish implementation
 - ✅ `TranslationManager.kt` - Provider and composition local
 

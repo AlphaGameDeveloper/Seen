@@ -7,7 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import dev.alphagame.seen.data.PreferencesManager
 
-val LocalTranslation = compositionLocalOf<Translation> { 
+val LocalTranslation = compositionLocalOf<Translation> {
     EnglishTranslation()
 }
 
@@ -20,7 +20,7 @@ fun TranslationProvider(
     val translation = remember(preferencesManager.language) {
         Translation.getTranslation(preferencesManager.language)
     }
-    
+
     CompositionLocalProvider(LocalTranslation provides translation) {
         content()
     }
