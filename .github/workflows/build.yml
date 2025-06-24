@@ -50,12 +50,22 @@ jobs:
           $ANDROID_HOME/build-tools/34.0.0/apksigner verify \
             ${{ steps.find_apk.outputs.apk_path }}
 
+      - name: 🔤 Rename APK
+        id: rename_apk
+        run: |
+          APK_ORIG=$(find app/build/outputs/apk/release -name "*.apk" | head -n 1)
+          VERSION="${{ github.ref_name }}"
+          VERSION_CLEANED="${VERSION#v}"  # strips the leading "v"
+          NEW_NAME="seen-${VERSION_CLEANED}-release.apk"
+          cp "$APK_ORIG" "$NEW_NAME"
+          echo "apk_renamed=$NEW_NAME" >> $GITHUB_OUTPUT
+
       - name: 📤 Release signed APK
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
           name: "Seen ${{ github.ref_name }}"
           body: "✨ Automated release of the signed APK"
-          files: ${{ steps.find_apk.outputs.apk_path }}
+          files: ${{ steps.rename_apk.outputs.apk_renamed }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
