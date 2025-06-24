@@ -54,11 +54,11 @@ fun SettingsScreen(
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showDeleteConfirmationDialog by remember { mutableStateOf(false) }
     var refreshKey by remember { mutableStateOf(0) } // Force refresh after data deletion
-
-    // Update check state
-    var updateInfo by remember { mutableStateOf<UpdateInfo?>(null) }
-    var showUpdateDialog by remember { mutableStateOf(false) }
     var isCheckingForUpdates by remember { mutableStateOf(false) }
+    var showUpdateDialog by remember { mutableStateOf(false) }
+    var showNoUpdateDialog by remember { mutableStateOf(false) }
+    var showUpdateErrorDialog by remember { mutableStateOf(false) }
+    var updateInfo by remember { mutableStateOf<UpdateInfo?>(null) }
 
     // Keep local state in sync with preference changes
     LaunchedEffect(preferencesManager.themeMode, preferencesManager.language, refreshKey) {
@@ -172,18 +172,20 @@ fun SettingsScreen(
                             scope.launch {
                                 isCheckingForUpdates = true
                                 try {
-                                    val update = updateChecker.checkForUpdates()
-                                    if (update != null && update.isUpdateAvailable) {
-                                        updateInfo = update
-                                        showUpdateDialog = true
-                                    } else {
-                                        // Show snackbar or toast that app is up to date
-                                        hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    val result = updateChecker.checkForUpdatesForCompose()
+                                    when (result) {
+                                        is UpdateChecker.UpdateCheckResult.UpdateAvailable -> {
+                                            updateInfo = result.updateInfo
+                                            showUpdateDialog = true
+                                        }
+                                        is UpdateChecker.UpdateCheckResult.NoUpdate -> {
+                                            showNoUpdateDialog = true
+                                        }
+                                        is UpdateChecker.UpdateCheckResult.Error -> {
+                                            showUpdateErrorDialog = true
+                                        }
                                     }
                                     preferencesManager.lastUpdateCheckTime = System.currentTimeMillis()
-                                } catch (e: Exception) {
-                                    // Handle error - could show error message
-                                    android.util.Log.e("UpdateCheck", "Manual update check failed", e)
                                 } finally {
                                     isCheckingForUpdates = false
                                 }
@@ -608,6 +610,60 @@ fun SettingsScreen(
                 // Remember that user skipped this version (unless it's a force update)
                 if (!updateInfo!!.isForceUpdate) {
                     preferencesManager.skippedVersion = updateInfo!!.latestVersion
+                }
+            }
+        )
+    }
+
+    // No Update Dialog
+    if (showNoUpdateDialog) {
+        AlertDialog(
+            onDismissRequest = { showNoUpdateDialog = false },
+            title = {
+                Text(
+                    text = "You're All Up to Date!",
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            },
+            text = {
+                Text(
+                    text = "You are running the latest version of the app. No updates are available at this time.",
+                    lineHeight = 20.sp
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = { showNoUpdateDialog = false }
+                ) {
+                    Text("OK")
+                }
+            }
+        )
+    }
+
+    // Update Error Dialog
+    if (showUpdateErrorDialog) {
+        AlertDialog(
+            onDismissRequest = { showUpdateErrorDialog = false },
+            title = {
+                Text(
+                    text = "Update Check Failed",
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.error
+                )
+            },
+            text = {
+                Text(
+                    text = "Unable to check for updates. Please check your internet connection and try again later.",
+                    lineHeight = 20.sp
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = { showUpdateErrorDialog = false }
+                ) {
+                    Text("OK")
                 }
             }
         )

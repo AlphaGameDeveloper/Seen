@@ -80,6 +80,41 @@ class UpdateChecker(private val context: Context) {
         }
     }
 
+    suspend fun checkForUpdatesWithDialog(context: Context) {
+        val updateInfo = checkForUpdates()
+
+        withContext(Dispatchers.Main) {
+            when {
+                updateInfo == null -> {
+                    UpdateDialogHelper.showUpdateCheckErrorDialog(context)
+                }
+                updateInfo.isUpdateAvailable -> {
+                    UpdateDialogHelper.showUpdateAvailableDialog(context, updateInfo)
+                }
+                else -> {
+                    UpdateDialogHelper.showNoUpdateDialog(context)
+                }
+            }
+        }
+    }
+
+    // New method for Compose UI - returns result instead of showing dialogs
+    suspend fun checkForUpdatesForCompose(): UpdateCheckResult {
+        val updateInfo = checkForUpdates()
+
+        return when {
+            updateInfo == null -> UpdateCheckResult.Error
+            updateInfo.isUpdateAvailable -> UpdateCheckResult.UpdateAvailable(updateInfo)
+            else -> UpdateCheckResult.NoUpdate
+        }
+    }
+
+    sealed class UpdateCheckResult {
+        object NoUpdate : UpdateCheckResult()
+        object Error : UpdateCheckResult()
+        data class UpdateAvailable(val updateInfo: UpdateInfo) : UpdateCheckResult()
+    }
+
     fun shouldForceUpdate(updateInfo: UpdateInfo): Boolean {
         if (!updateInfo.isForceUpdate || updateInfo.minimumRequiredVersion == null) {
             return false
