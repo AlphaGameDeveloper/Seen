@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">Seen</string>
+    <string name="app_name" translatable="false">Seen</string>
     <string name="widget_description" translatable="false">Quick mood tracker with emoji buttons</string>
 </resources>

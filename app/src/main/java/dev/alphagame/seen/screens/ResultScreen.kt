@@ -60,10 +60,9 @@ fun ResultScreen(scores: List<Int>, onRetakeQuiz: () -> Unit) {
         verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(String.format(translation.resultScore, totalScore), fontSize = 20.sp, color = MaterialTheme.colorScheme.onBackground)
+        Text(translation.resultScore, fontSize = 20.sp, color = MaterialTheme.colorScheme.onBackground)
         Text("$totalScore", fontSize = 64.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
         Text("$levelText", fontSize = 20.sp, color = color)
-        Text(String.format(translation.individualScores, scores.joinToString(", ")), fontSize = 16.sp, color = MaterialTheme.colorScheme.onBackground)
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.fillMaxWidth()

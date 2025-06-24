@@ -33,7 +33,6 @@ abstract class Translation {
     abstract val resultDescription: String
     abstract val retakeQuiz: String
     abstract val saveResult: String
-    abstract val individualScores: String
     abstract val talkToSomeone: String
     abstract val learnAboutDepression: String
     abstract val returnToHome: String

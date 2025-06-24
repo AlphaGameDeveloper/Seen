@@ -40,7 +40,7 @@ class FrenchTranslation : Translation() {
 
     // Result Screen
     override val resultTitle = "Évaluation terminée"
-    override val resultScore = "Votre score : %d"
+    override val resultScore = "Votre score"
     override val resultMinimal = "Dépression minimale"
     override val resultMild = "Dépression légère"
     override val resultModerate = "Dépression modérée"
@@ -48,7 +48,6 @@ class FrenchTranslation : Translation() {
     override val resultDescription = "Cette évaluation fournit des informations sur votre état de santé mentale actuel. Envisagez de consulter un professionnel de la santé pour un diagnostic approprié et un soutien."
     override val retakeQuiz = "Refaire l'évaluation"
     override val saveResult = "Sauvegarder le résultat"
-    override val individualScores = "Scores individuels : %s"
     override val talkToSomeone = "📞 Parler à quelqu'un – 988"
     override val learnAboutDepression = "📚 En savoir plus sur la dépression"
     override val returnToHome = "🔄 Retour à l'accueil"

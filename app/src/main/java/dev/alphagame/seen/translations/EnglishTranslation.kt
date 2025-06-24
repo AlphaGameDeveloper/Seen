@@ -40,7 +40,7 @@ class EnglishTranslation : Translation() {
 
     // Result Screen
     override val resultTitle = "Assessment Complete"
-    override val resultScore = "Your Score: %d"
+    override val resultScore = "Your Score"
     override val resultMinimal = "Minimal Depression"
     override val resultMild = "Mild Depression"
     override val resultModerate = "Moderate Depression"
@@ -48,7 +48,6 @@ class EnglishTranslation : Translation() {
     override val resultDescription = "This assessment provides insights into your current mental health state. Consider consulting with a healthcare professional for proper diagnosis and support."
     override val retakeQuiz = "Retake Assessment"
     override val saveResult = "Save Result"
-    override val individualScores = "Individual scores: %s"
     override val talkToSomeone = "📞 Talk to Someone – 988"
     override val learnAboutDepression = "📚 Learn About Depression"
     override val returnToHome = "🔄 Return to Home"
