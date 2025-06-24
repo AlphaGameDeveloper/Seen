@@ -127,8 +127,10 @@ class FrenchTranslation : Translation() {
     override val onboardingNotesDesc = "Gardez des notes privées sur vos pensées, sentiments et expériences quotidiennes dans un espace sécurisé."
     override val onboardingPrivacyTitle = "Votre vie privée d'abord"
     override val onboardingPrivacyDesc = "Toutes vos données restent sur votre appareil. Nous ne collectons, stockons ou partageons jamais vos informations personnelles."
-    override val onboardingNoAdsTitle = "Pas de publicités"
-    override val onboardingNoAdsDesc = "Profitez d'une expérience sans distractions. Cette application est entièrement gratuite et n'affichera jamais de publicités."
+    override val onboardingNoAdsTitle = "Aucune publicité"
+    override val onboardingNoAdsDesc = "Profitez d'une expérience sans distraction. Cette application est entièrement gratuite et n'affichera jamais de publicités."
+    override val onboardingNotificationsTitle = "Restez Connecté"
+    override val onboardingNotificationsDesc = "Autorisez les notifications pour recevoir des rappels pour vos bilans de santé mentale et les mises à jour importantes de l'application. Vous pouvez modifier cela à tout moment dans les paramètres."
     override val next = "Suivant"
 
     // Common

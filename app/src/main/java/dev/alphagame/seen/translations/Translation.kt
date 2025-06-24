@@ -93,6 +93,8 @@ abstract class Translation {
     abstract val onboardingPrivacyDesc: String
     abstract val onboardingNoAdsTitle: String
     abstract val onboardingNoAdsDesc: String
+    abstract val onboardingNotificationsTitle: String
+    abstract val onboardingNotificationsDesc: String
     abstract val next: String
 
     // Settings Screen - Additional

@@ -14,6 +14,7 @@ class PreferencesManager(context: Context) {
         private const val KEY_LANGUAGE = "language"
         private const val KEY_LAST_UPDATE_CHECK = "last_update_check"
         private const val KEY_SKIPPED_VERSION = "skipped_version"
+        private const val KEY_NOTIFICATIONS_ENABLED = "notifications_enabled"
 
         const val THEME_LIGHT = "light"
         const val THEME_DARK = "dark"
@@ -47,6 +48,10 @@ class PreferencesManager(context: Context) {
     var skippedVersion: String?
         get() = prefs.getString(KEY_SKIPPED_VERSION, null)
         set(value) = prefs.edit().putString(KEY_SKIPPED_VERSION, value).apply()
+
+    var notificationsEnabled: Boolean
+        get() = prefs.getBoolean(KEY_NOTIFICATIONS_ENABLED, false)
+        set(value) = prefs.edit().putBoolean(KEY_NOTIFICATIONS_ENABLED, value).apply()
 
     fun shouldCheckForUpdates(): Boolean {
         val lastCheck = lastUpdateCheckTime

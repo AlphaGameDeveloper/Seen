@@ -339,6 +339,62 @@ fun SettingsScreen(
                 }
             }
 
+            // Notifications Settings Section
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
+            ) {
+                Column(
+                    modifier = Modifier.padding(20.dp)
+                ) {
+                    Text(
+                        text = "Notifications",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(
+                                text = "Enable Reminders",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = "Receive gentle reminders for mental health check-ins",
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                                lineHeight = 16.sp
+                            )
+                        }
+
+                        var notificationsEnabled by remember(refreshKey) { mutableStateOf(preferencesManager.notificationsEnabled) }
+
+                        Switch(
+                            checked = notificationsEnabled,
+                            onCheckedChange = { enabled ->
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                                notificationsEnabled = enabled
+                                preferencesManager.notificationsEnabled = enabled
+                            }
+                        )
+                    }
+                }
+            }
+
             // Privacy & Assessment Settings Section
             Card(
                 modifier = Modifier.fillMaxWidth(),

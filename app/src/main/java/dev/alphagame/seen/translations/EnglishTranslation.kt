@@ -129,6 +129,8 @@ class EnglishTranslation : Translation() {
     override val onboardingPrivacyDesc = "All your data stays on your device. We never collect, store, or share your personal information."
     override val onboardingNoAdsTitle = "No Advertisements"
     override val onboardingNoAdsDesc = "Enjoy a distraction-free experience. This app is completely free and will never show any advertisements."
+    override val onboardingNotificationsTitle = "Stay Connected"
+    override val onboardingNotificationsDesc = "Allow notifications to receive reminders for your mental health check-ins and important app updates. You can change this anytime in settings."
     override val next = "Next"
 
     // Common
