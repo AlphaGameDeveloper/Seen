@@ -29,6 +29,8 @@ import dev.alphagame.seen.screens.MoodHistoryScreen
 import dev.alphagame.seen.screens.DatabaseDebugScreen
 import dev.alphagame.seen.screens.OnboardingScreen
 import dev.alphagame.seen.ui.theme.SeenTheme
+import dev.alphagame.seen.translations.TranslationProvider
+import dev.alphagame.seen.translations.rememberTranslation
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +40,7 @@ class MainActivity : ComponentActivity() {
             val context = LocalContext.current
             val preferencesManager = remember { PreferencesManager(context) }
             var themeMode by remember { mutableStateOf(preferencesManager.themeMode) }
+            var languageMode by remember { mutableStateOf(preferencesManager.language) }
 
             val darkTheme = when (themeMode) {
                 PreferencesManager.THEME_DARK -> true
@@ -46,21 +49,33 @@ class MainActivity : ComponentActivity() {
             }
 
             SeenTheme(darkTheme = darkTheme) {
-                SeenApplication(
-                    onThemeChanged = { newTheme ->
-                        themeMode = newTheme
-                        preferencesManager.themeMode = newTheme
-                    }
-                )
+                TranslationProvider {
+                    SeenApplication(
+                        onThemeChanged = { newTheme ->
+                            themeMode = newTheme
+                            preferencesManager.themeMode = newTheme
+                        },
+                        onLanguageChanged = { newLanguage ->
+                            languageMode = newLanguage
+                            preferencesManager.language = newLanguage
+                            // Force recomposition by recreating the activity
+                            recreate()
+                        }
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-fun SeenApplication(onThemeChanged: (String) -> Unit = {}) {
+fun SeenApplication(
+    onThemeChanged: (String) -> Unit = {},
+    onLanguageChanged: (String) -> Unit = {}
+) {
     val context = LocalContext.current
     val preferencesManager = remember { PreferencesManager(context) }
+    val translation = rememberTranslation()
 
     val questions = PHQ9Data.questions
     val options = PHQ9Data.options
@@ -134,10 +149,10 @@ fun SeenApplication(onThemeChanged: (String) -> Unit = {}) {
             "quiz" -> {
                 if (currentQuestion < questions.size) {
                     QuestionScreen(
-                        question = questions[currentQuestion].text,
+                        question = PHQ9Data.getQuestionText(currentQuestion, translation),
                         questionIndex = currentQuestion,
                         totalQuestions = questions.size,
-                        options = options.map { it.text to it.score },
+                        options = options.map { PHQ9Data.getOptionText(it.score, translation) to it.score },
                         onAnswerSelected = { score ->
                             scores.add(score)
                             currentQuestion++
@@ -167,7 +182,8 @@ fun SeenApplication(onThemeChanged: (String) -> Unit = {}) {
                     onBackToHome = {
                         navigateBack()
                     },
-                    onThemeChanged = onThemeChanged
+                    onThemeChanged = onThemeChanged,
+                    onLanguageChanged = onLanguageChanged
                 )
             }
             "mood_history" -> {

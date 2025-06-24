@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.alphagame.seen.data.MoodEntry
 import dev.alphagame.seen.data.WidgetMoodManager
+import dev.alphagame.seen.translations.rememberTranslation
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -26,6 +27,7 @@ fun MoodHistoryScreen(
     onBackClick: () -> Unit
 ) {
     val context = LocalContext.current
+    val translation = rememberTranslation()
     val widgetMoodManager = remember { WidgetMoodManager(context) }
     var moodEntries by remember { mutableStateOf<List<MoodEntry>>(emptyList()) }
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -49,12 +51,12 @@ fun MoodHistoryScreen(
             IconButton(onClick = onBackClick) {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = translation.back,
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }
             Text(
-                text = "Mood History",
+                text = translation.moodHistory,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -66,7 +68,7 @@ fun MoodHistoryScreen(
             ) {
                 Icon(
                     Icons.Default.Delete,
-                    contentDescription = "Clear History",
+                    contentDescription = translation.clearHistory,
                     tint = if (moodEntries.isNotEmpty()) MaterialTheme.colorScheme.onSurface
                            else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                 )
@@ -77,7 +79,7 @@ fun MoodHistoryScreen(
 
         // Statistics
         if (moodEntries.isNotEmpty()) {
-            MoodStatistics(moodEntries = moodEntries)
+            MoodStatistics(moodEntries = moodEntries, translation = translation)
             Spacer(modifier = Modifier.height(16.dp))
         }
 
@@ -88,7 +90,7 @@ fun MoodHistoryScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "No mood entries yet.\nUse the widget to start tracking!",
+                    text = translation.noMoodData,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -98,6 +100,7 @@ fun MoodHistoryScreen(
                 items(moodEntries) { entry ->
                     MoodEntryItem(
                         entry = entry,
+                        translation = translation,
                         onDeleteClick = { entryToDelete ->
                             widgetMoodManager.deleteMoodEntry(entryToDelete.timestamp)
                             moodEntries = widgetMoodManager.getMoodEntries()
@@ -113,8 +116,8 @@ fun MoodHistoryScreen(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Clear Mood History") },
-            text = { Text("Are you sure you want to delete all mood entries? This action cannot be undone.") },
+            title = { Text(translation.clearMoodHistory) },
+            text = { Text(translation.clearMoodHistoryConfirmation) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -123,12 +126,12 @@ fun MoodHistoryScreen(
                         showDeleteDialog = false
                     }
                 ) {
-                    Text("Delete")
+                    Text(translation.delete)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteDialog = false }) {
-                    Text("Cancel")
+                    Text(translation.cancel)
                 }
             }
         )
@@ -136,7 +139,10 @@ fun MoodHistoryScreen(
 }
 
 @Composable
-private fun MoodStatistics(moodEntries: List<MoodEntry>) {
+private fun MoodStatistics(
+    moodEntries: List<MoodEntry>,
+    translation: dev.alphagame.seen.translations.Translation
+) {
     val todaysMoods = remember(moodEntries) {
         val today = Calendar.getInstance()
         today.set(Calendar.HOUR_OF_DAY, 0)
@@ -158,7 +164,7 @@ private fun MoodStatistics(moodEntries: List<MoodEntry>) {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "Today's Stats",
+                text = translation.todaysStats,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -168,14 +174,14 @@ private fun MoodStatistics(moodEntries: List<MoodEntry>) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Entries today: ${todaysMoods.size}")
-                Text("Total entries: ${moodEntries.size}")
+                Text(String.format(translation.entriesToday, todaysMoods.size))
+                Text(String.format(translation.totalEntries, moodEntries.size))
             }
 
             if (todaysMoods.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Today's moods: ${todaysMoods.joinToString(" ") { it.mood.emoji }}",
+                    text = String.format(translation.todaysMoods, todaysMoods.joinToString(" ") { it.mood.emoji }),
                     fontSize = 16.sp
                 )
             }
@@ -186,6 +192,7 @@ private fun MoodStatistics(moodEntries: List<MoodEntry>) {
 @Composable
 private fun MoodEntryItem(
     entry: MoodEntry,
+    translation: dev.alphagame.seen.translations.Translation,
     onDeleteClick: (MoodEntry) -> Unit
 ) {
     val dateFormat = remember { SimpleDateFormat("MMM dd, yyyy 'at' HH:mm", Locale.getDefault()) }
@@ -229,7 +236,7 @@ private fun MoodEntryItem(
             ) {
                 Icon(
                     Icons.Default.Delete,
-                    contentDescription = "Delete this mood entry",
+                    contentDescription = translation.deleteMoodEntry,
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -240,9 +247,9 @@ private fun MoodEntryItem(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Delete Mood Entry") },
+            title = { Text(translation.deleteMoodEntry) },
             text = {
-                Text("Are you sure you want to delete this ${entry.mood.label} mood entry from ${dateFormat.format(entry.timestamp)}?")
+                Text(String.format(translation.deleteMoodEntryConfirmation, entry.mood.label, dateFormat.format(entry.timestamp)))
             },
             confirmButton = {
                 TextButton(
@@ -251,12 +258,12 @@ private fun MoodEntryItem(
                         showDeleteDialog = false
                     }
                 ) {
-                    Text("Delete")
+                    Text(translation.delete)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteDialog = false }) {
-                    Text("Cancel")
+                    Text(translation.cancel)
                 }
             }
         )

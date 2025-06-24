@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.alphagame.seen.translations.rememberTranslation
 
 @Composable
 fun WelcomeScreen(
@@ -23,6 +24,7 @@ fun WelcomeScreen(
     onSecretDebugScreen: () -> Unit = {}
 ) {
     val context = LocalContext.current
+    val translation = rememberTranslation()
     var clickCount by remember { mutableStateOf(0) }
 
     // Reset click count after 30 seconds of inactivity
@@ -43,7 +45,7 @@ fun WelcomeScreen(
     ) {
         // App Title
         Text(
-            text = "Seen",
+            text = translation.appName,
             fontSize = 64.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary,
@@ -78,7 +80,7 @@ fun WelcomeScreen(
 
         // Subtitle
         Text(
-            text = "Mental Health Matters",
+            text = translation.welcomeSubtitle,
             fontSize = 18.sp,
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
             textAlign = TextAlign.Center
@@ -145,7 +147,7 @@ fun WelcomeScreen(
             )
         ) {
             Text(
-                text = "Take PHQ-9 Assessment",
+                text = translation.startQuiz,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold
             )
@@ -167,7 +169,7 @@ fun WelcomeScreen(
             )
         ) {
             Text(
-                text = "📝 My Notes",
+                text = "📝 ${translation.viewNotes}",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold
             )
@@ -189,7 +191,7 @@ fun WelcomeScreen(
             )
         ) {
             Text(
-                text = "😊 Mood History",
+                text = "😊 ${translation.viewMoodHistory}",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold
             )

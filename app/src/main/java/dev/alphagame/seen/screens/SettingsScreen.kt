@@ -24,28 +24,34 @@ import androidx.compose.ui.unit.sp
 import dev.alphagame.seen.data.AppVersionInfo
 import dev.alphagame.seen.data.DatabaseHelper
 import dev.alphagame.seen.data.PreferencesManager
+import dev.alphagame.seen.translations.Translation
+import dev.alphagame.seen.translations.rememberTranslation
 import dev.alphagame.seen.data.WidgetMoodManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     onBackToHome: () -> Unit,
-    onThemeChanged: (String) -> Unit = {}
+    onThemeChanged: (String) -> Unit = {},
+    onLanguageChanged: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
     val hapticFeedback = LocalHapticFeedback.current
     val preferencesManager = remember { PreferencesManager(context) }
     val databaseHelper = remember { DatabaseHelper(context) }
     val widgetMoodManager = remember { WidgetMoodManager(context) }
+    val translation = rememberTranslation()
 
     var currentTheme by remember { mutableStateOf(preferencesManager.themeMode) }
+    var currentLanguage by remember { mutableStateOf(preferencesManager.language) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showDeleteConfirmationDialog by remember { mutableStateOf(false) }
     var refreshKey by remember { mutableStateOf(0) } // Force refresh after data deletion
 
     // Keep local state in sync with preference changes
-    LaunchedEffect(preferencesManager.themeMode, refreshKey) {
+    LaunchedEffect(preferencesManager.themeMode, preferencesManager.language, refreshKey) {
         currentTheme = preferencesManager.themeMode
+        currentLanguage = preferencesManager.language
     }
 
     Column(
@@ -57,7 +63,7 @@ fun SettingsScreen(
         TopAppBar(
             title = {
                 Text(
-                    text = "Settings",
+                    text = translation.settings,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -97,7 +103,7 @@ fun SettingsScreen(
                     modifier = Modifier.padding(20.dp)
                 ) {
                     Text(
-                        text = "About",
+                        text = translation.about,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -142,7 +148,7 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = "Created by Damien Boisvert & Alexander Cameron",
+                        text = translation.createdBy,
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     )
@@ -161,7 +167,7 @@ fun SettingsScreen(
                     modifier = Modifier.padding(20.dp)
                 ) {
                     Text(
-                        text = "Appearance",
+                        text = translation.appearance,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -170,7 +176,7 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
-                        text = "Color Scheme",
+                        text = translation.colorScheme,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onSurface
@@ -179,9 +185,9 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     val themeOptions = listOf(
-                        "auto" to "Auto (System)",
-                        "light" to "Light",
-                        "dark" to "Dark"
+                        "auto" to translation.themeAuto,
+                        "light" to translation.themeLight,
+                        "dark" to translation.themeDark
                     )
 
                     themeOptions.forEach { (value, label) ->
@@ -205,6 +211,62 @@ fun SettingsScreen(
                         ) {
                             RadioButton(
                                 selected = currentTheme == value,
+                                onClick = null
+                            )
+                            Text(
+                                text = label,
+                                modifier = Modifier.padding(start = 8.dp),
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    }
+                }
+            }
+
+            // Language Settings Section
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
+            ) {
+                Column(
+                    modifier = Modifier.padding(20.dp)
+                ) {
+                    Text(
+                        text = translation.language,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    val languageOptions = Translation.getAvailableLanguages()
+
+                    languageOptions.forEach { (code, label) ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .selectable(
+                                    selected = currentLanguage == code,
+                                    onClick = {
+                                        if (currentLanguage != code) {
+                                            hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                                            currentLanguage = code
+                                            preferencesManager.language = code
+                                            onLanguageChanged(code)
+                                        }
+                                    },
+                                    role = Role.RadioButton
+                                )
+                                .padding(vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = currentLanguage == code,
                                 onClick = null
                             )
                             Text(
@@ -427,14 +489,14 @@ fun SettingsScreen(
                         contentColor = MaterialTheme.colorScheme.onError
                     )
                 ) {
-                    Text("Delete All")
+                    Text(translation.deleteAll)
                 }
             },
             dismissButton = {
                 TextButton(
                     onClick = { showDeleteDialog = false }
                 ) {
-                    Text("Cancel")
+                    Text(translation.cancel)
                 }
             }
         )
@@ -449,14 +511,14 @@ fun SettingsScreen(
             },
             title = {
                 Text(
-                    text = "Data Deleted Successfully",
+                    text = translation.dataDeletedTitle,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.primary
                 )
             },
             text = {
                 Text(
-                    text = "All your data has been permanently deleted and settings have been reset to defaults. The application will now close.",
+                    text = translation.dataDeletedText,
                     lineHeight = 20.sp
                 )
             },
@@ -472,7 +534,7 @@ fun SettingsScreen(
                         contentColor = MaterialTheme.colorScheme.onPrimary
                     )
                 ) {
-                    Text("Continue")
+                    Text(translation.continueButton)
                 }
             }
         )

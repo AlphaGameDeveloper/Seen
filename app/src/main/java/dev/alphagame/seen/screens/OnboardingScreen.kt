@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.alphagame.seen.translations.rememberTranslation
 import kotlinx.coroutines.launch
 
 data class OnboardingPage(
@@ -34,30 +35,32 @@ data class OnboardingPage(
 fun OnboardingScreen(
     onOnboardingComplete: () -> Unit
 ) {
+    val translation = rememberTranslation()
+    
     val pages = listOf(
         OnboardingPage(
-            title = "Welcome to Seen",
-            description = "A simple, private mental health companion designed to help you track your wellbeing.",
+            title = translation.onboardingWelcomeTitle,
+            description = translation.onboardingWelcomeDesc,
             emoji = "👋"
         ),
         OnboardingPage(
-            title = "PHQ-9 Assessment",
-            description = "Take the clinically validated PHQ-9 questionnaire to assess your mental health and track changes over time.",
+            title = translation.onboardingPHQ9Title,
+            description = translation.onboardingPHQ9Desc,
             emoji = "📋"
         ),
         OnboardingPage(
-            title = "Personal Notes",
-            description = "Keep private notes about your thoughts, feelings, and daily experiences in a secure space.",
+            title = translation.onboardingNotesTitle,
+            description = translation.onboardingNotesDesc,
             emoji = "📝"
         ),
         OnboardingPage(
-            title = "Privacy First",
-            description = "Your data stays on your device. We don't collect, store, or share any of your personal information.",
+            title = translation.onboardingPrivacyTitle,
+            description = translation.onboardingPrivacyDesc,
             emoji = "🔒"
         ),
         OnboardingPage(
-            title = "No Advertisements",
-            description = "Enjoy a distraction-free experience. This app is completely free and will never show any advertisements.",
+            title = translation.onboardingNoAdsTitle,
+            description = translation.onboardingNoAdsDesc,
             emoji = "🚫"
         )
     )
@@ -84,7 +87,7 @@ fun OnboardingScreen(
                 onClick = onOnboardingComplete
             ) {
                 Text(
-                    text = "Skip",
+                    text = translation.onboardingSkip,
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                 )
             }
@@ -144,7 +147,7 @@ fun OnboardingScreen(
                     },
                     modifier = Modifier.width(100.dp)
                 ) {
-                    Text("Back")
+                    Text(translation.back)
                 }
             } else {
                 Spacer(modifier = Modifier.width(100.dp))
@@ -170,7 +173,7 @@ fun OnboardingScreen(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = if (isLastPage) "Get Started" else "Next",
+                        text = if (isLastPage) translation.onboardingContinue else translation.next,
                         fontWeight = FontWeight.SemiBold
                     )
                     Spacer(modifier = Modifier.width(8.dp))

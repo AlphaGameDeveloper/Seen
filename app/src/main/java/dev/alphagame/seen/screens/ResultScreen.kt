@@ -19,10 +19,12 @@ import androidx.compose.ui.unit.sp
 import dev.alphagame.seen.MainActivity
 import dev.alphagame.seen.data.NotesManager
 import dev.alphagame.seen.data.PreferencesManager
+import dev.alphagame.seen.translations.rememberTranslation
 
 @Composable
 fun ResultScreen(scores: List<Int>, onRetakeQuiz: () -> Unit) {
     val context = LocalContext.current
+    val translation = rememberTranslation()
     val notesManager = remember { NotesManager(context) }
     val preferencesManager = remember { PreferencesManager(context) }
 
@@ -34,12 +36,12 @@ fun ResultScreen(scores: List<Int>, onRetakeQuiz: () -> Unit) {
         .fillMaxWidth()
 
     val totalScore = scores.sum()
-    val (level, color) = when {
-        totalScore <= 4 -> "Minimal" to Color(0xFF6ECB63)
-        totalScore <= 9 -> "Mild" to Color(0xFFFFD700)
-        totalScore <= 14 -> "Moderate" to Color(0xFFFFA500)
-        totalScore <= 19 -> "Moderately Severe" to Color(0xFFFF6347)
-        else -> "Severe" to Color(0xFFFF3C38)
+    val (level, levelText, color) = when {
+        totalScore <= 4 -> Triple("Minimal", translation.resultMinimal, Color(0xFF6ECB63))
+        totalScore <= 9 -> Triple("Mild", translation.resultMild, Color(0xFFFFD700))
+        totalScore <= 14 -> Triple("Moderate", translation.resultModerate, Color(0xFFFFA500))
+        totalScore <= 19 -> Triple("Moderately Severe", translation.resultSevere, Color(0xFFFF6347))
+        else -> Triple("Severe", translation.resultSevere, Color(0xFFFF3C38))
     }
 
     // Save PHQ-9 data if enabled in settings
@@ -58,10 +60,10 @@ fun ResultScreen(scores: List<Int>, onRetakeQuiz: () -> Unit) {
         verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Your PHQ-9 Score:", fontSize = 20.sp, color = MaterialTheme.colorScheme.onBackground)
+        Text(String.format(translation.resultScore, totalScore), fontSize = 20.sp, color = MaterialTheme.colorScheme.onBackground)
         Text("$totalScore", fontSize = 64.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
-        Text("Depression Level: $level", fontSize = 20.sp, color = color)
-        Text("Individual scores: ${scores.joinToString(", ")}", fontSize = 16.sp, color = MaterialTheme.colorScheme.onBackground)
+        Text("$levelText", fontSize = 20.sp, color = color)
+        Text(String.format(translation.individualScores, scores.joinToString(", ")), fontSize = 16.sp, color = MaterialTheme.colorScheme.onBackground)
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.fillMaxWidth()
@@ -78,7 +80,7 @@ fun ResultScreen(scores: List<Int>, onRetakeQuiz: () -> Unit) {
                     containerColor = MaterialTheme.colorScheme.surface
                 )
             ) {
-                Text("📞 Talk to Someone – 988", color = MaterialTheme.colorScheme.onSurface)
+                Text(translation.talkToSomeone, color = MaterialTheme.colorScheme.onSurface)
             }
 
             Button(
@@ -92,7 +94,7 @@ fun ResultScreen(scores: List<Int>, onRetakeQuiz: () -> Unit) {
                     containerColor = MaterialTheme.colorScheme.surface
                 )
             ) {
-                Text("📚 Learn About Depression", color = MaterialTheme.colorScheme.onSurface)
+                Text(translation.learnAboutDepression, color = MaterialTheme.colorScheme.onSurface)
             }
 
             Button(
@@ -103,7 +105,7 @@ fun ResultScreen(scores: List<Int>, onRetakeQuiz: () -> Unit) {
                     containerColor = MaterialTheme.colorScheme.surface
                 )
             ) {
-                Text("🔄 Return to Home", color = MaterialTheme.colorScheme.onSurface)
+                Text(translation.returnToHome, color = MaterialTheme.colorScheme.onSurface)
             }
         }
     }

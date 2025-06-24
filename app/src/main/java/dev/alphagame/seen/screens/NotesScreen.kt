@@ -25,10 +25,12 @@ import dev.alphagame.seen.data.Note
 import dev.alphagame.seen.data.NotesManager
 import dev.alphagame.seen.data.Mood
 import dev.alphagame.seen.components.NoteItem
+import dev.alphagame.seen.translations.rememberTranslation
 
 @Composable
 fun NotesScreen(onBackToHome: () -> Unit) {
     val context = LocalContext.current
+    val translation = rememberTranslation()
     val configuration = LocalConfiguration.current
     val notesManager = remember { NotesManager(context) }
     var noteText by remember { mutableStateOf("") }
@@ -73,13 +75,13 @@ fun NotesScreen(onBackToHome: () -> Unit) {
                 IconButton(onClick = onBackToHome) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back",
+                        contentDescription = translation.back,
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
 
                 Text(
-                    text = "My Notes",
+                    text = translation.notes,
                     fontSize = titleSize,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary,
@@ -94,7 +96,7 @@ fun NotesScreen(onBackToHome: () -> Unit) {
                     ) {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = "Add Note",
+                            contentDescription = translation.addNote,
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
@@ -120,6 +122,7 @@ fun NotesScreen(onBackToHome: () -> Unit) {
                         AddNoteCard(
                             noteText = noteText,
                             selectedMood = selectedMood,
+                            translation = translation,
                             onNoteTextChange = { noteText = it },
                             onMoodSelected = { mood ->
                                 selectedMood = if (selectedMood == mood) null else mood
@@ -163,7 +166,7 @@ fun NotesScreen(onBackToHome: () -> Unit) {
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Add Note",
+                    contentDescription = translation.addNote,
                     tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
@@ -175,6 +178,7 @@ fun NotesScreen(onBackToHome: () -> Unit) {
 private fun AddNoteCard(
     noteText: String,
     selectedMood: Mood?,
+    translation: dev.alphagame.seen.translations.Translation,
     onNoteTextChange: (String) -> Unit,
     onMoodSelected: (Mood) -> Unit,
     onSaveNote: () -> Unit,
@@ -201,7 +205,7 @@ private fun AddNoteCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Add New Note",
+                    text = translation.addNote,
                     fontSize = if (isCompact) 18.sp else 20.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.primary
@@ -209,7 +213,7 @@ private fun AddNoteCard(
 
                 onCancel?.let {
                     TextButton(onClick = it) {
-                        Text("Cancel")
+                        Text(translation.cancel)
                     }
                 }
             }
@@ -218,7 +222,7 @@ private fun AddNoteCard(
 
             // Mood selection
             Text(
-                text = "How are you feeling?",
+                text = translation.howAreYouFeeling,
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                 fontWeight = FontWeight.Medium
@@ -260,7 +264,7 @@ private fun AddNoteCard(
                     .heightIn(min = if (isCompact) 100.dp else 120.dp),
                 placeholder = {
                     Text(
-                        text = "Write your thoughts here...",
+                        text = translation.noteHint,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                     )
                 },
@@ -288,7 +292,7 @@ private fun AddNoteCard(
                 enabled = noteText.isNotBlank()
             ) {
                 Text(
-                    text = "💾 Save Note",
+                    text = translation.saveNote,
                     fontSize = if (isCompact) 14.sp else 16.sp,
                     fontWeight = FontWeight.SemiBold
                 )

@@ -15,11 +15,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.alphagame.seen.data.Note
 import dev.alphagame.seen.data.Mood
+import dev.alphagame.seen.translations.rememberTranslation
 import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
 fun NoteItem(note: Note, onDelete: () -> Unit) {
+    val translation = rememberTranslation()
     val configuration = LocalConfiguration.current
     val isCompact = configuration.screenWidthDp.dp < 600.dp
     val dateFormat = SimpleDateFormat(
@@ -75,7 +77,7 @@ fun NoteItem(note: Note, onDelete: () -> Unit) {
                 ) {
                     Icon(
                         imageVector = Icons.Default.Delete,
-                        contentDescription = "Delete note",
+                        contentDescription = translation.deleteNote,
                         tint = MaterialTheme.colorScheme.error,
                         modifier = Modifier.size(if (isCompact) 18.dp else 20.dp)
                     )

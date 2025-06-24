@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.alphagame.seen.translations.rememberTranslation
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -28,6 +29,8 @@ fun QuestionScreen(
     options: List<Pair<String, Int>>,
     onAnswerSelected: (Int) -> Unit
 ) {
+    val translation = rememberTranslation()
+    
     val buttonModifier = Modifier
         .border(
             width = 1.dp,
@@ -52,7 +55,7 @@ fun QuestionScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Question ${questionIndex + 1} of $totalQuestions",
+                text = String.format(translation.questionProgress, questionIndex + 1, totalQuestions),
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.onBackground
             )
