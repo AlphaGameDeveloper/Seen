@@ -208,9 +208,12 @@ Version not found
 - `app/src/main/java/dev/alphagame/seen/data/VersionChecker.kt`
 - `app/src/main/java/dev/alphagame/seen/workers/UpdateCheckWorker.kt`
 - `app/src/main/java/dev/alphagame/seen/data/UpdateCheckManager.kt`
+- `app/src/main/java/dev/alphagame/seen/receivers/ManualWorkerTriggerReceiver.kt` - BroadcastReceiver for manual triggers
+- `app/src/main/java/dev/alphagame/seen/utils/ManualUpdateTrigger.kt` - Utility for triggering manual updates
 
 ### Modified Files
 - `app/build.gradle.kts` - Added WorkManager dependency
+- `app/src/main/AndroidManifest.xml` - Added BroadcastReceiver registration
 - `app/src/main/java/dev/alphagame/seen/translations/Translation.kt` - Added notification strings
 - `app/src/main/java/dev/alphagame/seen/translations/EnglishTranslation.kt` - English translations
 - `app/src/main/java/dev/alphagame/seen/translations/FrenchTranslation.kt` - French translations
@@ -277,16 +280,19 @@ SettingsScreen: Update available: [true/false]
 **Problem**: Background service is running but notifications aren't appearing.
 
 **Possible Causes**:
-1. Android system notification permissions revoked
-2. App in battery optimization (Doze mode)
-3. Notification channel disabled
-4. No actual update available
+1. **Do Not Disturb Mode**: Most common cause - check if DND is enabled
+2. Android system notification permissions revoked
+3. App in battery optimization (Doze mode)
+4. Notification channel disabled
+5. No actual update available
 
 **Debug Steps**:
-1. Check Android notification settings for the app
-2. Disable battery optimization for the app
-3. Use the test button to manually trigger a check
-4. Check logcat for worker execution logs
+1. **Check Do Not Disturb**: `adb shell settings get global zen_mode` (should be 0)
+2. **Disable DND if needed**: `adb shell settings put global zen_mode 0`
+3. Check Android notification settings for the app
+4. Disable battery optimization for the app
+5. Use the test button to manually trigger a check
+6. Check logcat for worker execution logs
 
 #### Version Comparison Issues
 **Problem**: App reports no update available when one should exist.
@@ -315,12 +321,16 @@ Key log messages to look for:
 
 1. **Enable Settings**: Turn on both notification toggles in Settings
 2. **Use Test Button**: Tap "🧪 Test Background Update Check" to manually test
-3. **Check Logs**: Monitor logcat for debug messages
-4. **Verify Server**: Test the endpoint manually:
+3. **Use ADB Command**: Trigger externally with `adb shell am broadcast -a dev.alphagame.seen.TRIGGER_UPDATE_CHECK -n dev.alphagame.seen/.receivers.ManualWorkerTriggerReceiver`
+4. **Check Logs**: Monitor logcat for debug messages:
+   ```bash
+   adb logcat -s UpdateCheck UpdateCheckWorker UpdateCheckManager VersionChecker ManualWorkerTrigger
+   ```
+5. **Verify Server**: Test the endpoint manually:
    ```bash
    curl https://seen.alphagame.dev/latestVersionTag
    ```
-5. **Wait for Background Check**: Service runs every 15 minutes (Android WorkManager minimum interval)
+6. **Wait for Background Check**: Service runs every 15 minutes (Android WorkManager minimum interval)
 
 ### Important Notes
 
@@ -339,3 +349,18 @@ For immediate testing of the update notification functionality:
 1. Use the "🧪 Test Background Update Check" button in Settings
 2. Monitor logcat for real-time feedback
 3. The background service will start working after 15 minutes of the app being backgrounded
+4. **NEW**: Use the manual trigger via ADB command for external testing
+
+#### Manual Trigger via ADB
+You can manually trigger an update check from the command line using ADB:
+```bash
+adb shell am broadcast -a dev.alphagame.seen.TRIGGER_UPDATE_CHECK -n dev.alphagame.seen/.receivers.ManualWorkerTriggerReceiver
+```
+
+This is useful for:
+- Automated testing scripts
+- CI/CD pipelines
+- Remote debugging
+- Testing without opening the app
+
+**Note**: The device must be connected via ADB and the app must be installed for this to work.

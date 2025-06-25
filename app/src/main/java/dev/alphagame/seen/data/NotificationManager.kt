@@ -85,8 +85,11 @@ class SeenNotificationManager(private val context: Context) {
 
     fun sendUpdateNotification(title: String, message: String) {
         if (!preferencesManager.notificationsEnabled) {
+            android.util.Log.d("SeenNotificationManager", "Notifications disabled, skipping update notification")
             return
         }
+
+        android.util.Log.d("SeenNotificationManager", "Sending update notification: $title - $message")
 
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -112,9 +115,13 @@ class SeenNotificationManager(private val context: Context) {
 
         try {
             NotificationManagerCompat.from(context).notify(NOTIFICATION_ID_UPDATE, notification)
+            android.util.Log.d("SeenNotificationManager", "Update notification sent successfully")
         } catch (e: SecurityException) {
             // Permission was revoked or notification channel is blocked
+            android.util.Log.e("SeenNotificationManager", "Failed to send update notification: Security exception", e)
             preferencesManager.notificationsEnabled = false
+        } catch (e: Exception) {
+            android.util.Log.e("SeenNotificationManager", "Failed to send update notification: Unexpected error", e)
         }
     }
 

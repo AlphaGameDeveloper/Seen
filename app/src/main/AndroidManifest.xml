@@ -40,6 +40,15 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/mood_widget_info" />
         </receiver>
+
+        <!-- Manual Update Check Trigger -->
+        <receiver
+            android:name=".receivers.ManualWorkerTriggerReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="dev.alphagame.seen.TRIGGER_UPDATE_CHECK" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

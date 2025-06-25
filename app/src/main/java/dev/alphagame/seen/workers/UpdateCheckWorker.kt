@@ -32,6 +32,7 @@ class UpdateCheckWorker(
             }
 
             // Check if notifications are enabled
+            Log.d(TAG, "Checking notification preferences: enabled=${preferencesManager.notificationsEnabled}")
             if (!preferencesManager.notificationsEnabled) {
                 Log.d(TAG, "Notifications disabled, skipping update check")
                 return Result.success()
@@ -56,10 +57,15 @@ class UpdateCheckWorker(
                     translation.updateNotificationMessage
                 }
 
+                Log.d(TAG, "About to send notification with title: ${translation.updateNotificationTitle}")
+                Log.d(TAG, "Notification message: $notificationMessage")
+
                 notificationManager.sendUpdateNotification(
                     title = translation.updateNotificationTitle,
                     message = notificationMessage
                 )
+
+                Log.d(TAG, "Notification send call completed")
             } else {
                 Log.d(TAG, "No update available")
             }
