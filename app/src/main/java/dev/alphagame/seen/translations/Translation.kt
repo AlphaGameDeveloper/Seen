@@ -124,6 +124,26 @@ abstract class Translation {
     abstract val error: String
     abstract val loading: String
 
+    // Update Check
+    abstract val checkForUpdates: String
+    abstract val checkingForUpdates: String
+    abstract val updateAvailable: String
+    abstract val requiredUpdate: String
+    abstract val noUpdatesAvailable: String
+    abstract val noUpdatesAvailableMessage: String
+    abstract val updateCheckFailed: String
+    abstract val updateCheckFailedMessage: String
+    abstract val noInternetConnection: String
+    abstract val noInternetConnectionMessage: String
+    abstract val internetTroubleshootingTips: String
+    abstract val updateNow: String
+    abstract val updateLater: String
+    abstract val downloadUpdate: String
+    abstract val whatsNew: String
+    abstract val currentVersion: String
+    abstract val latestVersion: String
+    abstract val updateRequired: String
+
     companion object {
         const val ENGLISH = "en"
         const val FRENCH = "fr"

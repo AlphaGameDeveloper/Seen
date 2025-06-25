@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.alphagame.seen.components.UpdateDialog
+import dev.alphagame.seen.components.NoInternetDialog
 import dev.alphagame.seen.data.AppVersionInfo
 import dev.alphagame.seen.data.DatabaseHelper
 import dev.alphagame.seen.data.PreferencesManager
@@ -58,6 +59,7 @@ fun SettingsScreen(
     var showUpdateDialog by remember { mutableStateOf(false) }
     var showNoUpdateDialog by remember { mutableStateOf(false) }
     var showUpdateErrorDialog by remember { mutableStateOf(false) }
+    var showNetworkErrorDialog by remember { mutableStateOf(false) }
     var updateInfo by remember { mutableStateOf<UpdateInfo?>(null) }
 
     // Keep local state in sync with preference changes
@@ -181,6 +183,9 @@ fun SettingsScreen(
                                         is UpdateChecker.UpdateCheckResult.NoUpdate -> {
                                             showNoUpdateDialog = true
                                         }
+                                        is UpdateChecker.UpdateCheckResult.NetworkError -> {
+                                            showNetworkErrorDialog = true
+                                        }
                                         is UpdateChecker.UpdateCheckResult.Error -> {
                                             showUpdateErrorDialog = true
                                         }
@@ -200,7 +205,7 @@ fun SettingsScreen(
                                 strokeWidth = 2.dp
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Checking for Updates...")
+                            Text(translation.checkingForUpdates)
                         } else {
                             Icon(
                                 imageVector = Icons.Default.Refresh,
@@ -208,7 +213,7 @@ fun SettingsScreen(
                                 modifier = Modifier.size(18.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Check for Updates")
+                            Text(translation.checkForUpdates)
                         }
                     }
                 }
@@ -677,14 +682,14 @@ fun SettingsScreen(
             onDismissRequest = { showNoUpdateDialog = false },
             title = {
                 Text(
-                    text = "You're All Up to Date!",
+                    text = translation.noUpdatesAvailable,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.primary
                 )
             },
             text = {
                 Text(
-                    text = "You are running the latest version of the app. No updates are available at this time.",
+                    text = translation.noUpdatesAvailableMessage,
                     lineHeight = 20.sp
                 )
             },
@@ -692,7 +697,7 @@ fun SettingsScreen(
                 Button(
                     onClick = { showNoUpdateDialog = false }
                 ) {
-                    Text("OK")
+                    Text(translation.ok)
                 }
             }
         )
@@ -704,14 +709,14 @@ fun SettingsScreen(
             onDismissRequest = { showUpdateErrorDialog = false },
             title = {
                 Text(
-                    text = "Update Check Failed",
+                    text = translation.updateCheckFailed,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.error
                 )
             },
             text = {
                 Text(
-                    text = "Unable to check for updates. Please check your internet connection and try again later.",
+                    text = translation.updateCheckFailedMessage,
                     lineHeight = 20.sp
                 )
             },
@@ -719,9 +724,16 @@ fun SettingsScreen(
                 Button(
                     onClick = { showUpdateErrorDialog = false }
                 ) {
-                    Text("OK")
+                    Text(translation.ok)
                 }
             }
+        )
+    }
+
+    // Network Error Dialog
+    if (showNetworkErrorDialog) {
+        NoInternetDialog(
+            onDismiss = { showNetworkErrorDialog = false }
         )
     }
 }

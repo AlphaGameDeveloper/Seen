@@ -100,18 +100,81 @@ class UpdateChecker(private val context: Context) {
 
     // New method for Compose UI - returns result instead of showing dialogs
     suspend fun checkForUpdatesForCompose(): UpdateCheckResult {
-        val updateInfo = checkForUpdates()
+        return withContext(Dispatchers.IO) {
+            try {
+                val UPDATE_URL = "https://seen.alphagame.dev/update-check?currentVersion=${AppVersionInfo.VERSION_NAME}&currentVersionCode=${AppVersionInfo.VERSION_CODE}&gitCommit=${AppVersionInfo.GIT_COMMIT}&gitBranch=${AppVersionInfo.GIT_BRANCH}"
+                Log.d(TAG, "Checking for updates at $UPDATE_URL")
 
-        return when {
-            updateInfo == null -> UpdateCheckResult.Error
-            updateInfo.isUpdateAvailable -> UpdateCheckResult.UpdateAvailable(updateInfo)
-            else -> UpdateCheckResult.NoUpdate
+                val request = Request.Builder()
+                    .url(UPDATE_URL)
+                    .addHeader("User-Agent", "Seen-Android/${AppVersionInfo.VERSION_NAME}")
+                    .build()
+
+                val response = client.newCall(request).execute()
+
+                if (!response.isSuccessful) {
+                    Log.w(TAG, "Update check failed with code: ${response.code}")
+                    return@withContext UpdateCheckResult.Error
+                }
+
+                val responseBody = response.body?.string()
+                if (responseBody.isNullOrEmpty()) {
+                    Log.w(TAG, "Empty response from update server")
+                    return@withContext UpdateCheckResult.Error
+                }
+
+                Log.d(TAG, "Update response: $responseBody")
+
+                val updateResponse = try {
+                    gson.fromJson(responseBody, UpdateResponse::class.java)
+                } catch (e: JsonSyntaxException) {
+                    Log.e(TAG, "Failed to parse update response JSON", e)
+                    return@withContext UpdateCheckResult.Error
+                }
+
+                val currentVersion = AppVersionInfo.VERSION_NAME
+                val currentVersionCode = AppVersionInfo.VERSION_CODE
+
+                Log.d(TAG, "Current version: $currentVersion (code: $currentVersionCode)")
+                Log.d(TAG, "Latest version: ${updateResponse.version} (code: ${updateResponse.versionCode})")
+
+                val isUpdateAvailable = updateResponse.versionCode > currentVersionCode
+
+                val updateInfo = UpdateInfo(
+                    latestVersion = updateResponse.version,
+                    currentVersion = currentVersion,
+                    isUpdateAvailable = isUpdateAvailable,
+                    downloadUrl = updateResponse.downloadUrl,
+                    releaseNotes = updateResponse.releaseNotes,
+                    isForceUpdate = updateResponse.forceUpdate,
+                    minimumRequiredVersion = updateResponse.minimumRequiredVersion
+                )
+
+                when {
+                    updateInfo.isUpdateAvailable -> UpdateCheckResult.UpdateAvailable(updateInfo)
+                    else -> UpdateCheckResult.NoUpdate
+                }
+
+            } catch (e: java.net.UnknownHostException) {
+                Log.e(TAG, "Network error - no internet connection", e)
+                UpdateCheckResult.NetworkError
+            } catch (e: java.net.ConnectException) {
+                Log.e(TAG, "Network error - connection failed", e)
+                UpdateCheckResult.NetworkError
+            } catch (e: java.net.SocketTimeoutException) {
+                Log.e(TAG, "Network error - timeout", e)
+                UpdateCheckResult.NetworkError
+            } catch (e: Exception) {
+                Log.e(TAG, "Error checking for updates", e)
+                UpdateCheckResult.Error
+            }
         }
     }
 
     sealed class UpdateCheckResult {
         object NoUpdate : UpdateCheckResult()
         object Error : UpdateCheckResult()
+        object NetworkError : UpdateCheckResult()
         data class UpdateAvailable(val updateInfo: UpdateInfo) : UpdateCheckResult()
     }
 

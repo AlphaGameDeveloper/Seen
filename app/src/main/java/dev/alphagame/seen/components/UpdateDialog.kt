@@ -2,10 +2,17 @@ package dev.alphagame.seen.components
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.alphagame.seen.data.UpdateInfo
 import dev.alphagame.seen.translations.rememberTranslation
@@ -17,6 +24,7 @@ fun UpdateDialog(
     onUpdateLater: () -> Unit = {}
 ) {
     val context = LocalContext.current
+    val translation = rememberTranslation()
 
     // Add logging to see if dialog is being created
     android.util.Log.d("UpdateDialog", "UpdateDialog being shown for version ${updateInfo.latestVersion}")
@@ -25,7 +33,7 @@ fun UpdateDialog(
         onDismissRequest = if (updateInfo.isForceUpdate) { {} } else onDismiss,
         title = {
             Text(
-                text = if (updateInfo.isForceUpdate) "Required Update" else "Update Available",
+                text = if (updateInfo.isForceUpdate) translation.requiredUpdate else translation.updateAvailable,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 18.sp
             )
@@ -33,14 +41,14 @@ fun UpdateDialog(
         text = {
             val message = buildString {
                 append("A new version (${updateInfo.latestVersion}) is available!")
-                append("\nCurrent version: ${updateInfo.currentVersion}")
+                append("\n${translation.currentVersion} ${updateInfo.currentVersion}")
 
                 if (!updateInfo.releaseNotes.isNullOrEmpty()) {
-                    append("\n\nWhat's new:\n${updateInfo.releaseNotes}")
+                    append("\n\n${translation.whatsNew}\n${updateInfo.releaseNotes}")
                 }
 
                 if (updateInfo.isForceUpdate) {
-                    append("\n\nThis update is required to continue using the app.")
+                    append("\n\n${translation.updateRequired}")
                 }
             }
 
@@ -63,7 +71,7 @@ fun UpdateDialog(
                     }
                 }
             ) {
-                Text(if (updateInfo.isForceUpdate) "Update Now" else "Update")
+                Text(if (updateInfo.isForceUpdate) translation.updateNow else translation.downloadUpdate)
             }
         },
         dismissButton = if (!updateInfo.isForceUpdate) {
@@ -72,9 +80,63 @@ fun UpdateDialog(
                     onUpdateLater()
                     onDismiss()
                 }) {
-                    Text("Later")
+                    Text(translation.updateLater)
                 }
             }
         } else null
+    )
+}
+
+@Composable
+fun NoInternetDialog(
+    onDismiss: () -> Unit
+) {
+    val translation = rememberTranslation()
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.size(24.dp)
+                )
+                Text(
+                    text = translation.noInternetConnection,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        },
+        text = {
+            Column {
+                Text(
+                    text = translation.noInternetConnectionMessage,
+                    fontSize = 14.sp,
+                    lineHeight = 18.sp,
+                    textAlign = TextAlign.Start
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = translation.internetTroubleshootingTips,
+                    fontSize = 13.sp,
+                    lineHeight = 16.sp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = onDismiss
+            ) {
+                Text(translation.ok)
+            }
+        }
     )
 }
