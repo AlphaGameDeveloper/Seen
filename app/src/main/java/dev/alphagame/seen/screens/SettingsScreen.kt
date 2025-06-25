@@ -28,6 +28,7 @@ import dev.alphagame.seen.data.AppVersionInfo
 import dev.alphagame.seen.data.DatabaseHelper
 import dev.alphagame.seen.data.PreferencesManager
 import dev.alphagame.seen.data.UpdateChecker
+import dev.alphagame.seen.data.UpdateCheckManager
 import dev.alphagame.seen.data.UpdateInfo
 import dev.alphagame.seen.data.WidgetMoodManager
 import dev.alphagame.seen.translations.Translation
@@ -47,6 +48,7 @@ fun SettingsScreen(
     val databaseHelper = remember { DatabaseHelper(context) }
     val widgetMoodManager = remember { WidgetMoodManager(context) }
     val updateChecker = remember { UpdateChecker(context) }
+    val updateCheckManager = remember { UpdateCheckManager(context) }
     val translation = rememberTranslation()
     val scope = rememberCoroutineScope()
 
@@ -394,6 +396,59 @@ fun SettingsScreen(
                                 hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
                                 notificationsEnabled = enabled
                                 preferencesManager.notificationsEnabled = enabled
+
+                                // Start or stop background update checks based on notification permission
+                                if (enabled && preferencesManager.backgroundUpdateChecksEnabled) {
+                                    updateCheckManager.startBackgroundUpdateChecks()
+                                } else if (!enabled) {
+                                    updateCheckManager.stopBackgroundUpdateChecks()
+                                }
+                            }
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Background Update Checks Setting
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(
+                                text = translation.enableBackgroundUpdateChecks,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = translation.enableBackgroundUpdateChecksDescription,
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                                lineHeight = 16.sp
+                            )
+                        }
+
+                        var backgroundUpdateChecksEnabled by remember(refreshKey) {
+                            mutableStateOf(preferencesManager.backgroundUpdateChecksEnabled)
+                        }
+
+                        Switch(
+                            checked = backgroundUpdateChecksEnabled,
+                            onCheckedChange = { enabled ->
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                                backgroundUpdateChecksEnabled = enabled
+                                preferencesManager.backgroundUpdateChecksEnabled = enabled
+
+                                // Start or stop the background update service
+                                if (enabled && preferencesManager.notificationsEnabled) {
+                                    updateCheckManager.startBackgroundUpdateChecks()
+                                } else {
+                                    updateCheckManager.stopBackgroundUpdateChecks()
+                                }
                             }
                         )
                     }
@@ -563,6 +618,33 @@ fun SettingsScreen(
                         lineHeight = 20.sp
                     )
                 }
+            }
+
+            // Debug: Test background update check
+            OutlinedButton(
+                onClick = {
+                    scope.launch {
+                        android.util.Log.d("SettingsScreen", "Testing background update check...")
+                        val versionChecker = dev.alphagame.seen.data.VersionChecker(context)
+                        val latestVersion = versionChecker.checkLatestVersion()
+                        android.util.Log.d("SettingsScreen", "Latest version: $latestVersion")
+                        val isUpdateAvailable = versionChecker.isUpdateAvailable()
+                        android.util.Log.d("SettingsScreen", "Update available: $isUpdateAvailable")
+
+                        if (isUpdateAvailable) {
+                            val translationInstance = dev.alphagame.seen.translations.Translation.getTranslation(preferencesManager.language)
+                            val notificationManager = dev.alphagame.seen.data.SeenNotificationManager(context)
+                            notificationManager.sendUpdateNotification(
+                                title = translationInstance.updateNotificationTitle,
+                                message = "${translationInstance.updateNotificationMessage} ($latestVersion)"
+                            )
+                            android.util.Log.d("SettingsScreen", "Test notification sent")
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("🧪 Test Background Update Check")
             }
         }
     }

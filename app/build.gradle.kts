@@ -198,6 +198,7 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.2.0")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation(libs.okhttp)
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
 
 }
 

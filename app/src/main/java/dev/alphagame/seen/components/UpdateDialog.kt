@@ -65,6 +65,11 @@ fun UpdateDialog(
                     if (!downloadUrl.isNullOrEmpty()) {
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(downloadUrl))
                         context.startActivity(intent)
+                    } else {
+                        // Fallback: Open the GitHub releases page
+                        val fallbackUrl = "https://github.com/AlphaGameDeveloper/Seen/releases/latest"
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(fallbackUrl))
+                        context.startActivity(intent)
                     }
                     if (!updateInfo.isForceUpdate) {
                         onDismiss()

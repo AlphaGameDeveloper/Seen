@@ -15,6 +15,8 @@ class PreferencesManager(context: Context) {
         private const val KEY_LAST_UPDATE_CHECK = "last_update_check"
         private const val KEY_SKIPPED_VERSION = "skipped_version"
         private const val KEY_NOTIFICATIONS_ENABLED = "notifications_enabled"
+        private const val KEY_BACKGROUND_UPDATE_CHECKS = "background_update_checks"
+        private const val KEY_LAST_BACKGROUND_UPDATE_CHECK = "last_background_update_check"
 
         const val THEME_LIGHT = "light"
         const val THEME_DARK = "dark"
@@ -52,6 +54,14 @@ class PreferencesManager(context: Context) {
     var notificationsEnabled: Boolean
         get() = prefs.getBoolean(KEY_NOTIFICATIONS_ENABLED, false)
         set(value) = prefs.edit().putBoolean(KEY_NOTIFICATIONS_ENABLED, value).apply()
+
+    var backgroundUpdateChecksEnabled: Boolean
+        get() = prefs.getBoolean(KEY_BACKGROUND_UPDATE_CHECKS, false)
+        set(value) = prefs.edit().putBoolean(KEY_BACKGROUND_UPDATE_CHECKS, value).apply()
+
+    var lastBackgroundUpdateCheck: Long
+        get() = prefs.getLong(KEY_LAST_BACKGROUND_UPDATE_CHECK, 0)
+        set(value) = prefs.edit().putLong(KEY_LAST_BACKGROUND_UPDATE_CHECK, value).apply()
 
     fun shouldCheckForUpdates(): Boolean {
         val lastCheck = lastUpdateCheckTime

@@ -158,4 +158,10 @@ class SpanishTranslation : Translation() {
     override val currentVersion = "Versión actual:"
     override val latestVersion = "Última versión:"
     override val updateRequired = "Esta actualización es requerida para continuar usando la aplicación."
+
+    // Update Notifications
+    override val updateNotificationTitle = "Nueva actualización disponible"
+    override val updateNotificationMessage = "Una nueva versión de Seen está disponible. Toca para descargar."
+    override val enableBackgroundUpdateChecks = "Verificaciones automáticas de actualización"
+    override val enableBackgroundUpdateChecksDescription = "Verificar automáticamente nuevas versiones cada 15 minutos y recibir notificaciones"
 }

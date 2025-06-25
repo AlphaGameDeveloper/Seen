@@ -22,6 +22,7 @@ import dev.alphagame.seen.components.UpdateDialog
 import dev.alphagame.seen.data.PHQ9Data
 import dev.alphagame.seen.data.PreferencesManager
 import dev.alphagame.seen.data.UpdateChecker
+import dev.alphagame.seen.data.UpdateCheckManager
 import dev.alphagame.seen.data.UpdateInfo
 import dev.alphagame.seen.screens.WelcomeScreen
 import dev.alphagame.seen.screens.QuestionScreen
@@ -81,6 +82,7 @@ fun SeenApplication(
     val preferencesManager = remember { PreferencesManager(context) }
     val translation = rememberTranslation()
     val updateChecker = remember { UpdateChecker(context) }
+    val updateCheckManager = remember { UpdateCheckManager(context) }
     val scope = rememberCoroutineScope()
 
     // Update check state
@@ -106,6 +108,28 @@ fun SeenApplication(
             android.util.Log.d("UpdateCheck", "Should check for updates: ${preferencesManager.shouldCheckForUpdates()}")
             android.util.Log.d("UpdateCheck", "Last check time: ${preferencesManager.lastUpdateCheckTime}")
             android.util.Log.d("UpdateCheck", "Current time: ${System.currentTimeMillis()}")
+
+            // Start background update checks if enabled
+            if (preferencesManager.backgroundUpdateChecksEnabled && preferencesManager.notificationsEnabled) {
+                android.util.Log.d("UpdateCheck", "Starting background update checks")
+                updateCheckManager.startBackgroundUpdateChecks()
+            } else {
+                android.util.Log.d("UpdateCheck", "Background update checks not started:")
+                android.util.Log.d("UpdateCheck", "  - backgroundUpdateChecksEnabled: ${preferencesManager.backgroundUpdateChecksEnabled}")
+                android.util.Log.d("UpdateCheck", "  - notificationsEnabled: ${preferencesManager.notificationsEnabled}")
+            }
+
+            // Test the version checker directly
+            try {
+                android.util.Log.d("UpdateCheck", "Testing VersionChecker directly...")
+                val versionChecker = dev.alphagame.seen.data.VersionChecker(context)
+                val latestVersion = versionChecker.checkLatestVersion()
+                android.util.Log.d("UpdateCheck", "Latest version from server: $latestVersion")
+                val isUpdateAvailable = versionChecker.isUpdateAvailable()
+                android.util.Log.d("UpdateCheck", "Is update available: $isUpdateAvailable")
+            } catch (e: Exception) {
+                android.util.Log.e("UpdateCheck", "Error testing VersionChecker", e)
+            }
 
             // For debugging - always check for updates (remove the shouldCheckForUpdates condition temporarily)
             // if (preferencesManager.shouldCheckForUpdates()) {

@@ -158,4 +158,10 @@ class EnglishTranslation : Translation() {
     override val currentVersion = "Current version:"
     override val latestVersion = "Latest version:"
     override val updateRequired = "This update is required to continue using the app."
+
+    // Update Notifications
+    override val updateNotificationTitle = "New Update Available"
+    override val updateNotificationMessage = "A new version of Seen is available. Tap to download."
+    override val enableBackgroundUpdateChecks = "Background Update Checks"
+    override val enableBackgroundUpdateChecksDescription = "Automatically check for new versions every 15 minutes and receive notifications"
 }

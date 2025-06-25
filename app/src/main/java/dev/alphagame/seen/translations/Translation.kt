@@ -144,6 +144,12 @@ abstract class Translation {
     abstract val latestVersion: String
     abstract val updateRequired: String
 
+    // Update Notifications
+    abstract val updateNotificationTitle: String
+    abstract val updateNotificationMessage: String
+    abstract val enableBackgroundUpdateChecks: String
+    abstract val enableBackgroundUpdateChecksDescription: String
+
     companion object {
         const val ENGLISH = "en"
         const val FRENCH = "fr"
