@@ -619,33 +619,6 @@ fun SettingsScreen(
                     )
                 }
             }
-
-            // Debug: Test background update check
-            OutlinedButton(
-                onClick = {
-                    scope.launch {
-                        android.util.Log.d("SettingsScreen", "Testing background update check...")
-                        val versionChecker = dev.alphagame.seen.data.VersionChecker(context)
-                        val latestVersion = versionChecker.checkLatestVersion()
-                        android.util.Log.d("SettingsScreen", "Latest version: $latestVersion")
-                        val isUpdateAvailable = versionChecker.isUpdateAvailable()
-                        android.util.Log.d("SettingsScreen", "Update available: $isUpdateAvailable")
-
-                        if (isUpdateAvailable) {
-                            val translationInstance = dev.alphagame.seen.translations.Translation.getTranslation(preferencesManager.language)
-                            val notificationManager = dev.alphagame.seen.data.SeenNotificationManager(context)
-                            notificationManager.sendUpdateNotification(
-                                title = translationInstance.updateNotificationTitle,
-                                message = "${translationInstance.updateNotificationMessage} ($latestVersion)"
-                            )
-                            android.util.Log.d("SettingsScreen", "Test notification sent")
-                        }
-                    }
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("🧪 Test Background Update Check")
-            }
         }
     }
 
