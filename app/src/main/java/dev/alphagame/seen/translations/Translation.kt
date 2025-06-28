@@ -1,5 +1,7 @@
 package dev.alphagame.seen.translations
 
+import dev.alphagame.seen.data.PreferencesManager
+
 abstract class Translation {
     // General App Strings
     abstract val appName: String
@@ -150,21 +152,45 @@ abstract class Translation {
     abstract val enableBackgroundUpdateChecks: String
     abstract val enableBackgroundUpdateChecksDescription: String
 
+    // Enhanced Onboarding
+    abstract val onboardingGetStarted: String
+    abstract val onboardingConfigureApp: String
+    abstract val onboardingAITitle: String
+    abstract val onboardingAIDesc: String
+    abstract val onboardingAIEnabled: String
+    abstract val onboardingAIDisabled: String
+    abstract val onboardingNotificationConfigTitle: String
+    abstract val onboardingNotificationConfigDesc: String
+    abstract val onboardingAllowNotifications: String
+    abstract val onboardingEnableReminders: String
+    abstract val onboardingEnableUpdateChecks: String
+    abstract val onboardingGeneralSettingsTitle: String
+    abstract val onboardingGeneralSettingsDesc: String
+    abstract val onboardingChooseTheme: String
+    abstract val onboardingChooseLanguage: String
+    abstract val onboardingDataPrivacyTitle: String
+    abstract val onboardingDataPrivacyDesc: String
+    abstract val onboardingEnableDataStorage: String
+    abstract val onboardingComplete: String
+    abstract val onboardingSetupComplete: String
+    abstract val onboardingSetupCompleteDesc: String
+    abstract val onboardingReadyToUse: String
+
     companion object {
-        const val ENGLISH = "en"
-        const val FRENCH = "fr"
-        const val SPANISH = "es"
+        fun getTranslation(languageCode: String): Translation {
+            return when (languageCode) {
+                PreferencesManager.LANGUAGE_FRENCH -> FrenchTranslation()
+                PreferencesManager.LANGUAGE_SPANISH -> SpanishTranslation()
+                else -> EnglishTranslation()
+            }
+        }
 
-        fun getAvailableLanguages(): List<Pair<String, String>> = listOf(
-            ENGLISH to "English",
-            FRENCH to "Français",
-            SPANISH to "Español"
-        )
-
-        fun getTranslation(languageCode: String): Translation = when (languageCode) {
-            FRENCH -> FrenchTranslation()
-            SPANISH -> SpanishTranslation()
-            else -> EnglishTranslation()
+        fun getAvailableLanguages(): List<Pair<String, String>> {
+            return listOf(
+                PreferencesManager.LANGUAGE_ENGLISH to "English",
+                PreferencesManager.LANGUAGE_FRENCH to "Français",
+                PreferencesManager.LANGUAGE_SPANISH to "Español"
+            )
         }
     }
 }

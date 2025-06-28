@@ -32,6 +32,7 @@ import dev.alphagame.seen.screens.SettingsScreen
 import dev.alphagame.seen.screens.MoodHistoryScreen
 import dev.alphagame.seen.screens.DatabaseDebugScreen
 import dev.alphagame.seen.screens.OnboardingScreen
+import dev.alphagame.seen.screens.EnhancedOnboardingScreen
 import dev.alphagame.seen.ui.theme.SeenTheme
 import dev.alphagame.seen.translations.TranslationProvider
 import dev.alphagame.seen.translations.rememberTranslation
@@ -198,7 +199,7 @@ fun SeenApplication(
         // Main content
         when (currentScreen) {
             "onboarding" -> {
-                OnboardingScreen(
+                EnhancedOnboardingScreen(
                     onOnboardingComplete = {
                         preferencesManager.isOnboardingCompleted = true
                         currentScreen = "welcome"
@@ -278,7 +279,7 @@ fun SeenApplication(
                 )
             }
             "info_onboarding" -> {
-                OnboardingScreen(
+                EnhancedOnboardingScreen(
                     onOnboardingComplete = {
                         navigateBack()
                     }

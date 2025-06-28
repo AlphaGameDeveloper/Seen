@@ -26,7 +26,9 @@ class VersionChecker(private val context: Context) {
 
                 val request = Request.Builder()
                     .url(VERSION_URL)
-                    .addHeader("User-Agent", "Seen-Android/${AppVersionInfo.VERSION_NAME}")
+                    .addHeader("User-Agent", "Seen-Android/${AppVersionInfo.VERSION_NAME} +damien@alphagame.dev")
+                    .addHeader("Accept", "application/json")
+                    .addHeader("x-Seen-Version", AppVersionInfo.VERSION_NAME)
                     .build()
 
                 val response = client.newCall(request).execute()

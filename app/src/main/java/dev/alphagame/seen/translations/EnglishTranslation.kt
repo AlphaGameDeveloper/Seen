@@ -132,6 +132,30 @@ class EnglishTranslation : Translation() {
     override val onboardingNotificationsDesc = "Allow notifications to receive reminders for your mental health check-ins and important app updates. You can change this anytime in settings."
     override val next = "Next"
 
+    // Enhanced Onboarding
+    override val onboardingGetStarted = "Get Started"
+    override val onboardingConfigureApp = "Configure App"
+    override val onboardingAITitle = "AI Features"
+    override val onboardingAIDesc = "Enable AI-powered insights and suggestions to enhance your mental health journey. All processing happens locally on your device."
+    override val onboardingAIEnabled = "Enable AI Features"
+    override val onboardingAIDisabled = "Keep AI Features Disabled"
+    override val onboardingNotificationConfigTitle = "Notification Preferences"
+    override val onboardingNotificationConfigDesc = "Customize how Seen keeps you informed about your mental health journey and app updates."
+    override val onboardingAllowNotifications = "Allow Notifications"
+    override val onboardingEnableReminders = "Enable gentle reminders for mental health check-ins"
+    override val onboardingEnableUpdateChecks = "Enable automatic update notifications"
+    override val onboardingGeneralSettingsTitle = "Personalize Your Experience"
+    override val onboardingGeneralSettingsDesc = "Choose your preferred theme and language to make Seen feel just right for you."
+    override val onboardingChooseTheme = "Choose Theme"
+    override val onboardingChooseLanguage = "Choose Language"
+    override val onboardingDataPrivacyTitle = "Data & Privacy"
+    override val onboardingDataPrivacyDesc = "Control how your assessment data is stored and ensure your privacy is protected."
+    override val onboardingEnableDataStorage = "Save detailed assessment data for progress tracking"
+    override val onboardingComplete = "Complete Setup"
+    override val onboardingSetupComplete = "You're All Set!"
+    override val onboardingSetupCompleteDesc = "Seen is now configured to your preferences. You can always change these settings later."
+    override val onboardingReadyToUse = "Start Using Seen"
+
     // Common
     override val yes = "Yes"
     override val no = "No"
@@ -162,6 +186,6 @@ class EnglishTranslation : Translation() {
     // Update Notifications
     override val updateNotificationTitle = "New Update Available"
     override val updateNotificationMessage = "A new version of Seen is available. Tap to download."
-    override val enableBackgroundUpdateChecks = "Background Update Checks"
+    override val enableBackgroundUpdateChecks = "Enable Background Update Checks"
     override val enableBackgroundUpdateChecksDescription = "Automatically check for new versions every 15 minutes and receive notifications"
 }
