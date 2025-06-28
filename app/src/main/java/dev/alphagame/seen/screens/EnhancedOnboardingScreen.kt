@@ -54,7 +54,8 @@ enum class OnboardingStage {
 enum class ConfigurationStep {
     AI_FEATURES,
     NOTIFICATIONS,
-    GENERAL_SETTINGS,
+    THEME_SETTINGS,
+    LANGUAGE_SETTINGS,
     DATA_PRIVACY,
     COMPLETE
 }
@@ -74,14 +75,33 @@ fun EnhancedOnboardingScreen(
     var currentStage by remember { mutableStateOf(OnboardingStage.WELCOME_CAROUSEL) }
     var currentConfigStep by remember { mutableStateOf(ConfigurationStep.AI_FEATURES) }
 
-    // Configuration states
-    var aiEnabled by remember { mutableStgc ateOf(false) }
-    var notificationsEnabled by remember { mutableStateOf(false) }
-    var remindersEnabled by remember { mutableStateOf(false) }
-    var updateChecksEnabled by remember { mutableStateOf(false) }
-    var selectedTheme by remember { mutableStateOf(PreferencesManager.THEME_AUTO) }
+    // Configuration states - Initialize with current preferences
+    var aiEnabled by remember { mutableStateOf(false) } // AI features not yet implemented, so default false
+    var notificationsEnabled by remember { mutableStateOf(preferencesManager.notificationsEnabled) }
+    var remindersEnabled by remember { mutableStateOf(preferencesManager.notificationsEnabled) } // Default to same as notifications
+    var updateChecksEnabled by remember { mutableStateOf(preferencesManager.backgroundUpdateChecksEnabled) }
+    var selectedTheme by remember { mutableStateOf(preferencesManager.themeMode) }
     var selectedLanguage by remember { mutableStateOf(preferencesManager.language) }
-    var dataStorageEnabled by remember { mutableStateOf(false) }
+    var dataStorageEnabled by remember { mutableStateOf(preferencesManager.isPhq9DataStorageEnabled) }
+
+    // Check actual notification permission status on initialization
+    LaunchedEffect(Unit) {
+        val hasPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true // Pre-API 33 doesn't require runtime permission
+        }
+        
+        // Update notification state based on actual permission
+        if (!hasPermission) {
+            notificationsEnabled = false
+            remindersEnabled = false
+            updateChecksEnabled = false
+        }
+    }
 
     // Dialog states
     var showNotificationSuccessDialog by remember { mutableStateOf(false) }
@@ -160,16 +180,16 @@ fun EnhancedOnboardingScreen(
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                 when (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)) {
                                     PackageManager.PERMISSION_GRANTED -> {
+                                        // Permission already granted, just update state without showing dialog
                                         notificationsEnabled = true
-                                        showNotificationSuccessDialog = true
                                     }
                                     else -> {
                                         notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                                     }
                                 }
                             } else {
+                                // Pre-API 33, notifications don't require runtime permission
                                 notificationsEnabled = true
-                                showNotificationSuccessDialog = true
                             }
                         } else {
                             notificationsEnabled = false
@@ -183,8 +203,9 @@ fun EnhancedOnboardingScreen(
                     onNext = {
                         when (currentConfigStep) {
                             ConfigurationStep.AI_FEATURES -> currentConfigStep = ConfigurationStep.NOTIFICATIONS
-                            ConfigurationStep.NOTIFICATIONS -> currentConfigStep = ConfigurationStep.GENERAL_SETTINGS
-                            ConfigurationStep.GENERAL_SETTINGS -> currentConfigStep = ConfigurationStep.DATA_PRIVACY
+                            ConfigurationStep.NOTIFICATIONS -> currentConfigStep = ConfigurationStep.THEME_SETTINGS
+                            ConfigurationStep.THEME_SETTINGS -> currentConfigStep = ConfigurationStep.LANGUAGE_SETTINGS
+                            ConfigurationStep.LANGUAGE_SETTINGS -> currentConfigStep = ConfigurationStep.DATA_PRIVACY
                             ConfigurationStep.DATA_PRIVACY -> currentConfigStep = ConfigurationStep.COMPLETE
                             ConfigurationStep.COMPLETE -> {
                                 // Apply all settings
@@ -207,8 +228,9 @@ fun EnhancedOnboardingScreen(
                         when (currentConfigStep) {
                             ConfigurationStep.AI_FEATURES -> currentStage = OnboardingStage.WELCOME_CAROUSEL
                             ConfigurationStep.NOTIFICATIONS -> currentConfigStep = ConfigurationStep.AI_FEATURES
-                            ConfigurationStep.GENERAL_SETTINGS -> currentConfigStep = ConfigurationStep.NOTIFICATIONS
-                            ConfigurationStep.DATA_PRIVACY -> currentConfigStep = ConfigurationStep.GENERAL_SETTINGS
+                            ConfigurationStep.THEME_SETTINGS -> currentConfigStep = ConfigurationStep.NOTIFICATIONS
+                            ConfigurationStep.LANGUAGE_SETTINGS -> currentConfigStep = ConfigurationStep.THEME_SETTINGS
+                            ConfigurationStep.DATA_PRIVACY -> currentConfigStep = ConfigurationStep.LANGUAGE_SETTINGS
                             ConfigurationStep.COMPLETE -> currentConfigStep = ConfigurationStep.DATA_PRIVACY
                         }
                     },
@@ -513,11 +535,15 @@ fun ConfigurationFlow(
                     onUpdateChecksEnabledChange = onUpdateChecksEnabledChange
                 )
             }
-            ConfigurationStep.GENERAL_SETTINGS -> {
-                GeneralSettingsConfigurationStep(
+            ConfigurationStep.THEME_SETTINGS -> {
+                ThemeConfigurationStep(
                     selectedTheme = selectedTheme,
+                    onThemeChange = onThemeChange
+                )
+            }
+            ConfigurationStep.LANGUAGE_SETTINGS -> {
+                LanguageConfigurationStep(
                     selectedLanguage = selectedLanguage,
-                    onThemeChange = onThemeChange,
                     onLanguageChange = onLanguageChange
                 )
             }
@@ -557,7 +583,7 @@ fun ConfigurationFlow(
             // Next/Complete button
             Button(
                 onClick = onNext,
-                modifier = Modifier.width(140.dp),
+                modifier = Modifier.width(if (currentStep == ConfigurationStep.COMPLETE) 160.dp else 140.dp),
                 shape = RoundedCornerShape(28.dp)
             ) {
                 Row(
@@ -569,7 +595,8 @@ fun ConfigurationFlow(
                             ConfigurationStep.COMPLETE -> translation.onboardingReadyToUse
                             else -> translation.next
                         },
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
+                        maxLines = 1
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Icon(
@@ -590,131 +617,31 @@ fun AIConfigurationStep(
 ) {
     val translation = rememberTranslation()
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(24.dp)
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
+    ConfigurationStepLayout(
+        emoji = "🤖",
+        title = translation.onboardingAITitle,
+        description = translation.onboardingAIDesc
     ) {
-        Text(
-            text = "🤖",
-            fontSize = 80.sp,
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Text(
-            text = translation.onboardingAITitle,
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground,
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = translation.onboardingAIDesc,
-            fontSize = 16.sp,
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-            textAlign = TextAlign.Center,
-            lineHeight = 24.sp
-        )
-
-        Spacer(modifier = Modifier.height(48.dp))
-
         // AI toggle options
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .selectable(
-                        selected = aiEnabled,
-                        onClick = { onAIEnabledChange(true) },
-                        role = Role.RadioButton
-                    ),
-                colors = CardDefaults.cardColors(
-                    containerColor = if (aiEnabled) MaterialTheme.colorScheme.primaryContainer
-                                   else MaterialTheme.colorScheme.surface
-                ),
-                border = if (aiEnabled) CardDefaults.outlinedCardBorder().copy(
-                    brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.primary),
-                    width = 2.dp
-                ) else null
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    RadioButton(
-                        selected = aiEnabled,
-                        onClick = null
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Column {
-                        Text(
-                            text = translation.onboardingAIEnabled,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Text(
-                            text = "Get personalized insights and suggestions",
-                            fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                        )
-                    }
-                }
-            }
+            SelectableOptionCard(
+                selected = aiEnabled,
+                onClick = { onAIEnabledChange(true) },
+                title = translation.onboardingAIEnabled,
+                description = "Get personalized insights and suggestions",
+                icon = "🧠"
+            )
 
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .selectable(
-                        selected = !aiEnabled,
-                        onClick = { onAIEnabledChange(false) },
-                        role = Role.RadioButton
-                    ),
-                colors = CardDefaults.cardColors(
-                    containerColor = if (!aiEnabled) MaterialTheme.colorScheme.primaryContainer
-                                   else MaterialTheme.colorScheme.surface
-                ),
-                border = if (!aiEnabled) CardDefaults.outlinedCardBorder().copy(
-                    brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.primary),
-                    width = 2.dp
-                ) else null
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    RadioButton(
-                        selected = !aiEnabled,
-                        onClick = null
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Column {
-                        Text(
-                            text = translation.onboardingAIDisabled,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Text(
-                            text = "Use the app without AI features",
-                            fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                        )
-                    }
-                }
-            }
+            SelectableOptionCard(
+                selected = !aiEnabled,
+                onClick = { onAIEnabledChange(false) },
+                title = translation.onboardingAIDisabled,
+                description = "Use the app without AI features",
+                icon = "📱"
+            )
         }
     }
 }
@@ -728,117 +655,90 @@ fun NotificationConfigurationStep(
     onRemindersEnabledChange: (Boolean) -> Unit,
     onUpdateChecksEnabledChange: (Boolean) -> Unit
 ) {
+    val context = LocalContext.current
     val translation = rememberTranslation()
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(24.dp)
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
+    // Check if notification permission is already granted
+    val hasNotificationPermission = remember {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true // Pre-API 33 doesn't require runtime permission
+        }
+    }
+
+    // Update the notificationsEnabled state if permission is already granted
+    LaunchedEffect(hasNotificationPermission) {
+        if (hasNotificationPermission && !notificationsEnabled) {
+            onNotificationsEnabledChange(true)
+        }
+    }
+
+    ConfigurationStepLayout(
+        emoji = "🔔",
+        title = translation.onboardingNotificationConfigTitle,
+        description = translation.onboardingNotificationConfigDesc
     ) {
-        Text(
-            text = "🔔",
-            fontSize = 80.sp,
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Text(
-            text = translation.onboardingNotificationConfigTitle,
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground,
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = translation.onboardingNotificationConfigDesc,
-            fontSize = 16.sp,
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-            textAlign = TextAlign.Center,
-            lineHeight = 24.sp
-        )
-
-        Spacer(modifier = Modifier.height(48.dp))
-
-        // Main notification permission
-        Card(
+        Column(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            )
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(20.dp)
+            // Main notification permission
+            SettingsCard(
+                title = "Notification Permission",
+                icon = "🔔"
             ) {
-                Button(
-                    onClick = { onNotificationsEnabledChange(true) },
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = !notificationsEnabled
+                Column(
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Icon(
-                        imageVector = if (notificationsEnabled) Icons.Default.Check else Icons.Default.Settings,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = if (notificationsEnabled) "Notifications Enabled ✓" else translation.onboardingAllowNotifications
-                    )
-                }
-
-                if (notificationsEnabled) {
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Reminder notifications
-                    Row(
+                    Button(
+                        onClick = { onNotificationsEnabledChange(true) },
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = "Mental Health Reminders",
-                                fontWeight = FontWeight.Medium
+                        enabled = !hasNotificationPermission,
+                        colors = if (hasNotificationPermission) {
+                            ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                contentColor = MaterialTheme.colorScheme.primary
                             )
-                            Text(
-                                text = translation.onboardingEnableReminders,
-                                fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                            )
+                        } else {
+                            ButtonDefaults.buttonColors()
                         }
-                        Switch(
-                            checked = remindersEnabled,
-                            onCheckedChange = onRemindersEnabledChange
+                    ) {
+                        Icon(
+                            imageVector = if (hasNotificationPermission) Icons.Default.Check else Icons.Default.Settings,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = if (hasNotificationPermission) "Notifications Enabled ✓" else translation.onboardingAllowNotifications
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                    if (hasNotificationPermission) {
+                        Spacer(modifier = Modifier.height(16.dp))
 
-                    // Update notifications
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = "Update Notifications",
-                                fontWeight = FontWeight.Medium
-                            )
-                            Text(
-                                text = translation.onboardingEnableUpdateChecks,
-                                fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                            )
-                        }
-                        Switch(
+                        // Reminder notifications
+                        SettingToggleItem(
+                            title = "Mental Health Reminders",
+                            description = translation.onboardingEnableReminders,
+                            checked = remindersEnabled,
+                            onCheckedChange = onRemindersEnabledChange,
+                            icon = "💭"
+                        )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        // Update notifications
+                        SettingToggleItem(
+                            title = "Update Notifications",
+                            description = translation.onboardingEnableUpdateChecks,
                             checked = updateChecksEnabled,
-                            onCheckedChange = onUpdateChecksEnabledChange
+                            onCheckedChange = onUpdateChecksEnabledChange,
+                            icon = "📱"
                         )
                     }
                 }
@@ -848,148 +748,82 @@ fun NotificationConfigurationStep(
 }
 
 @Composable
-fun GeneralSettingsConfigurationStep(
+fun ThemeConfigurationStep(
     selectedTheme: String,
+    onThemeChange: (String) -> Unit
+) {
+    val translation = rememberTranslation()
+
+    ConfigurationStepLayout(
+        emoji = "🎨",
+        title = translation.onboardingChooseTheme,
+        description = "Customize how the app looks to match your preference"
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            val themes = listOf(
+                PreferencesManager.THEME_AUTO to "System Default" to "📱",
+                PreferencesManager.THEME_LIGHT to "Light Theme" to "☀️",
+                PreferencesManager.THEME_DARK to "Dark Theme" to "🌙"
+            )
+
+            themes.forEach { (codeLabel, icon) ->
+                val (code, label) = codeLabel
+                SelectableOptionCard(
+                    selected = selectedTheme == code,
+                    onClick = { onThemeChange(code) },
+                    title = label,
+                    description = when (code) {
+                        PreferencesManager.THEME_AUTO -> "Automatically switch between light and dark based on your device settings"
+                        PreferencesManager.THEME_LIGHT -> "A bright, clean interface perfect for daytime use"
+                        PreferencesManager.THEME_DARK -> "A gentle, dark interface that's easier on your eyes"
+                        else -> null
+                    },
+                    icon = icon
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun LanguageConfigurationStep(
     selectedLanguage: String,
-    onThemeChange: (String) -> Unit,
     onLanguageChange: (String) -> Unit
 ) {
     val translation = rememberTranslation()
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(24.dp)
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
+    ConfigurationStepLayout(
+        emoji = "🌎",
+        title = translation.onboardingChooseLanguage,
+        description = "Choose your preferred language for the app interface"
     ) {
-        Text(
-            text = "🎨",
-            fontSize = 80.sp,
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Text(
-            text = translation.onboardingGeneralSettingsTitle,
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground,
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = translation.onboardingGeneralSettingsDesc,
-            fontSize = 16.sp,
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-            textAlign = TextAlign.Center,
-            lineHeight = 24.sp
-        )
-
-        Spacer(modifier = Modifier.height(48.dp))
-
-        // Theme selection
-        Card(
+        Column(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            )
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(20.dp)
-            ) {
-                Text(
-                    text = translation.onboardingChooseTheme,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                val themes = listOf(
-                    PreferencesManager.THEME_AUTO to "System Default",
-                    PreferencesManager.THEME_LIGHT to "Light",
-                    PreferencesManager.THEME_DARK to "Dark"
-                )
-
-                themes.forEach { (code, label) ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .selectable(
-                                selected = selectedTheme == code,
-                                onClick = { onThemeChange(code) },
-                                role = Role.RadioButton
-                            )
-                            .padding(vertical = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        RadioButton(
-                            selected = selectedTheme == code,
-                            onClick = null
-                        )
-                        Text(
-                            text = label,
-                            modifier = Modifier.padding(start = 8.dp),
-                            fontSize = 14.sp
-                        )
-                    }
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Language selection
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
+            val languages = listOf(
+                PreferencesManager.LANGUAGE_ENGLISH to "English" to "🇺🇸",
+                PreferencesManager.LANGUAGE_FRENCH to "Français" to "🇫🇷",
+                PreferencesManager.LANGUAGE_SPANISH to "Español" to "🇪🇸"
             )
-        ) {
-            Column(
-                modifier = Modifier.padding(20.dp)
-            ) {
-                Text(
-                    text = translation.onboardingChooseLanguage,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold
+
+            languages.forEach { (codeLabel, flag) ->
+                val (code, label) = codeLabel
+                SelectableOptionCard(
+                    selected = selectedLanguage == code,
+                    onClick = { onLanguageChange(code) },
+                    title = label,
+                    description = when (code) {
+                        PreferencesManager.LANGUAGE_ENGLISH -> "Default language with full feature support"
+                        PreferencesManager.LANGUAGE_FRENCH -> "Interface complète en français"
+                        PreferencesManager.LANGUAGE_SPANISH -> "Interfaz completa en español"
+                        else -> null
+                    },
+                    icon = flag
                 )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                val languages = listOf(
-                    PreferencesManager.LANGUAGE_ENGLISH to "English",
-                    PreferencesManager.LANGUAGE_FRENCH to "Français",
-                    PreferencesManager.LANGUAGE_SPANISH to "Español"
-                )
-
-                languages.forEach { (code, label) ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .selectable(
-                                selected = selectedLanguage == code,
-                                onClick = { onLanguageChange(code) },
-                                role = Role.RadioButton
-                            )
-                            .padding(vertical = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        RadioButton(
-                            selected = selectedLanguage == code,
-                            onClick = null
-                        )
-                        Text(
-                            text = label,
-                            modifier = Modifier.padding(start = 8.dp),
-                            fontSize = 14.sp
-                        )
-                    }
-                }
             }
         }
     }
@@ -1002,93 +836,63 @@ fun DataPrivacyConfigurationStep(
 ) {
     val translation = rememberTranslation()
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(24.dp)
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
+    ConfigurationStepLayout(
+        emoji = "🔐",
+        title = translation.onboardingDataPrivacyTitle,
+        description = translation.onboardingDataPrivacyDesc
     ) {
-        Text(
-            text = "🔐",
-            fontSize = 80.sp,
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Text(
-            text = translation.onboardingDataPrivacyTitle,
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground,
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = translation.onboardingDataPrivacyDesc,
-            fontSize = 16.sp,
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-            textAlign = TextAlign.Center,
-            lineHeight = 24.sp
-        )
-
-        Spacer(modifier = Modifier.height(48.dp))
-
-        Card(
+        Column(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            )
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(20.dp)
+            SettingsCard(
+                title = "PHQ-9 Data Storage",
+                icon = "📊"
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                Column(
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = "PHQ-9 Data Storage",
-                            fontWeight = FontWeight.Medium
-                        )
-                        Text(
-                            text = translation.onboardingEnableDataStorage,
-                            fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                            lineHeight = 16.sp
-                        )
-                    }
-                    Switch(
+                    SettingToggleItem(
+                        title = "Enable Data Storage",
+                        description = translation.onboardingEnableDataStorage,
                         checked = dataStorageEnabled,
-                        onCheckedChange = onDataStorageEnabledChange
+                        onCheckedChange = onDataStorageEnabledChange,
+                        icon = "💾"
                     )
                 }
+            }
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Card(
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
-                    )
+            // Privacy promise card
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
+                ),
+                border = CardDefaults.outlinedCardBorder().copy(
+                    brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)),
+                    width = 1.dp
+                )
+            ) {
+                Row(
+                    modifier = Modifier.padding(20.dp),
+                    verticalAlignment = Alignment.Top
                 ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp)
-                    ) {
+                    Text(
+                        text = "🔒",
+                        fontSize = 24.sp,
+                        modifier = Modifier.padding(end = 12.dp)
+                    )
+                    Column {
                         Text(
-                            text = "🔒 Privacy Promise",
+                            text = "Privacy Promise",
                             fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.primary
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = 16.sp
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "All your data stays on your device. We never collect, store, or share your personal information with third parties.",
-                            fontSize = 12.sp,
-                            lineHeight = 16.sp,
+                            fontSize = 14.sp,
+                            lineHeight = 20.sp,
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
                         )
                     }
@@ -1102,33 +906,82 @@ fun DataPrivacyConfigurationStep(
 fun SetupCompleteStep() {
     val translation = rememberTranslation()
 
+    ConfigurationStepLayout(
+        emoji = "🎉",
+        title = translation.onboardingSetupComplete,
+        description = translation.onboardingSetupCompleteDesc
+    ) {
+        // Success card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
+            ),
+            border = CardDefaults.outlinedCardBorder().copy(
+                brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)),
+                width = 1.dp
+            )
+        ) {
+            Row(
+                modifier = Modifier.padding(24.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "✨",
+                    fontSize = 32.sp,
+                    modifier = Modifier.padding(end = 16.dp)
+                )
+                Text(
+                    text = "You're ready to begin your mental health journey with Seen!",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.primary,
+                    lineHeight = 22.sp
+                )
+            }
+        }
+    }
+}
+
+// Reusable components for consistent configuration step design
+
+@Composable
+fun ConfigurationStepLayout(
+    emoji: String,
+    title: String,
+    description: String,
+    content: @Composable () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            .padding(24.dp)
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Emoji header
         Text(
-            text = "🎉",
+            text = emoji,
             fontSize = 80.sp,
             textAlign = TextAlign.Center
         )
 
         Spacer(modifier = Modifier.height(32.dp))
 
+        // Title
         Text(
-            text = translation.onboardingSetupComplete,
+            text = title,
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary,
+            color = MaterialTheme.colorScheme.onBackground,
             textAlign = TextAlign.Center
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Description
         Text(
-            text = translation.onboardingSetupCompleteDesc,
+            text = description,
             fontSize = 16.sp,
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
             textAlign = TextAlign.Center,
@@ -1137,24 +990,166 @@ fun SetupCompleteStep() {
 
         Spacer(modifier = Modifier.height(48.dp))
 
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
-            )
+        // Content
+        content()
+    }
+}
+
+@Composable
+fun SettingsCard(
+    title: String,
+    icon: String,
+    content: @Composable () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(20.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+            Row(
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "✨ You're ready to begin your mental health journey with Seen!",
-                    fontSize = 16.sp,
+                    text = icon,
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+                Text(
+                    text = title,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            content()
+        }
+    }
+}
+
+@Composable
+fun SelectableOptionCard(
+    selected: Boolean,
+    onClick: () -> Unit,
+    title: String,
+    description: String?,
+    icon: String,
+    compact: Boolean = false
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .selectable(
+                selected = selected,
+                onClick = onClick,
+                role = Role.RadioButton
+            ),
+        colors = CardDefaults.cardColors(
+            containerColor = if (selected) MaterialTheme.colorScheme.primaryContainer
+                           else MaterialTheme.colorScheme.surface
+        ),
+        border = if (selected) CardDefaults.outlinedCardBorder().copy(
+            brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.primary),
+            width = 2.dp
+        ) else CardDefaults.outlinedCardBorder().copy(
+            brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)),
+            width = 1.dp
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = if (selected) 4.dp else 1.dp
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(if (compact) 12.dp else 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = icon,
+                fontSize = if (compact) 18.sp else 24.sp,
+                modifier = Modifier.padding(end = 12.dp)
+            )
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
                     fontWeight = FontWeight.Medium,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontSize = if (compact) 14.sp else 16.sp
+                )
+                if (description != null) {
+                    Text(
+                        text = description,
+                        fontSize = if (compact) 11.sp else 12.sp,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                        lineHeight = if (compact) 14.sp else 16.sp
+                    )
+                }
+            }
+
+            RadioButton(
+                selected = selected,
+                onClick = null,
+                colors = RadioButtonDefaults.colors(
+                    selectedColor = MaterialTheme.colorScheme.primary
+                )
+            )
+        }
+    }
+}
+
+@Composable
+fun SettingToggleItem(
+    title: String,
+    description: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    icon: String
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = icon,
+                fontSize = 16.sp,
+                modifier = Modifier.padding(end = 8.dp)
+            )
+            Column {
+                Text(
+                    text = title,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = description,
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                    lineHeight = 16.sp
                 )
             }
         }
+        Switch(
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = MaterialTheme.colorScheme.primary,
+                checkedTrackColor = MaterialTheme.colorScheme.primaryContainer
+            )
+        )
     }
 }
