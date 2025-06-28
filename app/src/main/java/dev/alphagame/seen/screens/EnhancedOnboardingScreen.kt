@@ -44,6 +44,7 @@ import androidx.core.content.ContextCompat
 import dev.alphagame.seen.data.PreferencesManager
 import dev.alphagame.seen.data.UpdateCheckManager
 import dev.alphagame.seen.translations.rememberTranslation
+import dev.alphagame.seen.translations.Translation
 import kotlinx.coroutines.launch
 
 enum class OnboardingStage {
@@ -66,7 +67,6 @@ fun EnhancedOnboardingScreen(
     onOnboardingComplete: () -> Unit
 ) {
     val context = LocalContext.current
-    val translation = rememberTranslation()
     val preferencesManager = remember { PreferencesManager(context) }
     val updateCheckManager = remember { UpdateCheckManager(context) }
     val hapticFeedback = LocalHapticFeedback.current
@@ -84,6 +84,11 @@ fun EnhancedOnboardingScreen(
     var selectedLanguage by remember { mutableStateOf(preferencesManager.language) }
     var dataStorageEnabled by remember { mutableStateOf(preferencesManager.isPhq9DataStorageEnabled) }
 
+    // Translation that reacts to language changes
+    val translation = remember(selectedLanguage) {
+        Translation.getTranslation(selectedLanguage)
+    }
+
     // Check actual notification permission status on initialization
     LaunchedEffect(Unit) {
         val hasPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -94,7 +99,7 @@ fun EnhancedOnboardingScreen(
         } else {
             true // Pre-API 33 doesn't require runtime permission
         }
-        
+
         // Update notification state based on actual permission
         if (!hasPermission) {
             notificationsEnabled = false
@@ -112,10 +117,15 @@ fun EnhancedOnboardingScreen(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         notificationsEnabled = isGranted
+        preferencesManager.notificationsEnabled = isGranted
         if (isGranted) {
             showNotificationSuccessDialog = true
         } else {
             showNotificationDeniedDialog = true
+            // Also disable dependent features
+            remindersEnabled = false
+            updateChecksEnabled = false
+            preferencesManager.backgroundUpdateChecksEnabled = false
         }
     }
 
@@ -174,7 +184,10 @@ fun EnhancedOnboardingScreen(
                     selectedTheme = selectedTheme,
                     selectedLanguage = selectedLanguage,
                     dataStorageEnabled = dataStorageEnabled,
-                    onAIEnabledChange = { aiEnabled = it },
+                    onAIEnabledChange = {
+                        aiEnabled = it
+                        // AI features not yet implemented, so no preference to save
+                    },
                     onNotificationsEnabledChange = { enabled ->
                         if (enabled) {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -182,6 +195,7 @@ fun EnhancedOnboardingScreen(
                                     PackageManager.PERMISSION_GRANTED -> {
                                         // Permission already granted, just update state without showing dialog
                                         notificationsEnabled = true
+                                        preferencesManager.notificationsEnabled = true
                                     }
                                     else -> {
                                         notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
@@ -190,16 +204,45 @@ fun EnhancedOnboardingScreen(
                             } else {
                                 // Pre-API 33, notifications don't require runtime permission
                                 notificationsEnabled = true
+                                preferencesManager.notificationsEnabled = true
                             }
                         } else {
                             notificationsEnabled = false
+                            preferencesManager.notificationsEnabled = false
+                            // Also disable dependent features
+                            remindersEnabled = false
+                            updateChecksEnabled = false
+                            preferencesManager.backgroundUpdateChecksEnabled = false
+                            updateCheckManager.stopBackgroundUpdateChecks()
                         }
                     },
-                    onRemindersEnabledChange = { remindersEnabled = it },
-                    onUpdateChecksEnabledChange = { updateChecksEnabled = it },
-                    onThemeChange = { selectedTheme = it },
-                    onLanguageChange = { selectedLanguage = it },
-                    onDataStorageEnabledChange = { dataStorageEnabled = it },
+                    onRemindersEnabledChange = {
+                        remindersEnabled = it
+                        // Reminder preference could be saved here when implemented
+                    },
+                    onUpdateChecksEnabledChange = {
+                        updateChecksEnabled = it
+                        preferencesManager.backgroundUpdateChecksEnabled = it && notificationsEnabled
+
+                        // Start or stop background update checks immediately
+                        if (it && notificationsEnabled) {
+                            updateCheckManager.startBackgroundUpdateChecks()
+                        } else {
+                            updateCheckManager.stopBackgroundUpdateChecks()
+                        }
+                    },
+                    onThemeChange = {
+                        selectedTheme = it
+                        preferencesManager.themeMode = it
+                    },
+                    onLanguageChange = {
+                        selectedLanguage = it
+                        preferencesManager.language = it
+                    },
+                    onDataStorageEnabledChange = {
+                        dataStorageEnabled = it
+                        preferencesManager.isPhq9DataStorageEnabled = it
+                    },
                     onNext = {
                         when (currentConfigStep) {
                             ConfigurationStep.AI_FEATURES -> currentConfigStep = ConfigurationStep.NOTIFICATIONS
@@ -208,18 +251,8 @@ fun EnhancedOnboardingScreen(
                             ConfigurationStep.LANGUAGE_SETTINGS -> currentConfigStep = ConfigurationStep.DATA_PRIVACY
                             ConfigurationStep.DATA_PRIVACY -> currentConfigStep = ConfigurationStep.COMPLETE
                             ConfigurationStep.COMPLETE -> {
-                                // Apply all settings
-                                preferencesManager.notificationsEnabled = notificationsEnabled
-                                preferencesManager.themeMode = selectedTheme
-                                preferencesManager.language = selectedLanguage
-                                preferencesManager.isPhq9DataStorageEnabled = dataStorageEnabled
-                                preferencesManager.backgroundUpdateChecksEnabled = updateChecksEnabled && notificationsEnabled
-
-                                // Start background update checks if enabled
-                                if (updateChecksEnabled && notificationsEnabled) {
-                                    updateCheckManager.startBackgroundUpdateChecks()
-                                }
-
+                                // All settings are already applied immediately when changed
+                                // Just complete the onboarding
                                 onOnboardingComplete()
                             }
                         }
@@ -522,7 +555,8 @@ fun ConfigurationFlow(
             ConfigurationStep.AI_FEATURES -> {
                 AIConfigurationStep(
                     aiEnabled = aiEnabled,
-                    onAIEnabledChange = onAIEnabledChange
+                    onAIEnabledChange = onAIEnabledChange,
+                    translation = translation
                 )
             }
             ConfigurationStep.NOTIFICATIONS -> {
@@ -532,29 +566,33 @@ fun ConfigurationFlow(
                     updateChecksEnabled = updateChecksEnabled,
                     onNotificationsEnabledChange = onNotificationsEnabledChange,
                     onRemindersEnabledChange = onRemindersEnabledChange,
-                    onUpdateChecksEnabledChange = onUpdateChecksEnabledChange
+                    onUpdateChecksEnabledChange = onUpdateChecksEnabledChange,
+                    translation = translation
                 )
             }
             ConfigurationStep.THEME_SETTINGS -> {
                 ThemeConfigurationStep(
                     selectedTheme = selectedTheme,
-                    onThemeChange = onThemeChange
+                    onThemeChange = onThemeChange,
+                    translation = translation
                 )
             }
             ConfigurationStep.LANGUAGE_SETTINGS -> {
                 LanguageConfigurationStep(
                     selectedLanguage = selectedLanguage,
-                    onLanguageChange = onLanguageChange
+                    onLanguageChange = onLanguageChange,
+                    translation = translation
                 )
             }
             ConfigurationStep.DATA_PRIVACY -> {
                 DataPrivacyConfigurationStep(
                     dataStorageEnabled = dataStorageEnabled,
-                    onDataStorageEnabledChange = onDataStorageEnabledChange
+                    onDataStorageEnabledChange = onDataStorageEnabledChange,
+                    translation = translation
                 )
             }
             ConfigurationStep.COMPLETE -> {
-                SetupCompleteStep()
+                SetupCompleteStep(translation = translation)
             }
         }
 
@@ -613,10 +651,9 @@ fun ConfigurationFlow(
 @Composable
 fun AIConfigurationStep(
     aiEnabled: Boolean,
-    onAIEnabledChange: (Boolean) -> Unit
+    onAIEnabledChange: (Boolean) -> Unit,
+    translation: Translation
 ) {
-    val translation = rememberTranslation()
-
     ConfigurationStepLayout(
         emoji = "🤖",
         title = translation.onboardingAITitle,
@@ -653,10 +690,10 @@ fun NotificationConfigurationStep(
     updateChecksEnabled: Boolean,
     onNotificationsEnabledChange: (Boolean) -> Unit,
     onRemindersEnabledChange: (Boolean) -> Unit,
-    onUpdateChecksEnabledChange: (Boolean) -> Unit
+    onUpdateChecksEnabledChange: (Boolean) -> Unit,
+    translation: Translation
 ) {
     val context = LocalContext.current
-    val translation = rememberTranslation()
 
     // Check if notification permission is already granted
     val hasNotificationPermission = remember {
@@ -750,10 +787,9 @@ fun NotificationConfigurationStep(
 @Composable
 fun ThemeConfigurationStep(
     selectedTheme: String,
-    onThemeChange: (String) -> Unit
+    onThemeChange: (String) -> Unit,
+    translation: Translation
 ) {
-    val translation = rememberTranslation()
-
     ConfigurationStepLayout(
         emoji = "🎨",
         title = translation.onboardingChooseTheme,
@@ -791,10 +827,9 @@ fun ThemeConfigurationStep(
 @Composable
 fun LanguageConfigurationStep(
     selectedLanguage: String,
-    onLanguageChange: (String) -> Unit
+    onLanguageChange: (String) -> Unit,
+    translation: Translation
 ) {
-    val translation = rememberTranslation()
-
     ConfigurationStepLayout(
         emoji = "🌎",
         title = translation.onboardingChooseLanguage,
@@ -832,10 +867,9 @@ fun LanguageConfigurationStep(
 @Composable
 fun DataPrivacyConfigurationStep(
     dataStorageEnabled: Boolean,
-    onDataStorageEnabledChange: (Boolean) -> Unit
+    onDataStorageEnabledChange: (Boolean) -> Unit,
+    translation: Translation
 ) {
-    val translation = rememberTranslation()
-
     ConfigurationStepLayout(
         emoji = "🔐",
         title = translation.onboardingDataPrivacyTitle,
@@ -903,9 +937,7 @@ fun DataPrivacyConfigurationStep(
 }
 
 @Composable
-fun SetupCompleteStep() {
-    val translation = rememberTranslation()
-
+fun SetupCompleteStep(translation: Translation) {
     ConfigurationStepLayout(
         emoji = "🎉",
         title = translation.onboardingSetupComplete,
@@ -931,13 +963,21 @@ fun SetupCompleteStep() {
                     fontSize = 32.sp,
                     modifier = Modifier.padding(end = 16.dp)
                 )
-                Text(
-                    text = "You're ready to begin your mental health journey with Seen!",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.primary,
-                    lineHeight = 22.sp
-                )
+                Column {
+                    Text(
+                        text = "You're all set!",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.primary,
+                        lineHeight = 22.sp
+                    )
+                    Text(
+                        text = "All your preferences have been saved and are ready to use.",
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                        lineHeight = 20.sp
+                    )
+                }
             }
         }
     }

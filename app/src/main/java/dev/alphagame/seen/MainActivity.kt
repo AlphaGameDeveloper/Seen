@@ -32,7 +32,7 @@ import dev.alphagame.seen.screens.SettingsScreen
 import dev.alphagame.seen.screens.MoodHistoryScreen
 import dev.alphagame.seen.screens.DatabaseDebugScreen
 import dev.alphagame.seen.screens.OnboardingScreen
-import dev.alphagame.seen.screens.EnhancedOnboardingScreen
+import dev.alphagame.seen.onboarding.EnhancedOnboardingScreen
 import dev.alphagame.seen.ui.theme.SeenTheme
 import dev.alphagame.seen.translations.TranslationProvider
 import dev.alphagame.seen.translations.rememberTranslation
