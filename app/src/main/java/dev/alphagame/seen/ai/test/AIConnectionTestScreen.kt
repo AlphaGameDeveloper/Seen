@@ -20,12 +20,12 @@ import kotlinx.coroutines.launch
 fun AIConnectionTestScreen() {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    
+
     var testResults by remember { mutableStateOf("No tests run yet") }
     var isLoading by remember { mutableStateOf(false) }
-    
+
     val aiManager = remember { AIManager(context) }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -38,7 +38,7 @@ fun AIConnectionTestScreen() {
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold
         )
-        
+
         if (isLoading) {
             Box(
                 modifier = Modifier.fillMaxWidth(),
@@ -47,7 +47,7 @@ fun AIConnectionTestScreen() {
                 CircularProgressIndicator()
             }
         }
-        
+
         Button(
             onClick = {
                 isLoading = true
@@ -68,7 +68,7 @@ fun AIConnectionTestScreen() {
         ) {
             Text("Test Basic Connectivity")
         }
-        
+
         Button(
             onClick = {
                 isLoading = true
@@ -89,7 +89,7 @@ fun AIConnectionTestScreen() {
         ) {
             Text("Test Service Availability")
         }
-        
+
         Button(
             onClick = {
                 isLoading = true
@@ -97,9 +97,9 @@ fun AIConnectionTestScreen() {
                     try {
                         val testResponses = listOf(1, 1, 2, 1, 0, 1, 1, 0, 1)
                         val totalScore = testResponses.sum()
-                        
+
                         val result = aiManager.submitPHQ9ForAnalysis(totalScore, testResponses)
-                        
+
                         result.onSuccess { response ->
                             testResults = "PHQ9 Test Success!\n" +
                                     "Severity: ${response.severity ?: "Unknown"}\n" +
@@ -120,15 +120,15 @@ fun AIConnectionTestScreen() {
         ) {
             Text("Test PHQ9 Submission")
         }
-        
+
         Divider()
-        
+
         Text(
             text = "Test Results:",
             fontSize = 18.sp,
             fontWeight = FontWeight.SemiBold
         )
-        
+
         Card(
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -138,15 +138,15 @@ fun AIConnectionTestScreen() {
                 fontSize = 14.sp
             )
         }
-        
+
         Divider()
-        
+
         Text(
             text = "Debug Info:",
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold
         )
-        
+
         Text(
             text = "Server URL: http://192.168.0.147:8080/api\n" +
                     "PHQ9 Endpoint: http://192.168.0.147:8080/api/ai/phq9\n\n" +

@@ -34,7 +34,7 @@ fun AIAnalysisScreen(
     onBackToResults: () -> Unit,
     onViewResources: () -> Unit
 ) {
-    
+
     val buttonModifier = Modifier
         .border(
             width = 1.dp,
@@ -71,17 +71,17 @@ fun AIAnalysisScreen(
                             tint = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     }
-                    
+
                     Text(
                         text = "AI Analysis",
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
-                    
+
                     Spacer(modifier = Modifier.width(48.dp)) // Balance the back button
                 }
-                
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly,
@@ -100,7 +100,7 @@ fun AIAnalysisScreen(
                             color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     }
-                    
+
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
                             text = "Level",
@@ -132,7 +132,7 @@ fun AIAnalysisScreen(
                 is AIAnalysisState.Loading -> {
                     LoadingState()
                 }
-                
+
                 is AIAnalysisState.Success -> {
                     aiResponse?.let { response ->
                         if (response.emotional_state != null ||
@@ -142,7 +142,7 @@ fun AIAnalysisScreen(
                             AIAnalysisCard(aiResponse = response)
                         } else {
                             ErrorState(
-                                title = "Incomplete Analysis", 
+                                title = "Incomplete Analysis",
                                 message = "The AI analysis was received but some data was missing."
                             )
                         }
@@ -151,14 +151,14 @@ fun AIAnalysisScreen(
                         message = "The AI analysis completed but no data was received."
                     )
                 }
-                
+
                 is AIAnalysisState.Error -> {
                     ErrorState(
                         title = "Analysis Unavailable",
                         message = aiAnalysisState.message
                     )
                 }
-                
+
                 else -> {
                     LoadingState()
                 }
@@ -204,7 +204,7 @@ fun AIAnalysisScreen(
                         )
                     }
                 }
-                
+
                 // Back to Results Button
                 OutlinedButton(
                     onClick = onBackToResults,

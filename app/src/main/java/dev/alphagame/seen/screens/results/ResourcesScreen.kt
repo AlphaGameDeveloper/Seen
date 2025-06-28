@@ -34,7 +34,7 @@ fun ResourcesScreen(
 ) {
     val context = LocalContext.current
     val translation = rememberTranslation()
-    
+
     val buttonModifier = Modifier
         .border(
             width = 1.dp,
@@ -71,17 +71,17 @@ fun ResourcesScreen(
                             tint = MaterialTheme.colorScheme.onSecondaryContainer
                         )
                     }
-                    
+
                     Text(
                         text = "Resources & Support",
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSecondaryContainer
                     )
-                    
+
                     Spacer(modifier = Modifier.width(48.dp))
                 }
-                
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly,
@@ -170,7 +170,7 @@ fun ResourcesScreen(
                         }
                     }
                 }
-                
+
                 totalScore <= 14 -> {
                     ResourceCard(
                         title = "Support & Treatment Options",
@@ -201,7 +201,7 @@ fun ResourcesScreen(
                         }
                     }
                 }
-                
+
                 else -> {
                     ResourceCard(
                         title = "Immediate Professional Help",
@@ -333,14 +333,14 @@ private fun ResourceCard(
                     color = onBackgroundColor
                 )
             }
-            
+
             Text(
                 text = description,
                 fontSize = 14.sp,
                 color = onBackgroundColor.copy(alpha = 0.8f),
                 lineHeight = 20.sp
             )
-            
+
             content()
         }
     }

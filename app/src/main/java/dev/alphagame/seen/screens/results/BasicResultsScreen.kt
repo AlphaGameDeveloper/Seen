@@ -30,7 +30,7 @@ fun BasicResultsScreen(
     onRetakeQuiz: () -> Unit
 ) {
     val translation = rememberTranslation()
-    
+
     val buttonModifier = Modifier
         .border(
             width = 1.dp,
@@ -57,14 +57,14 @@ fun BasicResultsScreen(
                 fontSize = 20.sp,
                 color = MaterialTheme.colorScheme.onBackground
             )
-            
+
             Text(
                 text = "$totalScore",
                 fontSize = 64.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
             )
-            
+
             Text(
                 text = levelText,
                 fontSize = 20.sp,
@@ -104,7 +104,7 @@ fun BasicResultsScreen(
                             color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     }
-                    
+
                     is AIAnalysisState.Success -> {
                         Icon(
                             imageVector = Icons.Default.Info,
@@ -118,7 +118,7 @@ fun BasicResultsScreen(
                             color = MaterialTheme.colorScheme.onTertiaryContainer
                         )
                     }
-                    
+
                     is AIAnalysisState.Error -> {
                         Icon(
                             imageVector = Icons.Default.Info,
@@ -132,7 +132,7 @@ fun BasicResultsScreen(
                             color = MaterialTheme.colorScheme.onErrorContainer
                         )
                     }
-                    
+
                     else -> {
                         Icon(
                             imageVector = Icons.Default.Info,

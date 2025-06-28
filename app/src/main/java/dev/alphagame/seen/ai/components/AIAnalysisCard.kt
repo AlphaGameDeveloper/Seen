@@ -28,7 +28,7 @@ fun AIAnalysisCard(
     val emotionalState = aiResponse.emotional_state ?: "No analysis available"
     val recommendations = aiResponse.recommendations ?: emptyList()
     val severity = aiResponse.severity ?: "Unknown"
-    
+
     // Determine color based on severity
     val severityColor = when (severity.lowercase()) {
         "minimal" -> Color(0xFF6ECB63)
@@ -38,7 +38,7 @@ fun AIAnalysisCard(
         "severe" -> Color(0xFFFF3C38)
         else -> MaterialTheme.colorScheme.primary
     }
-    
+
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -75,9 +75,9 @@ fun AIAnalysisCard(
                     color = MaterialTheme.colorScheme.onSurface
                 )
             }
-            
+
             HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
-            
+
             // Severity Level
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -96,7 +96,7 @@ fun AIAnalysisCard(
                     color = severityColor
                 )
             }
-            
+
             // Emotional State Analysis
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -114,7 +114,7 @@ fun AIAnalysisCard(
                     lineHeight = 20.sp
                 )
             }
-            
+
             // Recommendations
             if (recommendations.isNotEmpty()) {
                 Column(
@@ -137,7 +137,7 @@ fun AIAnalysisCard(
                             color = MaterialTheme.colorScheme.onSurface
                         )
                     }
-                    
+
                     Column(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
@@ -165,7 +165,7 @@ fun AIAnalysisCard(
                     }
                 }
             }
-            
+
             // Disclaimer
             Text(
                 text = "⚠️ This AI analysis is for informational purposes only and should not replace professional medical advice. Please consult with a healthcare provider for proper diagnosis and treatment.",

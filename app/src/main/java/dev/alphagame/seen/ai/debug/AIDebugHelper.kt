@@ -10,41 +10,41 @@ import kotlinx.coroutines.launch
  * Debug utilities for testing AI Manager connectivity
  */
 class AIDebugHelper(private val context: Context) {
-    
+
     private val aiManager = AIManager(context)
-    
+
     companion object {
         private const val TAG = "AIDebugHelper"
     }
-    
+
     /**
      * Run comprehensive debugging tests
      */
     fun runDebugTests(scope: CoroutineScope) {
         scope.launch {
             Log.d(TAG, "Starting AI Manager debug tests...")
-            
+
             // Test 1: Basic availability check
             Log.d(TAG, "\n=== Test 1: Basic Availability ===")
             val isAvailable = aiManager.isAIServiceAvailable()
             Log.d(TAG, "Basic availability: $isAvailable")
-            
+
             // Test 2: PHQ9 endpoint check
             Log.d(TAG, "\n=== Test 2: PHQ9 Endpoint ===")
             val isPHQ9Available = aiManager.isPHQ9EndpointAvailable()
             Log.d(TAG, "PHQ9 endpoint available: $isPHQ9Available")
-            
+
             // Test 3: Detailed debug information
             Log.d(TAG, "\n=== Test 3: Detailed Debug ===")
             aiManager.debugConnection()
             Log.d(TAG, "Debug complete. Check logs for detailed output.")
-            
+
             // Test 4: Actual PHQ9 submission
             if (isPHQ9Available) {
                 Log.d(TAG, "\n=== Test 4: Actual PHQ9 Submission ===")
                 val testResponses = listOf(1, 1, 2, 1, 0, 1, 1, 0, 1) // Total: 8 (Mild)
                 val totalScore = testResponses.sum()
-                
+
                 val result = aiManager.submitPHQ9ForAnalysis(totalScore, testResponses)
                 result.onSuccess { response ->
                     Log.d(TAG, "✅ PHQ9 submission successful!")
@@ -57,11 +57,11 @@ class AIDebugHelper(private val context: Context) {
             } else {
                 Log.w(TAG, "Skipping PHQ9 submission test - endpoint not available")
             }
-            
+
             Log.d(TAG, "AI Manager debug tests completed!")
         }
     }
-    
+
     /**
      * Quick connectivity test
      */
@@ -72,7 +72,7 @@ class AIDebugHelper(private val context: Context) {
             callback(isAvailable)
         }
     }
-    
+
     /**
      * Test with specific PHQ9 data
      */
@@ -86,10 +86,10 @@ class AIDebugHelper(private val context: Context) {
                 callback(false, "Invalid PHQ9 data: must be 9 responses with values 0-3")
                 return@launch
             }
-            
+
             val totalScore = responses.sum()
             val result = aiManager.submitPHQ9ForAnalysis(totalScore, responses)
-            
+
             result.onSuccess { response ->
                 Log.d(TAG, "Custom data test successful: ${response.severity}")
                 callback(true, "Success: ${response.severity}")

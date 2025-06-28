@@ -44,7 +44,7 @@ sealed class AIAnalysisState {
 
 @Composable
 fun MultiScreenResultFlow(
-    scores: List<Int>, 
+    scores: List<Int>,
     onRetakeQuiz: () -> Unit
 ) {
     var currentScreen by remember { mutableStateOf(ResultScreenType.BASIC_RESULTS) }
@@ -54,7 +54,7 @@ fun MultiScreenResultFlow(
     val preferencesManager = remember { PreferencesManager(context) }
     val aiManager = remember { AIManager(context) }
     val coroutineScope = rememberCoroutineScope()
-    
+
     // AI Analysis State
     var aiAnalysisState by remember { mutableStateOf<AIAnalysisState>(AIAnalysisState.Idle) }
     var aiResponse by remember { mutableStateOf<PHQ9Response?>(null) }
@@ -112,7 +112,7 @@ fun MultiScreenResultFlow(
                 onRetakeQuiz = onRetakeQuiz
             )
         }
-        
+
         ResultScreenType.AI_ANALYSIS -> {
             AIAnalysisScreen(
                 aiAnalysisState = aiAnalysisState,
@@ -124,7 +124,7 @@ fun MultiScreenResultFlow(
                 onViewResources = { currentScreen = ResultScreenType.RESOURCES }
             )
         }
-        
+
         ResultScreenType.RESOURCES -> {
             ResourcesScreen(
                 totalScore = totalScore,

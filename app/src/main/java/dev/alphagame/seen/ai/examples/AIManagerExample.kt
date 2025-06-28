@@ -11,9 +11,9 @@ import kotlinx.coroutines.launch
  * This demonstrates how to integrate AI analysis into your application
  */
 class AIManagerExample(private val context: Context) {
-    
+
     private val aiManager = AIManager(context)
-    
+
     /**
      * Example: Analyze PHQ-9 responses and handle results
      */
@@ -26,19 +26,19 @@ class AIManagerExample(private val context: Context) {
             println("Invalid PHQ-9 responses. Must be exactly 9 responses with values 0-3.")
             return
         }
-        
+
         // Calculate total score
         val totalScore = PHQ9Utils.calculateTotalScore(responses)
         val severity = PHQ9Utils.getSeverityLevel(totalScore)
-        
+
         println("PHQ-9 Results:")
         println("Total Score: $totalScore")
         println("Severity: $severity")
-        
+
         // Check if AI analysis is recommended
         if (PHQ9Utils.shouldRecommendAIAnalysis(totalScore)) {
             println("Requesting AI analysis...")
-            
+
             // Submit for AI analysis
             scope.launch {
                 aiManager.submitPHQ9ForAnalysis(totalScore, responses)
@@ -54,7 +54,7 @@ class AIManagerExample(private val context: Context) {
                     .onFailure { error ->
                         println("AI analysis failed: ${error.message}")
                         println("Falling back to traditional assessment...")
-                        
+
                         // Provide fallback recommendations based on score
                         provideFallbackRecommendations(totalScore)
                     }
@@ -64,7 +64,7 @@ class AIManagerExample(private val context: Context) {
             provideFallbackRecommendations(totalScore)
         }
     }
-    
+
     /**
      * Example: Check service availability before using AI features
      */
@@ -78,7 +78,7 @@ class AIManagerExample(private val context: Context) {
             false
         }
     }
-    
+
     /**
      * Provide basic recommendations when AI is not available
      */
@@ -108,7 +108,7 @@ class AIManagerExample(private val context: Context) {
                 "Consider contacting your healthcare provider today"
             )
         }
-        
+
         println("\nGeneral Recommendations:")
         recommendations.forEachIndexed { index, recommendation ->
             println("${index + 1}. $recommendation")
@@ -122,14 +122,14 @@ class AIManagerExample(private val context: Context) {
 class ExampleUsage {
     fun demonstrateAIManager(context: Context, scope: CoroutineScope) {
         val example = AIManagerExample(context)
-        
+
         // Example PHQ-9 responses (9 questions, each scored 0-3)
         val sampleResponses = listOf(2, 1, 3, 2, 2, 1, 2, 1, 1) // Total: 15 (Moderate)
-        
+
         scope.launch {
             // Check service availability first
             val isAvailable = example.checkAIServiceStatus()
-            
+
             if (isAvailable) {
                 // Proceed with AI analysis
                 example.analyzePHQ9Responses(sampleResponses, scope)
