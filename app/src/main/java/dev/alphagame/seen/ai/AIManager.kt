@@ -30,7 +30,7 @@ class AIManager(private val context: Context) {
 
     companion object {
         private const val TAG = "AIManager"
-        private const val BASE_URL = "http://192.168.0.147:8080/api"
+        private const val BASE_URL = "https://seen.alphagame.dev/api"
         private const val PHQ9_ENDPOINT = "$BASE_URL/ai/phq9"
         private const val JSON_MEDIA_TYPE = "application/json; charset=utf-8"
     }
@@ -103,7 +103,7 @@ class AIManager(private val context: Context) {
                 }
 
                 Log.d(TAG, "AI API response: $responseBody")
-                
+
                 // Parse response with error handling
                 val aiResponse = try {
                     gson.fromJson(responseBody, PHQ9Response::class.java)
@@ -111,14 +111,14 @@ class AIManager(private val context: Context) {
                     Log.e(TAG, "JSON parsing failed for response: $responseBody", e)
                     throw e
                 }
-                
+
                 if (aiResponse == null) {
                     Log.e(TAG, "Failed to parse AI response - response was null")
                     return@withContext Result.failure(
                         Exception("Failed to parse AI response")
                     )
                 }
-                
+
                 // Validate response fields
                 if (aiResponse.emotional_state == null && aiResponse.recommendations == null && aiResponse.severity == null) {
                     Log.e(TAG, "AI response contains no valid data")
@@ -126,7 +126,7 @@ class AIManager(private val context: Context) {
                         Exception("AI response contains no valid data")
                     )
                 }
-                
+
                 Log.i(TAG, "Successfully received AI analysis - Severity: ${aiResponse.severity ?: "Unknown"}")
                 return@withContext Result.success(aiResponse)
 
@@ -156,10 +156,10 @@ class AIManager(private val context: Context) {
 
                 val response = client.newCall(request).execute()
                 val available = response.isSuccessful || response.code == 404 // 404 is OK for base endpoint
-                
+
                 Log.d(TAG, "AI service availability check: $available (${response.code})")
                 Log.d(TAG, "Response body: ${response.body?.string()?.take(100)}")
-                
+
                 return@withContext available
 
             } catch (e: Exception) {
@@ -168,7 +168,7 @@ class AIManager(private val context: Context) {
             }
         }
     }
-    
+
     /**
      * Check if the specific PHQ9 AI endpoint is available
      */
@@ -180,10 +180,10 @@ class AIManager(private val context: Context) {
                     total = 0,
                     responses = listOf(0, 0, 0, 0, 0, 0, 0, 0, 0)
                 )
-                
+
                 val jsonBody = gson.toJson(testRequest)
                 val requestBody = jsonBody.toRequestBody(JSON_MEDIA_TYPE.toMediaTypeOrNull())
-                
+
                 val request = Request.Builder()
                     .url(PHQ9_ENDPOINT)
                     .post(requestBody)
@@ -194,12 +194,12 @@ class AIManager(private val context: Context) {
 
                 val response = client.newCall(request).execute()
                 val available = response.isSuccessful || response.code in 400..499 // Client errors are OK, means endpoint exists
-                
+
                 Log.d(TAG, "PHQ9 endpoint availability check: $available (${response.code})")
                 if (!response.isSuccessful) {
                     Log.d(TAG, "Response body: ${response.body?.string()}")
                 }
-                
+
                 return@withContext available
 
             } catch (e: Exception) {
@@ -208,7 +208,7 @@ class AIManager(private val context: Context) {
             }
         }
     }
-    
+
     /**
      * Debug method to test the AI service connection
      * This will provide detailed logging about the connection status
@@ -216,11 +216,11 @@ class AIManager(private val context: Context) {
     suspend fun debugConnection(): String {
         return withContext(Dispatchers.IO) {
             val results = mutableListOf<String>()
-            
+
             results.add("=== AI Service Debug Information ===")
             results.add("Base URL: $BASE_URL")
             results.add("PHQ9 Endpoint: $PHQ9_ENDPOINT")
-            
+
             // Test 1: Basic connectivity
             try {
                 results.add("\n--- Test 1: Base API Connectivity ---")
@@ -234,15 +234,15 @@ class AIManager(private val context: Context) {
                 results.add("Status Code: ${response.code}")
                 results.add("Status Message: ${response.message}")
                 results.add("Headers: ${response.headers}")
-                
+
                 val body = response.body?.string()
                 results.add("Response Body: ${body?.take(200) ?: "Empty"}")
-                
+
             } catch (e: Exception) {
                 results.add("Base connectivity failed: ${e.message}")
                 results.add("Exception type: ${e.javaClass.simpleName}")
             }
-            
+
             // Test 2: PHQ9 endpoint with test data
             try {
                 results.add("\n--- Test 2: PHQ9 Endpoint Test ---")
@@ -250,12 +250,12 @@ class AIManager(private val context: Context) {
                     total = 5,
                     responses = listOf(1, 0, 1, 1, 0, 1, 0, 1, 0)
                 )
-                
+
                 val jsonBody = gson.toJson(testRequest)
                 results.add("Test JSON: $jsonBody")
-                
+
                 val requestBody = jsonBody.toRequestBody(JSON_MEDIA_TYPE.toMediaTypeOrNull())
-                
+
                 val request = Request.Builder()
                     .url(PHQ9_ENDPOINT)
                     .post(requestBody)
@@ -267,23 +267,23 @@ class AIManager(private val context: Context) {
                 val response = client.newCall(request).execute()
                 results.add("PHQ9 Status Code: ${response.code}")
                 results.add("PHQ9 Status Message: ${response.message}")
-                
+
                 val body = response.body?.string()
                 results.add("PHQ9 Response: ${body ?: "Empty"}")
-                
+
             } catch (e: Exception) {
                 results.add("PHQ9 endpoint test failed: ${e.message}")
                 results.add("Exception type: ${e.javaClass.simpleName}")
             }
-            
+
             results.add("\n=== End Debug Information ===")
-            
+
             val debugOutput = results.joinToString("\n")
             Log.d(TAG, debugOutput)
             return@withContext debugOutput
         }
     }
-    
+
     /**
      * Simple network connectivity test to verify basic connection
      */
@@ -291,32 +291,32 @@ class AIManager(private val context: Context) {
         return withContext(Dispatchers.IO) {
             try {
                 Log.d(TAG, "Testing basic connectivity to: $BASE_URL")
-                
+
                 // Create a very simple request with minimal timeouts for faster feedback
                 val testClient = OkHttpClient.Builder()
                     .connectTimeout(10, TimeUnit.SECONDS)
                     .readTimeout(10, TimeUnit.SECONDS)
                     .build()
-                
+
                 val request = Request.Builder()
                     .url(BASE_URL)
                     .get()
                     .build()
 
                 Log.d(TAG, "Sending request to: ${request.url}")
-                
+
                 val response = testClient.newCall(request).execute()
                 val body = response.body?.string()
-                
+
                 val result = """
                     Status: ${response.code} ${response.message}
                     URL: ${request.url}
                     Response: ${body?.take(100) ?: "Empty"}
                 """.trimIndent()
-                
+
                 Log.d(TAG, "Response received: $result")
                 return@withContext result
-                
+
             } catch (e: java.net.ConnectException) {
                 val error = "Connection refused - Server not reachable at $BASE_URL"
                 Log.e(TAG, error, e)
