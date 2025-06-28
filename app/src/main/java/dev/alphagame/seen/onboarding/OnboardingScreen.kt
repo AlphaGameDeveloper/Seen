@@ -23,20 +23,6 @@ import dev.alphagame.seen.onboarding.components.WelcomePage
 import dev.alphagame.seen.translations.Translation
 import kotlinx.coroutines.launch
 
-enum class OnboardingStage {
-    WELCOME_CAROUSEL,
-    CONFIGURATION
-}
-
-enum class ConfigurationStep {
-    AI_FEATURES,
-    NOTIFICATIONS,
-    THEME_SETTINGS,
-    LANGUAGE_SETTINGS,
-    DATA_PRIVACY,
-    COMPLETE
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EnhancedOnboardingScreen(
