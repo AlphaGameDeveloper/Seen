@@ -73,20 +73,20 @@ fun EnhancedOnboardingScreen(
 
     var currentStage by remember { mutableStateOf(OnboardingStage.WELCOME_CAROUSEL) }
     var currentConfigStep by remember { mutableStateOf(ConfigurationStep.AI_FEATURES) }
-    
+
     // Configuration states
-    var aiEnabled by remember { mutableStateOf(false) }
+    var aiEnabled by remember { mutableStgc ateOf(false) }
     var notificationsEnabled by remember { mutableStateOf(false) }
     var remindersEnabled by remember { mutableStateOf(false) }
     var updateChecksEnabled by remember { mutableStateOf(false) }
     var selectedTheme by remember { mutableStateOf(PreferencesManager.THEME_AUTO) }
     var selectedLanguage by remember { mutableStateOf(preferencesManager.language) }
     var dataStorageEnabled by remember { mutableStateOf(false) }
-    
+
     // Dialog states
     var showNotificationSuccessDialog by remember { mutableStateOf(false) }
     var showNotificationDeniedDialog by remember { mutableStateOf(false) }
-    
+
     // Notification permission launcher
     val notificationPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -193,12 +193,12 @@ fun EnhancedOnboardingScreen(
                                 preferencesManager.language = selectedLanguage
                                 preferencesManager.isPhq9DataStorageEnabled = dataStorageEnabled
                                 preferencesManager.backgroundUpdateChecksEnabled = updateChecksEnabled && notificationsEnabled
-                                
+
                                 // Start background update checks if enabled
                                 if (updateChecksEnabled && notificationsEnabled) {
                                     updateCheckManager.startBackgroundUpdateChecks()
                                 }
-                                
+
                                 onOnboardingComplete()
                             }
                         }
@@ -466,7 +466,7 @@ fun ConfigurationFlow(
     onSkip: () -> Unit
 ) {
     val translation = rememberTranslation()
-    
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -589,7 +589,7 @@ fun AIConfigurationStep(
     onAIEnabledChange: (Boolean) -> Unit
 ) {
     val translation = rememberTranslation()
-    
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -639,7 +639,7 @@ fun AIConfigurationStep(
                         role = Role.RadioButton
                     ),
                 colors = CardDefaults.cardColors(
-                    containerColor = if (aiEnabled) MaterialTheme.colorScheme.primaryContainer 
+                    containerColor = if (aiEnabled) MaterialTheme.colorScheme.primaryContainer
                                    else MaterialTheme.colorScheme.surface
                 ),
                 border = if (aiEnabled) CardDefaults.outlinedCardBorder().copy(
@@ -682,7 +682,7 @@ fun AIConfigurationStep(
                         role = Role.RadioButton
                     ),
                 colors = CardDefaults.cardColors(
-                    containerColor = if (!aiEnabled) MaterialTheme.colorScheme.primaryContainer 
+                    containerColor = if (!aiEnabled) MaterialTheme.colorScheme.primaryContainer
                                    else MaterialTheme.colorScheme.surface
                 ),
                 border = if (!aiEnabled) CardDefaults.outlinedCardBorder().copy(
@@ -729,7 +729,7 @@ fun NotificationConfigurationStep(
     onUpdateChecksEnabledChange: (Boolean) -> Unit
 ) {
     val translation = rememberTranslation()
-    
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -790,10 +790,10 @@ fun NotificationConfigurationStep(
                         text = if (notificationsEnabled) "Notifications Enabled ✓" else translation.onboardingAllowNotifications
                     )
                 }
-                
+
                 if (notificationsEnabled) {
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     // Reminder notifications
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -816,9 +816,9 @@ fun NotificationConfigurationStep(
                             onCheckedChange = onRemindersEnabledChange
                         )
                     }
-                    
+
                     Spacer(modifier = Modifier.height(12.dp))
-                    
+
                     // Update notifications
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -855,7 +855,7 @@ fun GeneralSettingsConfigurationStep(
     onLanguageChange: (String) -> Unit
 ) {
     val translation = rememberTranslation()
-    
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -906,15 +906,15 @@ fun GeneralSettingsConfigurationStep(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 val themes = listOf(
                     PreferencesManager.THEME_AUTO to "System Default",
                     PreferencesManager.THEME_LIGHT to "Light",
                     PreferencesManager.THEME_DARK to "Dark"
                 )
-                
+
                 themes.forEach { (code, label) ->
                     Row(
                         modifier = Modifier
@@ -958,15 +958,15 @@ fun GeneralSettingsConfigurationStep(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 val languages = listOf(
                     PreferencesManager.LANGUAGE_ENGLISH to "English",
                     PreferencesManager.LANGUAGE_FRENCH to "Français",
                     PreferencesManager.LANGUAGE_SPANISH to "Español"
                 )
-                
+
                 languages.forEach { (code, label) ->
                     Row(
                         modifier = Modifier
@@ -1001,7 +1001,7 @@ fun DataPrivacyConfigurationStep(
     onDataStorageEnabledChange: (Boolean) -> Unit
 ) {
     val translation = rememberTranslation()
-    
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -1101,7 +1101,7 @@ fun DataPrivacyConfigurationStep(
 @Composable
 fun SetupCompleteStep() {
     val translation = rememberTranslation()
-    
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
