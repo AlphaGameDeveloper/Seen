@@ -135,6 +135,11 @@ class AnalyticsManager(private val context: Context) : DefaultLifecycleObserver 
             Log.i(TAG, "Analytics enabled with existing UUID")
         }
 
+        // Ensure we have a valid session before tracking events
+        if (!isSessionActive) {
+            startSession()
+        }
+
         // Track analytics enablement
         trackEvent(EVENT_FEATURE_ENABLED, mapOf("feature" to "analytics"))
     }
@@ -265,6 +270,12 @@ class AnalyticsManager(private val context: Context) : DefaultLifecycleObserver 
             return
         }
 
+        // Ensure we have a valid session before tracking events
+        if (!isSessionActive) {
+            Log.v(TAG, "Starting session for event '$eventName'")
+            startSession()
+        }
+
         // Check for rate limiting on duplicate events
         val currentTime = System.currentTimeMillis()
         val lastEventTime = lastEventTimes[eventName] ?: 0L
@@ -363,17 +374,28 @@ class AnalyticsManager(private val context: Context) : DefaultLifecycleObserver 
     }
 
     private fun getCurrentSessionInfo(): SessionInfo {
-        // Ensure we always have a valid session ID
+        // Ensure we always have a valid session ID and start time
+        val currentTime = System.currentTimeMillis()
+        val validStartTime = if (sessionStartTime > 0) sessionStartTime else currentTime
+        
         val sessionId = if (currentSessionId.isNotEmpty()) {
             currentSessionId
         } else {
             // Fallback session ID if somehow empty
-            "session_${sessionStartTime}_${getUserUUID().take(8)}"
+            "session_${validStartTime}_${getUserUUID().take(8)}"
+        }
+
+        // Log warning if we had to use fallback values
+        if (sessionStartTime <= 0) {
+            Log.w(TAG, "Using fallback start_time for session info (sessionStartTime was $sessionStartTime)")
+        }
+        if (currentSessionId.isEmpty()) {
+            Log.w(TAG, "Using fallback session_id for session info")
         }
 
         return SessionInfo(
             session_id = sessionId,
-            start_time = sessionStartTime,
+            start_time = validStartTime,
             app_version = AppVersionInfo.VERSION_NAME,
             device_info = getDeviceInfo()
         )
