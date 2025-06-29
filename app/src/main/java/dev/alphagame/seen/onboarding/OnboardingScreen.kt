@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import dev.alphagame.seen.analytics.AnalyticsManager
 import dev.alphagame.seen.data.PreferencesManager
 import dev.alphagame.seen.data.UpdateCheckManager
 import dev.alphagame.seen.onboarding.components.WelcomeCarousel
@@ -31,6 +32,7 @@ fun EnhancedOnboardingScreen(
     val context = LocalContext.current
     val preferencesManager = remember { PreferencesManager(context) }
     val updateCheckManager = remember { UpdateCheckManager(context) }
+    val analyticsManager = remember { AnalyticsManager(context) }
     val hapticFeedback = LocalHapticFeedback.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -42,9 +44,15 @@ fun EnhancedOnboardingScreen(
     var notificationsEnabled by remember { mutableStateOf(preferencesManager.notificationsEnabled) }
     var remindersEnabled by remember { mutableStateOf(preferencesManager.notificationsEnabled) } // Default to same as notifications
     var updateChecksEnabled by remember { mutableStateOf(preferencesManager.backgroundUpdateChecksEnabled) }
+    var analyticsEnabled by remember { mutableStateOf(preferencesManager.analyticsEnabled) }
     var selectedTheme by remember { mutableStateOf(preferencesManager.themeMode) }
     var selectedLanguage by remember { mutableStateOf(preferencesManager.language) }
     var dataStorageEnabled by remember { mutableStateOf(preferencesManager.isPhq9DataStorageEnabled) }
+
+    // Track onboarding start
+    LaunchedEffect(Unit) {
+        analyticsManager.trackEvent(AnalyticsManager.EVENT_ONBOARDING_STARTED)
+    }
 
     // Translation that reacts to language changes
     val translation = remember(selectedLanguage) {
@@ -143,6 +151,7 @@ fun EnhancedOnboardingScreen(
                     notificationsEnabled = notificationsEnabled,
                     remindersEnabled = remindersEnabled,
                     updateChecksEnabled = updateChecksEnabled,
+                    analyticsEnabled = analyticsEnabled,
                     selectedTheme = selectedTheme,
                     selectedLanguage = selectedLanguage,
                     dataStorageEnabled = dataStorageEnabled,
@@ -193,6 +202,17 @@ fun EnhancedOnboardingScreen(
                             updateCheckManager.stopBackgroundUpdateChecks()
                         }
                     },
+                    onAnalyticsEnabledChange = {
+                        analyticsEnabled = it
+                        preferencesManager.analyticsEnabled = it
+
+                        // Enable or disable analytics in the manager
+                        if (it) {
+                            analyticsManager.enableAnalytics()
+                        } else {
+                            analyticsManager.disableAnalytics()
+                        }
+                    },
                     onThemeChange = {
                         selectedTheme = it
                         preferencesManager.themeMode = it
@@ -208,11 +228,22 @@ fun EnhancedOnboardingScreen(
                     onNext = {
                         when (currentConfigStep) {
                             ConfigurationStep.AI_FEATURES -> currentConfigStep = ConfigurationStep.NOTIFICATIONS
-                            ConfigurationStep.NOTIFICATIONS -> currentConfigStep = ConfigurationStep.THEME_SETTINGS
+                            ConfigurationStep.NOTIFICATIONS -> currentConfigStep = ConfigurationStep.ANALYTICS
+                            ConfigurationStep.ANALYTICS -> currentConfigStep = ConfigurationStep.THEME_SETTINGS
                             ConfigurationStep.THEME_SETTINGS -> currentConfigStep = ConfigurationStep.LANGUAGE_SETTINGS
                             ConfigurationStep.LANGUAGE_SETTINGS -> currentConfigStep = ConfigurationStep.DATA_PRIVACY
                             ConfigurationStep.DATA_PRIVACY -> currentConfigStep = ConfigurationStep.COMPLETE
                             ConfigurationStep.COMPLETE -> {
+                                // Track onboarding completion
+                                analyticsManager.trackEvent(AnalyticsManager.EVENT_ONBOARDING_COMPLETED, mapOf(
+                                    "ai_enabled" to aiEnabled,
+                                    "notifications_enabled" to notificationsEnabled,
+                                    "analytics_enabled" to analyticsEnabled,
+                                    "theme" to selectedTheme,
+                                    "language" to selectedLanguage,
+                                    "data_storage_enabled" to dataStorageEnabled
+                                ))
+
                                 // All settings are already applied immediately when changed
                                 // Just complete the onboarding
                                 onOnboardingComplete()
@@ -223,13 +254,18 @@ fun EnhancedOnboardingScreen(
                         when (currentConfigStep) {
                             ConfigurationStep.AI_FEATURES -> currentStage = OnboardingStage.WELCOME_CAROUSEL
                             ConfigurationStep.NOTIFICATIONS -> currentConfigStep = ConfigurationStep.AI_FEATURES
-                            ConfigurationStep.THEME_SETTINGS -> currentConfigStep = ConfigurationStep.NOTIFICATIONS
+                            ConfigurationStep.ANALYTICS -> currentConfigStep = ConfigurationStep.NOTIFICATIONS
+                            ConfigurationStep.THEME_SETTINGS -> currentConfigStep = ConfigurationStep.ANALYTICS
                             ConfigurationStep.LANGUAGE_SETTINGS -> currentConfigStep = ConfigurationStep.THEME_SETTINGS
                             ConfigurationStep.DATA_PRIVACY -> currentConfigStep = ConfigurationStep.LANGUAGE_SETTINGS
                             ConfigurationStep.COMPLETE -> currentConfigStep = ConfigurationStep.DATA_PRIVACY
                         }
                     },
-                    onSkip = onOnboardingComplete
+                    onSkip = {
+                        // Track onboarding skip
+                        analyticsManager.trackEvent(AnalyticsManager.EVENT_ONBOARDING_SKIPPED)
+                        onOnboardingComplete()
+                    }
                 )
             }
         }

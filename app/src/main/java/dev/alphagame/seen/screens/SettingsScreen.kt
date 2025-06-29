@@ -22,8 +22,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.alphagame.seen.analytics.AnalyticsManager
 import dev.alphagame.seen.components.UpdateDialog
 import dev.alphagame.seen.components.NoInternetDialog
+import dev.alphagame.seen.components.HealthStatusDots
+import dev.alphagame.seen.health.HealthStatusManager
 import dev.alphagame.seen.data.AppVersionInfo
 import dev.alphagame.seen.data.DatabaseHelper
 import dev.alphagame.seen.data.PreferencesManager
@@ -45,6 +48,8 @@ fun SettingsScreen(
     val context = LocalContext.current
     val hapticFeedback = LocalHapticFeedback.current
     val preferencesManager = remember { PreferencesManager(context) }
+    val analyticsManager = remember { AnalyticsManager(context) }
+    val healthStatusManager = remember { HealthStatusManager(context) }
     val databaseHelper = remember { DatabaseHelper(context) }
     val widgetMoodManager = remember { WidgetMoodManager(context) }
     val updateChecker = remember { UpdateChecker(context) }
@@ -62,12 +67,24 @@ fun SettingsScreen(
     var showNoUpdateDialog by remember { mutableStateOf(false) }
     var showUpdateErrorDialog by remember { mutableStateOf(false) }
     var showNetworkErrorDialog by remember { mutableStateOf(false) }
-    var updateInfo by remember { mutableStateOf<UpdateInfo?>(null) }
-
-    // Keep local state in sync with preference changes
+    var updateInfo by remember { mutableStateOf<UpdateInfo?>(null) }    // Keep local state in sync with preference changes
     LaunchedEffect(preferencesManager.themeMode, preferencesManager.language, refreshKey) {
         currentTheme = preferencesManager.themeMode
         currentLanguage = preferencesManager.language
+
+        // Track settings screen access (only on first load, not on refreshes)
+        if (refreshKey == 0) {
+            analyticsManager.trackEvent("settings_screen_accessed")
+            // Check health status when screen is first accessed
+            healthStatusManager.checkAllServices()
+        }
+    }
+
+    // Cleanup health status manager
+    DisposableEffect(Unit) {
+        onDispose {
+            healthStatusManager.cleanup()
+        }
     }
 
     Column(
@@ -91,6 +108,9 @@ fun SettingsScreen(
                         contentDescription = "Back"
                     )
                 }
+            },
+            actions = {
+                HealthStatusDots(healthStatusManager = healthStatusManager)
             },
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.surface,
@@ -503,6 +523,8 @@ fun SettingsScreen(
                             checked = phq9DataStorageEnabled,
                             onCheckedChange = { enabled ->
                                 hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                                // Track PHQ-9 data storage setting change
+                                analyticsManager.trackSettingChanged("phq9_data_storage", phq9DataStorageEnabled.toString(), enabled.toString())
                                 phq9DataStorageEnabled = enabled
                                 preferencesManager.isPhq9DataStorageEnabled = enabled
                             }
@@ -641,6 +663,9 @@ fun SettingsScreen(
             confirmButton = {
                 Button(
                     onClick = {
+                        // Track data deletion action
+                        analyticsManager.trackEvent("all_data_deleted")
+
                         // Clear all data from database
                         databaseHelper.clearAllData()
 

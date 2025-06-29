@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.alphagame.seen.analytics.AnalyticsManager
 import dev.alphagame.seen.data.MoodEntry
 import dev.alphagame.seen.data.WidgetMoodManager
 import dev.alphagame.seen.translations.rememberTranslation
@@ -29,12 +30,17 @@ fun MoodHistoryScreen(
     val context = LocalContext.current
     val translation = rememberTranslation()
     val widgetMoodManager = remember { WidgetMoodManager(context) }
+    val analyticsManager = remember { AnalyticsManager(context) }
     var moodEntries by remember { mutableStateOf<List<MoodEntry>>(emptyList()) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     // Load mood entries
     LaunchedEffect(Unit) {
         moodEntries = widgetMoodManager.getMoodEntries()
+        // Track mood history screen access
+        analyticsManager.trackEvent("mood_history_accessed", mapOf(
+            "total_entries" to moodEntries.size.toString()
+        ))
     }
 
     Column(
@@ -102,6 +108,10 @@ fun MoodHistoryScreen(
                         entry = entry,
                         translation = translation,
                         onDeleteClick = { entryToDelete ->
+                            // Track individual mood entry deletion
+                            analyticsManager.trackEvent("mood_entry_deleted", mapOf(
+                                "mood" to entryToDelete.mood.label
+                            ))
                             widgetMoodManager.deleteMoodEntry(entryToDelete.timestamp)
                             moodEntries = widgetMoodManager.getMoodEntries()
                         }
@@ -121,6 +131,11 @@ fun MoodHistoryScreen(
             confirmButton = {
                 TextButton(
                     onClick = {
+                        val entriesToDelete = moodEntries.size
+                        // Track mood history clearing
+                        analyticsManager.trackEvent("mood_history_cleared", mapOf(
+                            "entries_deleted" to entriesToDelete.toString()
+                        ))
                         widgetMoodManager.clearAllMoods()
                         moodEntries = emptyList()
                         showDeleteDialog = false

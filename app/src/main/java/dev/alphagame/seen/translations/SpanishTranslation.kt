@@ -188,4 +188,23 @@ class SpanishTranslation : Translation() {
     override val onboardingSetupComplete = "¡Todo listo!"
     override val onboardingSetupCompleteDesc = "Seen ahora está configurado según tus preferencias. Siempre puedes cambiar estas configuraciones más tarde."
     override val onboardingReadyToUse = "Comenzar a usar Seen"
+
+    // Analytics
+    override val onboardingAnalyticsTitle = "Ayuda a mejorar Seen"
+    override val onboardingAnalyticsDesc = "Comparte datos de uso anónimos para ayudarnos a mejorar Seen para todos"
+    override val onboardingAnalyticsEnabled = "📈 Compartir datos de uso"
+    override val onboardingAnalyticsDisabled = "🥺 Mantener datos privados"
+    override val analyticsPrivacyNote = "Solo recopilamos estadísticas de uso anónimas para mejorar la aplicación. Nunca se comparten datos de salud personal."
+    override val analyticsDataUsage = "Los datos recopilados incluyen patrones de uso de la aplicación, interacciones con funciones e informes de fallos. Todos los datos son anónimos y no se pueden vincular a ti."
+
+    // Health Status
+    override val serviceHealthStatus = "Estado de salud de servicios"
+    override val analyticsService = "Análisis"
+    override val releasesService = "Versiones"
+    override val aiService = "IA"
+    override val healthyStatus = "Saludable"
+    override val unhealthyStatus = "No saludable"
+    override val unknownStatus = "Desconocido"
+    override val refreshStatus = "Actualizar"
+    override val closeDialog = "Cerrar"
 }

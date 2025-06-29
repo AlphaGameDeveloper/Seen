@@ -8,6 +8,7 @@ enum class OnboardingStage {
 enum class ConfigurationStep {
     AI_FEATURES,
     NOTIFICATIONS,
+    ANALYTICS,
     THEME_SETTINGS,
     LANGUAGE_SETTINGS,
     DATA_PRIVACY,

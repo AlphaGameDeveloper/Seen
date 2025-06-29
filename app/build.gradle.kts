@@ -199,6 +199,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
     implementation(libs.okhttp)
     implementation("androidx.work:work-runtime-ktx:2.9.0")
+    implementation("androidx.lifecycle:lifecycle-process:2.8.2")
 
 }
 

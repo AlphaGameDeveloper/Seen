@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import dev.alphagame.seen.analytics.AnalyticsManager
 import dev.alphagame.seen.components.UpdateDialog
 import dev.alphagame.seen.data.PHQ9Data
 import dev.alphagame.seen.data.PreferencesManager
@@ -81,6 +82,7 @@ fun SeenApplication(
 ) {
     val context = LocalContext.current
     val preferencesManager = remember { PreferencesManager(context) }
+    val analyticsManager = remember { AnalyticsManager(context) }
     val translation = rememberTranslation()
     val updateChecker = remember { UpdateChecker(context) }
     val updateCheckManager = remember { UpdateCheckManager(context) }
@@ -209,17 +211,21 @@ fun SeenApplication(
             "welcome" -> {
                 WelcomeScreen(
                     onStartQuiz = {
+                        analyticsManager.trackEvent(AnalyticsManager.EVENT_PHQ9_STARTED)
                         navigateTo("quiz")
                         currentQuestion = 0
                         scores.clear()
                     },
                     onGoToNotes = {
+                        analyticsManager.trackFeatureUsed("notes_screen")
                         navigateTo("notes")
                     },
                     onGoToMoodHistory = {
+                        analyticsManager.trackEvent(AnalyticsManager.EVENT_MOOD_HISTORY_VIEWED)
                         navigateTo("mood_history")
                     },
                     onSecretDebugScreen = {
+                        analyticsManager.trackFeatureUsed("debug_screen")
                         navigateTo("debug_database")
                     }
                 )
@@ -234,6 +240,19 @@ fun SeenApplication(
                         onAnswerSelected = { score ->
                             scores.add(score)
                             currentQuestion++
+
+                            // Track if quiz was abandoned
+                            if (currentQuestion == questions.size) {
+                                val totalScore = scores.sum()
+                                val severity = when {
+                                    totalScore <= 4 -> "Minimal"
+                                    totalScore <= 9 -> "Mild"
+                                    totalScore <= 14 -> "Moderate"
+                                    totalScore <= 19 -> "Moderately Severe"
+                                    else -> "Severe"
+                                }
+                                analyticsManager.trackPHQ9Completion(totalScore, severity, false)
+                            }
                         }
                     )
                 } else {
@@ -258,10 +277,9 @@ fun SeenApplication(
             "settings" -> {
                 SettingsScreen(
                     onBackToHome = {
+                        analyticsManager.trackEvent(AnalyticsManager.EVENT_SETTINGS_OPENED)
                         navigateBack()
-                    },
-                    onThemeChanged = onThemeChanged,
-                    onLanguageChanged = onLanguageChanged
+                    }
                 )
             }
             "mood_history" -> {

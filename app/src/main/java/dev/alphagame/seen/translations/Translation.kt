@@ -176,6 +176,25 @@ abstract class Translation {
     abstract val onboardingSetupCompleteDesc: String
     abstract val onboardingReadyToUse: String
 
+    // Analytics
+    abstract val onboardingAnalyticsTitle: String
+    abstract val onboardingAnalyticsDesc: String
+    abstract val onboardingAnalyticsEnabled: String
+    abstract val onboardingAnalyticsDisabled: String
+    abstract val analyticsPrivacyNote: String
+    abstract val analyticsDataUsage: String
+
+    // Health Status
+    abstract val serviceHealthStatus: String
+    abstract val analyticsService: String
+    abstract val releasesService: String
+    abstract val aiService: String
+    abstract val healthyStatus: String
+    abstract val unhealthyStatus: String
+    abstract val unknownStatus: String
+    abstract val refreshStatus: String
+    abstract val closeDialog: String
+
     companion object {
         fun getTranslation(languageCode: String): Translation {
             return when (languageCode) {

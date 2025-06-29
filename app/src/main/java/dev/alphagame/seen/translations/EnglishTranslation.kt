@@ -156,6 +156,14 @@ class EnglishTranslation : Translation() {
     override val onboardingSetupCompleteDesc = "Seen is now configured to your preferences. You can always change these settings later."
     override val onboardingReadyToUse = "Start Using Seen"
 
+    // Analytics
+    override val onboardingAnalyticsTitle = "Help Improve Seen"
+    override val onboardingAnalyticsDesc = "Share anonymous usage data to help us make Seen better for everyone"
+    override val onboardingAnalyticsEnabled = "📈 Share Usage Data"
+    override val onboardingAnalyticsDisabled = "🥺 Keep Data Private"
+    override val analyticsPrivacyNote = "We only collect anonymous usage statistics to improve the app. No personal health data is ever shared."
+    override val analyticsDataUsage = "Data collected includes app usage patterns, feature interactions, and crash reports. All data is anonymous and cannot be linked back to you."
+
     // Common
     override val yes = "Yes"
     override val no = "No"
@@ -188,4 +196,15 @@ class EnglishTranslation : Translation() {
     override val updateNotificationMessage = "A new version of Seen is available. Tap to download."
     override val enableBackgroundUpdateChecks = "Enable Background Update Checks"
     override val enableBackgroundUpdateChecksDescription = "Automatically check for new versions every 15 minutes and receive notifications"
+
+    // Health Status
+    override val serviceHealthStatus = "Service Health Status"
+    override val analyticsService = "Analytics"
+    override val releasesService = "Releases"
+    override val aiService = "AI"
+    override val healthyStatus = "Healthy"
+    override val unhealthyStatus = "Unhealthy"
+    override val unknownStatus = "Unknown"
+    override val refreshStatus = "Refresh"
+    override val closeDialog = "Close"
 }

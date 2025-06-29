@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import dev.alphagame.seen.onboarding.ConfigurationStep
 import dev.alphagame.seen.onboarding.steps.AIConfigurationStep
+import dev.alphagame.seen.onboarding.steps.AnalyticsConfigurationStep
 import dev.alphagame.seen.onboarding.steps.DataPrivacyConfigurationStep
 import dev.alphagame.seen.onboarding.steps.LanguageConfigurationStep
 import dev.alphagame.seen.onboarding.steps.NotificationConfigurationStep
@@ -42,6 +43,7 @@ fun ConfigurationFlow(
     notificationsEnabled: Boolean,
     remindersEnabled: Boolean,
     updateChecksEnabled: Boolean,
+    analyticsEnabled: Boolean,
     selectedTheme: String,
     selectedLanguage: String,
     dataStorageEnabled: Boolean,
@@ -49,6 +51,7 @@ fun ConfigurationFlow(
     onNotificationsEnabledChange: (Boolean) -> Unit,
     onRemindersEnabledChange: (Boolean) -> Unit,
     onUpdateChecksEnabledChange: (Boolean) -> Unit,
+    onAnalyticsEnabledChange: (Boolean) -> Unit,
     onThemeChange: (String) -> Unit,
     onLanguageChange: (String) -> Unit,
     onDataStorageEnabledChange: (Boolean) -> Unit,
@@ -103,6 +106,13 @@ fun ConfigurationFlow(
                     onNotificationsEnabledChange = onNotificationsEnabledChange,
                     onRemindersEnabledChange = onRemindersEnabledChange,
                     onUpdateChecksEnabledChange = onUpdateChecksEnabledChange,
+                    translation = translation
+                )
+            }
+            ConfigurationStep.ANALYTICS -> {
+                AnalyticsConfigurationStep(
+                    analyticsEnabled = analyticsEnabled,
+                    onAnalyticsEnabledChange = onAnalyticsEnabledChange,
                     translation = translation
                 )
             }

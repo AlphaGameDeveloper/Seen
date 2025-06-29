@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.alphagame.seen.analytics.AnalyticsManager
 import dev.alphagame.seen.translations.rememberTranslation
 
 @Composable
@@ -25,7 +26,13 @@ fun WelcomeScreen(
 ) {
     val context = LocalContext.current
     val translation = rememberTranslation()
+    val analyticsManager = remember { AnalyticsManager(context) }
     var clickCount by remember { mutableStateOf(0) }
+
+    // Track welcome screen access
+    LaunchedEffect(Unit) {
+        analyticsManager.trackEvent("welcome_screen_accessed")
+    }
 
     // Reset click count after 30 seconds of inactivity
     LaunchedEffect(clickCount) {
@@ -135,7 +142,11 @@ fun WelcomeScreen(
 
         // Start Button
         Button(
-            onClick = onStartQuiz,
+            onClick = {
+                // Track PHQ-9 start from welcome screen
+                analyticsManager.trackEvent("phq9_started_from_welcome")
+                onStartQuiz()
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
@@ -157,7 +168,11 @@ fun WelcomeScreen(
 
         // Notes Button
         Button(
-            onClick = onGoToNotes,
+            onClick = {
+                // Track notes screen access from welcome
+                analyticsManager.trackEvent("notes_accessed_from_welcome")
+                onGoToNotes()
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
@@ -179,7 +194,11 @@ fun WelcomeScreen(
 
         // Mood History Button
         Button(
-            onClick = onGoToMoodHistory,
+            onClick = {
+                // Track mood history access from welcome
+                analyticsManager.trackEvent("mood_history_accessed_from_welcome")
+                onGoToMoodHistory()
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
