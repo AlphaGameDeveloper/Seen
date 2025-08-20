@@ -51,6 +51,15 @@
                 <action android:name="dev.alphagame.seen.TRIGGER_UPDATE_CHECK" />
             </intent-filter>
         </receiver>
+
+        <!-- Update Notification Action Handler -->
+        <receiver
+            android:name=".receivers.UpdateNotificationActionReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="dev.alphagame.seen.action.DONT_REMIND" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
