@@ -31,7 +31,8 @@ class AIManager(private val context: Context) {
 
     companion object {
         private const val TAG = "AIManager"
-        private const val BASE_URL = "https://seen.alphagame.dev/api"
+        // private const val BASE_URL = "https://seen.alphagame.dev/api"
+        private const val BASE_URL = "http://192.168.0.147:8080/api"
         private const val PHQ9_ENDPOINT = "$BASE_URL/ai/phq9"
         private const val JSON_MEDIA_TYPE = "application/json; charset=utf-8"
     }
@@ -44,7 +45,9 @@ class AIManager(private val context: Context) {
      */
     suspend fun submitPHQ9ForAnalysis(
         totalScore: Int,
-        responses: List<Int>
+        responses: List<Int>,
+        notes: String? = null,
+        moodEntries: List<String>? = null
     ): Result<PHQ9Response> {
         // Track AI analysis request
         analyticsManager.trackEvent("ai_analysis_requested", mapOf(
@@ -78,7 +81,9 @@ class AIManager(private val context: Context) {
                 // Create request
                 val phq9Request = PHQ9Request(
                     total = totalScore,
-                    responses = responses
+                    responses = responses,
+                    notes = notes,
+                    moodEntries = moodEntries
                 )
 
                 val jsonBody = gson.toJson(phq9Request)

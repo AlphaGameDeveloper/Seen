@@ -26,6 +26,8 @@ import dev.alphagame.seen.ai.AIManager
 import dev.alphagame.seen.ai.models.PHQ9Response
 import dev.alphagame.seen.data.NotesManager
 import dev.alphagame.seen.data.PreferencesManager
+import dev.alphagame.seen.data.Timestamps
+import dev.alphagame.seen.data.WidgetMoodManager
 import dev.alphagame.seen.translations.rememberTranslation
 import kotlinx.coroutines.launch
 
@@ -82,7 +84,16 @@ fun MultiScreenResultFlow(
             aiAnalysisState = AIAnalysisState.Loading
             coroutineScope.launch {
                 try {
-                    aiManager.submitPHQ9ForAnalysis(totalScore, scores)
+                    // Gather notes and mood entries
+                    val notes = notesManager.getAllNotes()
+                        .sortedBy { it.timestamp }
+                        .joinToString("\n") { "[${Timestamps.formatTimestamp(it.timestamp)}] mood:'${it.mood}', entry: '${it.content}'" }
+                        val widgetMoodManager = dev.alphagame.seen.data.WidgetMoodManager(context)
+                        val moodEntries = widgetMoodManager.getMoodEntries()
+                            .sortedBy { it.timestamp }
+                            .map { "${it.timestamp}: ${it.mood.label}" } // it.mood.emoji can be used but not sure
+
+                    aiManager.submitPHQ9ForAnalysis(totalScore, scores, notes, moodEntries)
                         .onSuccess { response ->
                             Log.d("ResultScreen", "AI analysis successful")
                             aiResponse = response
