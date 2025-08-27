@@ -17,6 +17,7 @@ class PreferencesManager(context: Context) {
         private const val KEY_NOTIFICATIONS_ENABLED = "notifications_enabled"
         private const val KEY_BACKGROUND_UPDATE_CHECKS = "background_update_checks"
         private const val KEY_LAST_BACKGROUND_UPDATE_CHECK = "last_background_update_check"
+        private const val KEY_LAST_UPDATE_NOTIFICATION = "last_update_notification"
         private const val KEY_ANALYTICS_ENABLED = "analytics_enabled"
 
         const val THEME_LIGHT = "light"
@@ -64,6 +65,10 @@ class PreferencesManager(context: Context) {
         get() = prefs.getLong(KEY_LAST_BACKGROUND_UPDATE_CHECK, 0)
         set(value) = prefs.edit().putLong(KEY_LAST_BACKGROUND_UPDATE_CHECK, value).apply()
 
+    var lastUpdateNotificationTime: Long
+        get() = prefs.getLong(KEY_LAST_UPDATE_NOTIFICATION, 0)
+        set(value) = prefs.edit().putLong(KEY_LAST_UPDATE_NOTIFICATION, value).apply()
+
     var analyticsEnabled: Boolean
         get() = prefs.getBoolean(KEY_ANALYTICS_ENABLED, false)
         set(value) = prefs.edit().putBoolean(KEY_ANALYTICS_ENABLED, value).apply()
@@ -73,6 +78,13 @@ class PreferencesManager(context: Context) {
         val currentTime = System.currentTimeMillis()
         val twentyFourHours = 24 * 60 * 60 * 1000L
         return (currentTime - lastCheck) > twentyFourHours
+    }
+
+    fun shouldSendUpdateNotification(): Boolean {
+        val lastNotification = lastUpdateNotificationTime
+        val currentTime = System.currentTimeMillis()
+        val twentyFourHours = 24 * 60 * 60 * 1000L
+        return (currentTime - lastNotification) > twentyFourHours
     }
 
     fun clearAllPreferences() {

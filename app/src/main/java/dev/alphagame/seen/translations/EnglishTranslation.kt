@@ -194,6 +194,7 @@ class EnglishTranslation : Translation() {
     // Update Notifications
     override val updateNotificationTitle = "New Update Available"
     override val updateNotificationMessage = "A new version of Seen is available. Tap to download."
+    override val updateNotificationDontRemind = "Don't remind me"
     override val enableBackgroundUpdateChecks = "Enable Background Update Checks"
     override val enableBackgroundUpdateChecksDescription = "Automatically check for new versions every 15 minutes and receive notifications"
 
