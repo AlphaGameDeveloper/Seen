@@ -149,6 +149,7 @@ abstract class Translation {
     // Update Notifications
     abstract val updateNotificationTitle: String
     abstract val updateNotificationMessage: String
+    abstract val updateNotificationDontRemind: String
     abstract val enableBackgroundUpdateChecks: String
     abstract val enableBackgroundUpdateChecksDescription: String
 

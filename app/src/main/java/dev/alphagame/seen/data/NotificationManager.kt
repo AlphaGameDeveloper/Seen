@@ -9,6 +9,8 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import dev.alphagame.seen.MainActivity
+import dev.alphagame.seen.receivers.UpdateNotificationActionReceiver
+import dev.alphagame.seen.translations.Translation
 
 class SeenNotificationManager(private val context: Context) {
 
@@ -83,7 +85,7 @@ class SeenNotificationManager(private val context: Context) {
         )
     }
 
-    fun sendUpdateNotification(title: String, message: String) {
+    fun sendUpdateNotification(title: String, message: String, latestVersion: String? = null) {
         if (!preferencesManager.notificationsEnabled) {
             android.util.Log.d("SeenNotificationManager", "Notifications disabled, skipping update notification")
             return
@@ -102,7 +104,7 @@ class SeenNotificationManager(private val context: Context) {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+        val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(android.R.drawable.stat_sys_download_done)
             .setContentTitle(title)
             .setContentText(message)
@@ -111,7 +113,31 @@ class SeenNotificationManager(private val context: Context) {
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .setVibrate(longArrayOf(0, 250, 250, 250))
-            .build()
+
+        // Add "Don't Remind Me" action if we have a version
+        if (latestVersion != null) {
+            val translation = Translation.getTranslation(preferencesManager.language)
+            
+            val dontRemindIntent = Intent(context, UpdateNotificationActionReceiver::class.java).apply {
+                action = UpdateNotificationActionReceiver.ACTION_DONT_REMIND
+                putExtra(UpdateNotificationActionReceiver.EXTRA_VERSION, latestVersion)
+            }
+
+            val dontRemindPendingIntent = PendingIntent.getBroadcast(
+                context,
+                1,
+                dontRemindIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+
+            notificationBuilder.addAction(
+                android.R.drawable.ic_menu_close_clear_cancel,
+                translation.updateNotificationDontRemind,
+                dontRemindPendingIntent
+            )
+        }
+
+        val notification = notificationBuilder.build()
 
         try {
             NotificationManagerCompat.from(context).notify(NOTIFICATION_ID_UPDATE, notification)
