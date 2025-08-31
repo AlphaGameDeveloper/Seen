@@ -53,6 +53,15 @@ class AnalyticsManager(private val context: Context) : DefaultLifecycleObserver 
     private val sessionEventsSent = mutableSetOf<String>()
     private var lastSessionEndTime: Long = 0
 
+    // Events that should only be sent once per session
+    private val sessionUniqueEvents = setOf(
+        EVENT_APP_OPENED,
+        EVENT_APP_CLOSED,
+        EVENT_ONBOARDING_STARTED,
+        EVENT_ONBOARDING_COMPLETED,
+        EVENT_ONBOARDING_SKIPPED
+    )
+
     companion object {
         private const val TAG = "AnalyticsManager"
         private const val PREFS_NAME = "analytics_preferences"
@@ -71,7 +80,7 @@ class AnalyticsManager(private val context: Context) : DefaultLifecycleObserver 
         private const val JSON_MEDIA_TYPE = "application/json; charset=utf-8"
 
         // Rate limiting constants
-        private const val MIN_EVENT_INTERVAL_MS = 1000L // Minimum 1 second between duplicate events
+        private const val MIN_EVENT_INTERVAL_MS = 1000L // Minimum 1 second between duplicate events (for non-unique events)
         private const val MIN_SESSION_END_INTERVAL_MS = 5000L // Minimum 5 seconds between session ends
 
         // Event names
@@ -160,7 +169,7 @@ class AnalyticsManager(private val context: Context) : DefaultLifecycleObserver 
             .remove(KEY_USER_UUID)
             .apply()
 
-        // Clear rate limiting data
+        // Clear rate limiting and session data
         lastEventTimes.clear()
         sessionEventsSent.clear()
 
@@ -212,14 +221,11 @@ class AnalyticsManager(private val context: Context) : DefaultLifecycleObserver 
         val sessionCount = prefs.getInt(KEY_TOTAL_SESSIONS, 0) + 1
         prefs.edit().putInt(KEY_TOTAL_SESSIONS, sessionCount).apply()
 
-        // Track app opened (only once per session)
-        if (!sessionEventsSent.contains(EVENT_APP_OPENED)) {
-            trackEventInternal(EVENT_APP_OPENED, mapOf(
-                "session_number" to sessionCount,
-                "is_first_launch" to (sessionCount == 1)
-            ))
-            sessionEventsSent.add(EVENT_APP_OPENED)
-        }
+        // Track app opened (will be automatically deduplicated)
+        trackEvent(EVENT_APP_OPENED, mapOf(
+            "session_number" to sessionCount,
+            "is_first_launch" to (sessionCount == 1)
+        ))
 
         Log.d(TAG, "Session started (#$sessionCount) with ID: $currentSessionId")
     }
@@ -241,14 +247,11 @@ class AnalyticsManager(private val context: Context) : DefaultLifecycleObserver 
         val totalTime = prefs.getLong(KEY_TOTAL_SESSION_TIME, 0) + sessionDuration
         prefs.edit().putLong(KEY_TOTAL_SESSION_TIME, totalTime).apply()
 
-        // Track app closed (only once per session end) - BEFORE clearing session state
-        if (!sessionEventsSent.contains(EVENT_APP_CLOSED)) {
-            trackEventInternal(EVENT_APP_CLOSED, mapOf(
-                "session_duration_ms" to sessionDuration,
-                "session_duration_seconds" to (sessionDuration / 1000)
-            ))
-            sessionEventsSent.add(EVENT_APP_CLOSED)
-        }
+        // Track app closed (will be automatically deduplicated)
+        trackEvent(EVENT_APP_CLOSED, mapOf(
+            "session_duration_ms" to sessionDuration,
+            "session_duration_seconds" to (sessionDuration / 1000)
+        ))
 
         Log.d(TAG, "Session ended (duration: ${sessionDuration}ms) ID: $currentSessionId")
 
@@ -276,19 +279,32 @@ class AnalyticsManager(private val context: Context) : DefaultLifecycleObserver 
             startSession()
         }
 
-        // Check for rate limiting on duplicate events
-        val currentTime = System.currentTimeMillis()
-        val lastEventTime = lastEventTimes[eventName] ?: 0L
-
-        if (currentTime - lastEventTime < MIN_EVENT_INTERVAL_MS) {
-            Log.v(TAG, "Event '$eventName' rate limited (last sent ${currentTime - lastEventTime}ms ago)")
+        // Check if this is a session-unique event that has already been sent
+        if (sessionUniqueEvents.contains(eventName) && sessionEventsSent.contains(eventName)) {
+            Log.v(TAG, "Event '$eventName' already sent in this session, skipping")
             return
         }
 
-        // Update last event time
-        lastEventTimes[eventName] = currentTime
+        // Check for rate limiting on duplicate events (for non-session-unique events)
+        if (!sessionUniqueEvents.contains(eventName)) {
+            val currentTime = System.currentTimeMillis()
+            val lastEventTime = lastEventTimes[eventName] ?: 0L
 
+            if (currentTime - lastEventTime < MIN_EVENT_INTERVAL_MS) {
+                Log.v(TAG, "Event '$eventName' rate limited (last sent ${currentTime - lastEventTime}ms ago)")
+                return
+            }
+
+            // Update last event time
+            lastEventTimes[eventName] = currentTime
+        }
+
+        // Track the event and mark as sent if it's session-unique
         trackEventInternal(eventName, properties)
+
+        if (sessionUniqueEvents.contains(eventName)) {
+            sessionEventsSent.add(eventName)
+        }
     }
 
     /**
@@ -377,7 +393,7 @@ class AnalyticsManager(private val context: Context) : DefaultLifecycleObserver 
         // Ensure we always have a valid session ID and start time
         val currentTime = System.currentTimeMillis()
         val validStartTime = if (sessionStartTime > 0) sessionStartTime else currentTime
-        
+
         val sessionId = if (currentSessionId.isNotEmpty()) {
             currentSessionId
         } else {
@@ -496,7 +512,8 @@ class AnalyticsManager(private val context: Context) : DefaultLifecycleObserver 
             appendLine("Session Start Time: $sessionStartTime")
             appendLine("Last Event Time: ${prefs.getLong(KEY_LAST_EVENT_TIME, 0)}")
             appendLine("Rate Limited Events: ${lastEventTimes.size}")
-            appendLine("Session Events Sent: ${sessionEventsSent.size}")
+            appendLine("Session Events Sent: ${sessionEventsSent.joinToString(", ")}")
+            appendLine("Session-Unique Events: ${sessionUniqueEvents.joinToString(", ")}")
             appendLine("Analytics Endpoint: $ANALYTICS_ENDPOINT")
         }
     }
@@ -529,6 +546,8 @@ class AnalyticsManager(private val context: Context) : DefaultLifecycleObserver 
         sessionEventsSent.clear()
         currentSessionId = ""
         isSessionActive = false
+        sessionStartTime = 0
+        lastSessionEndTime = 0
         Log.i(TAG, "All analytics data cleared")
     }
 }

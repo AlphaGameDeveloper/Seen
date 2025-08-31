@@ -50,7 +50,7 @@ fun AnalyticsConfigurationStep(
                 onClick = { onAnalyticsEnabledChange(false) },
                 title = translation.onboardingAnalyticsDisabled,
                 description = "Keep all usage data completely private",
-                icon = "🥺"
+                icon = "🔐"
             )
 
             Spacer(modifier = Modifier.height(16.dp))

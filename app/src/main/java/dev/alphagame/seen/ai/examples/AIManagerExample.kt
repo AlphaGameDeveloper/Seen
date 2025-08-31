@@ -41,7 +41,9 @@ class AIManagerExample(private val context: Context) {
 
             // Submit for AI analysis
             scope.launch {
-                aiManager.submitPHQ9ForAnalysis(totalScore, responses)
+                val notes = "Example usage note"
+                val moodEntries = listOf("happy", "calm")
+                aiManager.submitPHQ9ForAnalysis(totalScore, responses, notes, moodEntries)
                     .onSuccess { aiResponse ->
                         println("\n=== AI Analysis ===")
                         println("AI Severity Assessment: ${aiResponse.severity}")

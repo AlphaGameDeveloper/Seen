@@ -33,8 +33,6 @@ fun EnhancedOnboardingScreen(
     val preferencesManager = remember { PreferencesManager(context) }
     val updateCheckManager = remember { UpdateCheckManager(context) }
     val analyticsManager = remember { AnalyticsManager(context) }
-    val hapticFeedback = LocalHapticFeedback.current
-    val coroutineScope = rememberCoroutineScope()
 
     var currentStage by remember { mutableStateOf(OnboardingStage.WELCOME_CAROUSEL) }
     var currentConfigStep by remember { mutableStateOf(ConfigurationStep.AI_FEATURES) }
