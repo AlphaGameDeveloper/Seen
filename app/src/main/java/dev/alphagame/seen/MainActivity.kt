@@ -28,6 +28,7 @@ import dev.alphagame.seen.data.UpdateInfo
 import dev.alphagame.seen.screens.WelcomeScreen
 import dev.alphagame.seen.screens.QuestionScreen
 import dev.alphagame.seen.screens.ResultScreen
+import dev.alphagame.seen.screens.ResultScreen
 import dev.alphagame.seen.screens.NotesScreen
 import dev.alphagame.seen.screens.SettingsScreen
 import dev.alphagame.seen.screens.MoodHistoryScreen
@@ -279,7 +280,9 @@ fun SeenApplication(
                     onBackToHome = {
                         analyticsManager.trackEvent(AnalyticsManager.EVENT_SETTINGS_OPENED)
                         navigateBack()
-                    }
+                    },
+                    onThemeChanged = onThemeChanged,
+                    onLanguageChanged = onLanguageChanged
                 )
             }
             "mood_history" -> {

@@ -98,7 +98,9 @@ fun AIConnectionTestScreen() {
                         val testResponses = listOf(1, 1, 2, 1, 0, 1, 1, 0, 1)
                         val totalScore = testResponses.sum()
 
-                        val result = aiManager.submitPHQ9ForAnalysis(totalScore, testResponses)
+                        val notes = "Test screen note"
+                        val moodEntries = listOf("neutral")
+                        val result = aiManager.submitPHQ9ForAnalysis(totalScore, testResponses, notes, moodEntries)
 
                         result.onSuccess { response ->
                             testResults = "PHQ9 Test Success!\n" +

@@ -45,7 +45,9 @@ class AIDebugHelper(private val context: Context) {
                 val testResponses = listOf(1, 1, 2, 1, 0, 1, 1, 0, 1) // Total: 8 (Mild)
                 val totalScore = testResponses.sum()
 
-                val result = aiManager.submitPHQ9ForAnalysis(totalScore, testResponses)
+                val notes = "Debug test note"
+                val moodEntries = listOf("neutral", "happy")
+                val result = aiManager.submitPHQ9ForAnalysis(totalScore, testResponses, notes, moodEntries)
                 result.onSuccess { response ->
                     Log.d(TAG, "✅ PHQ9 submission successful!")
                     Log.d(TAG, "Severity: ${response.severity}")
@@ -88,7 +90,9 @@ class AIDebugHelper(private val context: Context) {
             }
 
             val totalScore = responses.sum()
-            val result = aiManager.submitPHQ9ForAnalysis(totalScore, responses)
+            val notes = "Custom test note"
+            val moodEntries = listOf("neutral")
+            val result = aiManager.submitPHQ9ForAnalysis(totalScore, responses, notes, moodEntries)
 
             result.onSuccess { response ->
                 Log.d(TAG, "Custom data test successful: ${response.severity}")
