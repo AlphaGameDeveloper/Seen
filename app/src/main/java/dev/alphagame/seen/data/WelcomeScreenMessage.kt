@@ -6,9 +6,9 @@ import java.util.Random;
 class WelcomeScreenMessage {
     companion object {
         private val messages: Array<String> = arrayOf(
-            "Welcome Text Option 1",
-            "Welcome Text Option 2",
-            "Welcome Text Option 3",
+            "Take a moment to check in with yourself",
+            "It's ok to not be ok",
+            "'There is hope, even when your brain tells you there isn't' - John Green",
             "Welcome Text Option 4"
         )
 
