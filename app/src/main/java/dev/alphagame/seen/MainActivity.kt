@@ -154,9 +154,8 @@ fun SeenApplication(
                             showUpdateDialog = true
                         } else {
                             android.util.Log.d("UpdateCheck", "Update skipped (user already dismissed this version)")
-                            android.util.Log.d("UpdateCheck", "but fuck that - showing anyway")
                             updateInfo = update
-                            showUpdateDialog = true
+                            showUpdateDialog = false
                         }
                     } else {
                         android.util.Log.d("UpdateCheck", "No update available")
