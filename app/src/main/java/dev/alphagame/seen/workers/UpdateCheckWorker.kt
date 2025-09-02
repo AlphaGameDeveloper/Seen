@@ -42,10 +42,26 @@ class UpdateCheckWorker(
             val isUpdateAvailable = versionChecker.isUpdateAvailable()
 
             if (isUpdateAvailable) {
-                Log.d(TAG, "Update available, sending notification")
+                Log.d(TAG, "Update available, checking if notification should be sent")
+
+                // Check if we should send a notification (daily limit)
+                if (!preferencesManager.shouldSendUpdateNotification()) {
+                    Log.d(TAG, "Update notification was sent recently, skipping notification for today")
+                    preferencesManager.lastBackgroundUpdateCheck = System.currentTimeMillis()
+                    return Result.success()
+                }
 
                 // Get the latest version for the notification
                 val latestVersion = versionChecker.checkLatestVersion()
+
+                // Check if this version was already skipped by the user
+                if (latestVersion != null && preferencesManager.skippedVersion == latestVersion) {
+                    Log.d(TAG, "User already skipped this version ($latestVersion), not sending notification")
+                    preferencesManager.lastBackgroundUpdateCheck = System.currentTimeMillis()
+                    return Result.success()
+                }
+
+                Log.d(TAG, "Sending update notification for version: $latestVersion")
 
                 // Get user's language preference for notification text
                 val translation = Translation.getTranslation(preferencesManager.language)
@@ -62,8 +78,12 @@ class UpdateCheckWorker(
 
                 notificationManager.sendUpdateNotification(
                     title = translation.updateNotificationTitle,
-                    message = notificationMessage
+                    message = notificationMessage,
+                    latestVersion = latestVersion
                 )
+
+                // Update the last notification time to implement daily limit
+                preferencesManager.lastUpdateNotificationTime = System.currentTimeMillis()
 
                 Log.d(TAG, "Notification send call completed")
             } else {
