@@ -15,7 +15,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.alphagame.seen.analytics.AnalyticsManager
+import dev.alphagame.seen.data.WelcomeScreenMessage
 import dev.alphagame.seen.translations.rememberTranslation
+import kotlin.random.Random
 
 @Composable
 fun WelcomeScreen(
@@ -87,7 +89,7 @@ fun WelcomeScreen(
 
         // Subtitle
         Text(
-            text = translation.welcomeSubtitle,
+            text = WelcomeScreenMessage.getRandomWelcomeScreenMessage(),
             fontSize = 18.sp,
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
             textAlign = TextAlign.Center
