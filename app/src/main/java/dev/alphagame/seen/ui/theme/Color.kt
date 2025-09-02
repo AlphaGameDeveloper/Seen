@@ -12,8 +12,11 @@ val LightGrey = Color(0xFFF3F4F6) //Background
 
 
 val Orange = Color(0xFFF97316)  //Pri1
+val OrangeCon = Color(0xFFF97316)
 val Grey = Color(0xFFd6cfc4)  //Ter1
+val GreyCon= Color(0xFFd6cfc4)
 val Blue2 = Color(0xFF5ca4a9) //Sec1
+val Blue2Con = Color(0xFF5ca4a9)
 val Black = Color(0xFF000000)
 
 
