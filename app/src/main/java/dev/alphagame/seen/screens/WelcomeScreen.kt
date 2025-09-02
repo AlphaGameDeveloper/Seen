@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.sp
 import dev.alphagame.seen.analytics.AnalyticsManager
 import dev.alphagame.seen.data.WelcomeScreenMessage
 import dev.alphagame.seen.translations.rememberTranslation
-import kotlin.random.Random
 
 @Composable
 fun WelcomeScreen(
