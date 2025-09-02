@@ -4,9 +4,8 @@ import android.util.Log
 import java.util.Random;
 
 class WelcomeScreenMessage {
-
     companion object {
-        val messages: Array<String> = arrayOf(
+        private val messages: Array<String> = arrayOf(
             "Welcome Text Option 1",
             "Welcome Text Option 2",
             "Welcome Text Option 3",
@@ -14,13 +13,14 @@ class WelcomeScreenMessage {
         )
 
         fun getRandomWelcomeScreenMessage(): String {
-            val random = Random()
-            val index = random.nextInt(messages.size)
+            // damien - java.util.Random.nextInt is between 0 (inclusive) and
+            // X (exclusive), so we don't need to subtract 1 from size because
+            // the function already does that. :3
+            val index = Random().nextInt(messages.size)
             val message =  messages[index]
-            Log.d("WelcomeScreenMessage", "Chose welcome screen message index $index ($message)")
+
+            Log.d("WelcomeScreenMessage","Chose welcome screen message index $index ($message)")
             return message
         }
-
-
     }
 }
