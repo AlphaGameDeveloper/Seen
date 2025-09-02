@@ -162,6 +162,7 @@ class SpanishTranslation : Translation() {
     // Update Notifications
     override val updateNotificationTitle = "Nueva actualización disponible"
     override val updateNotificationMessage = "Una nueva versión de Seen está disponible. Toca para descargar."
+    override val updateNotificationDontRemind = "No recordarme"
     override val enableBackgroundUpdateChecks = "Habilitar verificaciones automáticas de actualización"
     override val enableBackgroundUpdateChecksDescription = "Verificar automáticamente nuevas versiones cada 15 minutos y recibir notificaciones"
 
