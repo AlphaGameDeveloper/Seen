@@ -25,15 +25,15 @@
  * Use './gradlew printVersionInfo' to display current version information.
  */
 
+import java.time.ZonedDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 }
-
-import java.time.ZonedDateTime
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 
 // Function to get latest git tag
 fun getLatestGitTag(): String {
@@ -47,14 +47,13 @@ fun getLatestGitTag(): String {
         "1.0.0"
     }
 }
-
 // Function to get version name from git tag (removes 'v' prefix if present)
 fun getVersionName(): String {
     val tag = getLatestGitTag()
     return if (tag.startsWith("v")) tag.substring(1) else tag
 }
 
-// Function to generate version code from git tag
+// Function to generate version code from version name
 fun getVersionCode(): Int {
     val versionName = getVersionName()
     return try {
@@ -80,6 +79,7 @@ fun getVersionCode(): Int {
     } catch (e: Exception) {
         10000 // Default to 1.0.0 equivalent
     }
+
 }
 
 // Function to get git commit hash
@@ -99,6 +99,11 @@ fun getGitCommitHash(): String {
 fun getBuildTime(): String {
     return ZonedDateTime.now(ZoneOffset.UTC)
         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss 'UTC'"))
+}
+
+fun getFancyBuildTime(): String {
+    return ZonedDateTime.now()
+        .format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a"))
 }
 
 // Function to get git branch name
@@ -121,11 +126,11 @@ fun getGitCommitMessage(): String {
             .start()
         val result = process.inputStream.bufferedReader().readText().trim()
         if (process.waitFor() == 0 && result.isNotEmpty()) {
-            // Escape newlines and quotes for proper string literal formatting
+            // Escape newlines and quotes for safe inclusion in a string literal
             result.replace("\n", "\\n").replace("\"", "\\\"")
-        } else "\"No commit message\""
+        } else "No commit message"
     } catch (e: Exception) {
-        "\"No commit message\""
+        "No commit message"
     }
 }
 
@@ -149,6 +154,9 @@ android {
         buildConfigField("String", "GIT_TAG", "\"${getLatestGitTag()}\"")
         buildConfigField("String", "VERSION_FULL", "\"${getVersionName()}-${getGitCommitHash()}\"")
         buildConfigField("String", "GIT_COMMIT_MESSAGE", "\"${getGitCommitMessage()}\"")
+
+        // fmt mm/dd/yyyy hh:mm:ss America/Los_Angeles
+        buildConfigField("String", "PRETTY_BUILD_TIME", "\"${getFancyBuildTime()}\"")
     }
 
     lint {
