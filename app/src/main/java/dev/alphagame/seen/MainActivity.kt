@@ -1,5 +1,6 @@
 package dev.alphagame.seen
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
@@ -15,7 +16,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import dev.alphagame.seen.analytics.AnalyticsManager
@@ -367,13 +371,31 @@ fun SeenApplication(
             }
             // text in the bottom right corner with version info
             Text(
-                text = "Version: ${BuildConfig.VERSION_FULL}",
+                text = "Version: ${BuildConfig.VERSION_FULL}\nBuilt: ${BuildConfig.PRETTY_BUILD_TIME}",
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(20.dp),
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.bodySmall.copy(textAlign = TextAlign.Right),
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
             )
+        }
+
+        if (BuildConfig.DEBUG) {
+            // red DEBUG BUILD in top left corner
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(16.dp)
+                    .size(110.dp)
+
+            ) {
+                Text(
+                    text = "Debug Build",
+                    color = Color.Red,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
         }
 
         // Update Dialog
