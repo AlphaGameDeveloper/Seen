@@ -2,6 +2,7 @@ package dev.alphagame.seen
 
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -71,6 +72,10 @@ class MainActivity : ComponentActivity() {
                             languageMode = newLanguage
                             preferencesManager.language = newLanguage
                             // Force recomposition by recreating the activity
+
+
+                            // Alert the user that the application'll restart
+                            Toast.makeText(context, "The application will restart to apply changes.", Toast.LENGTH_SHORT).show()
                             recreate()
                         }
                     )

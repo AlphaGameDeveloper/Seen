@@ -103,7 +103,7 @@ fun getBuildTime(): String {
 
 fun getFancyBuildTime(): String {
     return ZonedDateTime.now()
-        .format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a"))
+        .format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a-"))
 }
 
 // Function to get git branch name
