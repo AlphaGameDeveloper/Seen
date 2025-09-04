@@ -12,6 +12,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.alphagame.seen.translations.rememberTranslation
+import dev.alphagame.seen.data.PHQ9Data
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -27,7 +30,8 @@ fun QuestionScreen(
     questionIndex: Int,
     totalQuestions: Int,
     options: List<Pair<String, Int>>,
-    onAnswerSelected: (Int) -> Unit
+    onAnswerSelected: (Int) -> Unit,
+    onBack: () -> Unit = {}
 ) {
     val translation = rememberTranslation()
 
@@ -39,13 +43,22 @@ fun QuestionScreen(
         .fillMaxWidth()
 
     AnimatedContent(
-        targetState = question,
+        targetState = questionIndex,
         transitionSpec = {
-            (slideInHorizontally { it / 2 } + fadeIn()) togetherWith
-                    (slideOutHorizontally { -it / 2 } + fadeOut())
+            // slide left when going forward, slide right when going back
+            if (targetState > initialState) {
+                (slideInHorizontally { it / 2 } + fadeIn()) togetherWith
+                        (slideOutHorizontally { -it / 2 } + fadeOut())
+            } else {
+                (slideInHorizontally { -it / 2 } + fadeIn()) togetherWith
+                        (slideOutHorizontally { it / 2 } + fadeOut())
+            }
         },
         label = "PHQ9Question"
-    ) { targetQuestion ->
+    ) { targetIndex ->
+        // Derive the question text from the animated target index so the
+        // content shown matches the animation direction (prevents mismatch)
+        val displayedQuestion = PHQ9Data.getQuestionText(targetIndex, translation)
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -54,13 +67,22 @@ fun QuestionScreen(
             verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
+                IconButton(onClick = onBack) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = "Back",
+                        tint = MaterialTheme.colorScheme.onBackground
+                    )
+                }
+            }
             Text(
-                text = String.format(translation.questionProgress, questionIndex + 1, totalQuestions),
+                text = String.format(translation.questionProgress, targetIndex + 1, totalQuestions),
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.onBackground
             )
             Text(
-                text = targetQuestion,
+                text = displayedQuestion,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground

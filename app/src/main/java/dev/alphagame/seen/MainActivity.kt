@@ -263,6 +263,15 @@ fun SeenApplication(
                                 analyticsManager.trackPHQ9Completion(totalScore, severity, false)
                             }
                         }
+                        ,
+                        onBack = {
+                            if (currentQuestion > 0) {
+                                currentQuestion--
+                                if (scores.isNotEmpty()) scores.removeLast()
+                            } else {
+                                navigateBack()
+                            }
+                        }
                     )
                 } else {
                     ResultScreen(
