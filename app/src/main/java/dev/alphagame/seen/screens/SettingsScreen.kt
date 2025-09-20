@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.alphagame.seen.FeatureFlags
 import dev.alphagame.seen.analytics.AnalyticsManager
 import dev.alphagame.seen.components.UpdateDialog
 import dev.alphagame.seen.components.NoInternetDialog
@@ -166,29 +167,30 @@ fun SettingsScreen(
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )
 
-                    val gitBranch = AppVersionInfo.getGitBranch()
-                    if (gitBranch != "unknown" && gitBranch != "dynamic") {
+                    if (FeatureFlags.SETTINGS_EXTENDED_ABOUT) {
+                        val gitBranch = AppVersionInfo.getGitBranch()
+                        if (gitBranch != "unknown" && gitBranch != "dynamic") {
+                            Text(
+                                text = "Branch: $gitBranch",
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                            )
+                        }
+
                         Text(
-                            text = "Branch: $gitBranch",
+                            text = "Commit Message: ${AppVersionInfo.GIT_COMMIT_MESSAGE}",
                             fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = translation.createdBy,
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                         )
                     }
-
-                    Text(
-                        text = "Commit Message: ${AppVersionInfo.GIT_COMMIT_MESSAGE}",
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Text(
-                        text = translation.createdBy,
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                    )
-
                     Spacer(modifier = Modifier.height(16.dp))
 
                     OutlinedButton(

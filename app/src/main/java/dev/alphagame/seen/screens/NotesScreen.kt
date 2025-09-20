@@ -170,7 +170,21 @@ fun NotesScreen(onBackToHome: () -> Unit) {
                 }
             }
         }
-
+        // Mood entries list
+        if (notes.isEmpty() && !isAddingNote) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    // TODO: Add translations for this entry; if not, don't show in different language!
+                    text = "No notes data yet.\nUse the \"Add Entry\" button in the bottom-right corner to get started!",
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(PaddingValues(60.dp, 0.dp)),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
         // Floating Action Button for compact screens
         if (isCompact && !isAddingNote) {
             FloatingActionButton(

@@ -334,7 +334,7 @@ fun SeenApplication(
                     .align(Alignment.TopStart)
                     .statusBarsPadding()
                     .padding(16.dp)
-                    .size(40.dp)
+                    .size(45.dp)
             ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -349,7 +349,7 @@ fun SeenApplication(
                         Icon(
                             imageVector = Icons.Default.Info,
                             contentDescription = "Info",
-                            modifier = Modifier.size(20.dp),
+                            modifier = Modifier.size(25.dp),
                             tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                         )
                     }
@@ -362,7 +362,7 @@ fun SeenApplication(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(16.dp)
-                    .size(40.dp)
+                    .size(45.dp)
             ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -377,7 +377,7 @@ fun SeenApplication(
                         Icon(
                             imageVector = Icons.Default.Settings,
                             contentDescription = "Settings",
-                            modifier = Modifier.size(20.dp),
+                            modifier = Modifier.size(25.dp),
                             tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                         )
                     }

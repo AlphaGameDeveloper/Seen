@@ -12,7 +12,7 @@ class EnglishTranslation : Translation() {
     override val welcomeTitle = "Welcome to Seen"
     override val welcomeSubtitle = "Take a moment to check in with yourself"
     override val startQuiz = "Start Assessment"
-    override val viewNotes = "View Notes"
+    override val viewNotes = "View Journal"
     override val viewMoodHistory = "View Mood History"
 
     // PHQ-9 Questions
@@ -88,7 +88,7 @@ class EnglishTranslation : Translation() {
     override val continueButton = "Continue"
 
     // Notes Screen
-    override val notes = "Notes"
+    override val notes = "Journal"
     override val addNote = "Add Note"
     override val editNote = "Edit Note"
     override val deleteNote = "Delete Note"
