@@ -9,6 +9,7 @@ lifecycleRuntimeKtx = "2.9.0"
 activityCompose = "1.10.1"
 composeBom = "2024.09.00"
 okhttp = "4.12.0"
+vico = "2.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -26,6 +27,27 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+
+# For Jetpack Compose.
+vico-compose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vico" }
+
+# For Material 2 theming in Jetpack Compose.
+vico-compose-m2 = { group = "com.patrykandpatrick.vico", name = "compose-m2", version.ref = "vico" }
+
+# For Material 3 theming in Jetpack Compose.
+vico-compose-m3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
+
+# For Compose Multiplatform (Android, iOS, desktop).
+vico-multiplatform = { group = "com.patrykandpatrick.vico", name = "multiplatform", version.ref = "vico" }
+
+# For Material 2 theming in Compose Multiplatform.
+vico-multiplatform-m2 = { group = "com.patrykandpatrick.vico", name = "multiplatform-m2", version.ref = "vico" }
+
+# For Material 3 theming in Compose Multiplatform.
+vico-multiplatform-m3 = { group = "com.patrykandpatrick.vico", name = "multiplatform-m3", version.ref = "vico" }
+
+# For the Android view system.
+vico-views = { group = "com.patrykandpatrick.vico", name = "views", version.ref = "vico" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

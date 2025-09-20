@@ -208,7 +208,11 @@ dependencies {
     implementation(libs.okhttp)
     implementation("androidx.work:work-runtime-ktx:2.9.0")
     implementation("androidx.lifecycle:lifecycle-process:2.8.2")
-
+    implementation(libs.vico.compose)
+    implementation(libs.vico.compose.m2)
+    implementation(libs.vico.compose.m3)
+    implementation(libs.vico.multiplatform)
+    implementation(libs.vico.views)
 }
 
 // Gradle task to display version information

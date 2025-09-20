@@ -1,5 +1,6 @@
 package dev.alphagame.seen.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,12 +13,27 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
+import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.core.cartesian.data.columnSeries
+import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.core.common.component.TextComponent
 import dev.alphagame.seen.analytics.AnalyticsManager
 import dev.alphagame.seen.data.MoodEntry
+import dev.alphagame.seen.data.NotesManager
+import dev.alphagame.seen.data.PHQ9Response
 import dev.alphagame.seen.data.WidgetMoodManager
 import dev.alphagame.seen.translations.rememberTranslation
 import java.text.SimpleDateFormat
@@ -29,15 +45,19 @@ fun MoodHistoryScreen(
 ) {
     val context = LocalContext.current
     val translation = rememberTranslation()
+    val notesManager = remember { NotesManager(context) }
     val widgetMoodManager = remember { WidgetMoodManager(context) }
     val analyticsManager = remember { AnalyticsManager(context) }
     var moodEntries by remember { mutableStateOf<List<MoodEntry>>(emptyList()) }
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var phq9Results by remember { mutableStateOf<List<PHQ9Response>>(emptyList()) }
+    val modelProducer = remember { CartesianChartModelProducer() }
 
     // Load mood entries
     LaunchedEffect(Unit) {
         moodEntries = widgetMoodManager.getMoodEntries()
         // Track mood history screen access
+        phq9Results = notesManager.getPHQ9Responses()
         analyticsManager.trackEvent("mood_history_accessed", mapOf(
             "total_entries" to moodEntries.size.toString()
         ))
@@ -102,6 +122,24 @@ fun MoodHistoryScreen(
                 )
             }
         } else {
+            val phq9Map = phq9Results.mapNotNull { it.total }.filterNotNull()
+            Log.d("MoodHistoryScreen", phq9Map.toString())
+            LaunchedEffect(Unit) {
+                modelProducer.runTransaction {
+                    lineSeries { series(phq9Map) }
+                }
+            }
+
+            if (phq9Map.isNotEmpty()) {
+                CartesianChartHost(
+                    rememberCartesianChart(
+                        rememberLineCartesianLayer(),
+                        startAxis = VerticalAxis.rememberStart(),
+                        bottomAxis = HorizontalAxis.rememberBottom(label = TextComponent()),
+                    ),
+                    modelProducer,
+                )
+            }
             LazyColumn {
                 items(moodEntries) { entry ->
                     MoodEntryItem(
