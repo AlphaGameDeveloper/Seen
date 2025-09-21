@@ -3,6 +3,7 @@ package dev.alphagame.seen.data
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import android.util.Log
 
 class NotesManager(context: Context) {
     private val dbHelper = DatabaseHelper(context)
@@ -118,6 +119,8 @@ class NotesManager(context: Context) {
 
         cursor.close()
         db.close()
+
+        Log.d("NotesManager", "Retrieved PHQ-9 history: $results, count=${results.size}")
         return results
     }
 
@@ -178,6 +181,8 @@ class NotesManager(context: Context) {
 
         cursor.close()
         db.close()
+
+        Log.d("NotesManager", "Retrieved PHQ-9 responses: $responses, count=${responses.size}")
         return responses
     }
 }
