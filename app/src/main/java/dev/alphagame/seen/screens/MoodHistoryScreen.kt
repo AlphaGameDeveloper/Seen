@@ -131,11 +131,14 @@ fun MoodHistoryScreen(
 
         val phq9Map = (phq9Results.map { it.total }).reversed()
 
-
         Log.d("MoodHistoryScreen", phq9Map.toString())
-        LaunchedEffect(Unit) {
-            modelProducer.runTransaction {
-                lineSeries { series(phq9Map) }
+        
+        // Only update chart data if we have PHQ-9 results
+        LaunchedEffect(phq9Results) {
+            if (phq9Map.isNotEmpty()) {
+                modelProducer.runTransaction {
+                    lineSeries { series(phq9Map) }
+                }
             }
         }
         if (phq9Map.isNotEmpty()) {
