@@ -34,7 +34,7 @@ class PreferencesManager(context: Context) {
         set(value) = prefs.edit().putString(KEY_THEME_MODE, value).apply()
 
     var isPhq9DataStorageEnabled: Boolean
-        get() = prefs.getBoolean(KEY_PHQ9_DATA_STORAGE, false)
+        get() = prefs.getBoolean(KEY_PHQ9_DATA_STORAGE, true)
         set(value) = prefs.edit().putBoolean(KEY_PHQ9_DATA_STORAGE, value).apply()
 
     var isOnboardingCompleted: Boolean

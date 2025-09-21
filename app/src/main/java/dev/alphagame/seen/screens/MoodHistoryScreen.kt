@@ -129,6 +129,40 @@ fun MoodHistoryScreen(
             Spacer(modifier = Modifier.height(16.dp))
         }
 
+        val phq9Map = (phq9Results.map { it.total }).reversed()
+
+
+        Log.d("MoodHistoryScreen", phq9Map.toString())
+        LaunchedEffect(Unit) {
+            modelProducer.runTransaction {
+                lineSeries { series(phq9Map) }
+            }
+        }
+        if (phq9Map.isNotEmpty()) {
+            Text(
+                text = "PHQ-9 Responses",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            CartesianChartHost(
+                rememberCartesianChart(
+                    rememberLineCartesianLayer(),
+                    startAxis = VerticalAxis.rememberStart(),
+                    bottomAxis = HorizontalAxis.rememberBottom(label = TextComponent()),
+                ),
+                modelProducer,
+            )
+        }
+
+        HorizontalDivider(
+            modifier = Modifier.fillMaxWidth().padding(
+                PaddingValues(2.dp)
+            ),
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.tertiary
+        )
+        
         // Mood entries list
         if (moodEntries.isEmpty()) {
             Box(
@@ -142,45 +176,8 @@ fun MoodHistoryScreen(
                 )
             }
         } else {
-            val phq9Map = (phq9Results.map { it.total }).reversed()
-
-
-            Log.d("MoodHistoryScreen", phq9Map.toString())
-            LaunchedEffect(Unit) {
-                modelProducer.runTransaction {
-                    lineSeries { series(phq9Map) }
-                }
-            }
-
-
             LazyColumn {
                 item {
-                    if (phq9Map.isNotEmpty()) {
-                        Text(
-                            text = "PHQ-9 Responses",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        CartesianChartHost(
-                            rememberCartesianChart(
-                                rememberLineCartesianLayer(),
-                                startAxis = VerticalAxis.rememberStart(),
-                                bottomAxis = HorizontalAxis.rememberBottom(label = TextComponent()),
-                            ),
-                            modelProducer,
-                        )
-                    }
-                }
-                item {
-                    HorizontalDivider(
-                        modifier = Modifier.fillMaxWidth().padding(
-                            PaddingValues(2.dp)
-                        ),
-                        thickness = 1.dp,
-                        color = MaterialTheme.colorScheme.tertiary
-                    )
-
                     HorizontalDivider(
                         modifier = Modifier.fillMaxWidth(),
                         thickness = 8.dp,
