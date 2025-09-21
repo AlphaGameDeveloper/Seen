@@ -44,6 +44,7 @@ import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
+import com.patrykandpatrick.vico.compose.common.rememberHorizontalLegend
 import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
@@ -58,6 +59,7 @@ import dev.alphagame.seen.translations.rememberTranslation
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import java.util.Date
 
 @Composable
 fun MoodHistoryScreen(
@@ -131,8 +133,11 @@ fun MoodHistoryScreen(
 
         val phq9Map = (phq9Results.map { it.total }).reversed()
 
+        val formatter = SimpleDateFormat("MM/dd/yy", Locale.getDefault())
+        val dateMap = (phq9Results.map { formatter.format(Date(it.timestamp)) }).reversed()
         Log.d("MoodHistoryScreen", phq9Map.toString())
-        
+        Log.d("MoodHistoryScreen", dateMap.toString())
+
         // Only update chart data if we have PHQ-9 results
         LaunchedEffect(phq9Results) {
             if (phq9Map.isNotEmpty()) {
@@ -153,6 +158,7 @@ fun MoodHistoryScreen(
                     rememberLineCartesianLayer(),
                     startAxis = VerticalAxis.rememberStart(),
                     bottomAxis = HorizontalAxis.rememberBottom(label = TextComponent()),
+
                 ),
                 modelProducer,
             )
@@ -165,7 +171,7 @@ fun MoodHistoryScreen(
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.tertiary
         )
-        
+
         // Mood entries list
         if (moodEntries.isEmpty()) {
             Box(
