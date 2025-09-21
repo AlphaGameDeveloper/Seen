@@ -476,182 +476,206 @@ fun SettingsScreen(
                     }
                 }
             }
-
-            // Privacy & Assessment Settings Section
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
-            ) {
-                Column(
-                    modifier = Modifier.padding(20.dp)
-                ) {
-                    Text(
-                        text = "AI Features",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
+            if (FeatureFlags.SETTINGS_AI_FEATURES) {
+                // Privacy & Assessment Settings Section
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
                     )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(
+                        modifier = Modifier.padding(20.dp)
                     ) {
-                        Column(
-                            modifier = Modifier.weight(1f)
+
+                        Text(
+                            text = "AI Features",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                text = "Enable AI Features",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Text(
-                                text = "Get personalized insights and suggestions (Coming Soon)",
-                                fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                                lineHeight = 16.sp
+                            Column(
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text(
+                                    text = "Enable AI Features",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                Text(
+                                    text = "Get personalized insights and suggestions (Coming Soon)",
+                                    fontSize = 12.sp,
+                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                                    lineHeight = 16.sp
+                                )
+                            }
+
+                            var aiEnabled by remember(refreshKey) { mutableStateOf(false) } // AI features not yet implemented
+
+                            Switch(
+                                checked = aiEnabled,
+                                enabled = false, // Disabled until AI features are implemented
+                                onCheckedChange = { enabled ->
+                                    // AI features not yet implemented
+                                    aiEnabled = enabled
+                                }
                             )
                         }
-
-                        var aiEnabled by remember(refreshKey) { mutableStateOf(false) } // AI features not yet implemented
-
-                        Switch(
-                            checked = aiEnabled,
-                            enabled = false, // Disabled until AI features are implemented
-                            onCheckedChange = { enabled ->
-                                // AI features not yet implemented
-                                aiEnabled = enabled
-                            }
-                        )
                     }
+
                 }
             }
 
             // Analytics Settings Section
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
-            ) {
-                Column(
-                    modifier = Modifier.padding(20.dp)
-                ) {
-                    Text(
-                        text = "Analytics",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
+            if (FeatureFlags.SETTINGS_ANALYTICS) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
                     )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(
+                        modifier = Modifier.padding(20.dp)
                     ) {
-                        Column(
-                            modifier = Modifier.weight(1f)
+                        Text(
+                            text = "Analytics",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                text = "Enable Analytics",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Text(
-                                text = "Help improve Seen by sharing anonymous usage data",
-                                fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                                lineHeight = 16.sp
+                            Column(
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text(
+                                    text = "Enable Analytics",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                Text(
+                                    text = "Help improve Seen by sharing anonymous usage data",
+                                    fontSize = 12.sp,
+                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                                    lineHeight = 16.sp
+                                )
+                            }
+
+                            var analyticsEnabled by remember(refreshKey) {
+                                mutableStateOf(
+                                    preferencesManager.analyticsEnabled
+                                )
+                            }
+
+                            Switch(
+                                checked = analyticsEnabled,
+                                onCheckedChange = { enabled ->
+                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    // Track analytics setting change
+                                    analyticsManager.trackSettingChanged(
+                                        "analytics_enabled",
+                                        analyticsEnabled.toString(),
+                                        enabled.toString()
+                                    )
+                                    analyticsEnabled = enabled
+                                    preferencesManager.analyticsEnabled = enabled
+
+                                    // Enable or disable analytics in the manager
+                                    if (enabled) {
+                                        analyticsManager.enableAnalytics()
+                                    } else {
+                                        analyticsManager.disableAnalytics()
+                                    }
+                                }
                             )
                         }
-
-                        var analyticsEnabled by remember(refreshKey) { mutableStateOf(preferencesManager.analyticsEnabled) }
-
-                        Switch(
-                            checked = analyticsEnabled,
-                            onCheckedChange = { enabled ->
-                                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-                                // Track analytics setting change
-                                analyticsManager.trackSettingChanged("analytics_enabled", analyticsEnabled.toString(), enabled.toString())
-                                analyticsEnabled = enabled
-                                preferencesManager.analyticsEnabled = enabled
-
-                                // Enable or disable analytics in the manager
-                                if (enabled) {
-                                    analyticsManager.enableAnalytics()
-                                } else {
-                                    analyticsManager.disableAnalytics()
-                                }
-                            }
-                        )
                     }
                 }
             }
 
             // Assessment Settings Section
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
-            ) {
-                Column(
-                    modifier = Modifier.padding(20.dp)
-                ) {
-                    Text(
-                        text = "Assessment Settings",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
+            if (FeatureFlags.SETTINGS_ASSESSMENT_SETTINGS) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
                     )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(
+                        modifier = Modifier.padding(20.dp)
                     ) {
-                        Column(
-                            modifier = Modifier.weight(1f)
+                        Text(
+                            text = "Assessment Settings",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                text = "Save PHQ-9 Assessment Data",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Text(
-                                text = "Store detailed question responses locally for tracking progress",
-                                fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                                lineHeight = 16.sp
+                            Column(
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text(
+                                    text = "Save PHQ-9 Assessment Data",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                Text(
+                                    text = "Store detailed question responses locally for tracking progress",
+                                    fontSize = 12.sp,
+                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                                    lineHeight = 16.sp
+                                )
+                            }
+
+                            var phq9DataStorageEnabled by remember(refreshKey) {
+                                mutableStateOf(
+                                    preferencesManager.isPhq9DataStorageEnabled
+                                )
+                            }
+
+                            Switch(
+                                //checked = phq9DataStorageEnabled,
+                                checked = true,
+                                onCheckedChange = { enabled ->
+                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    // Track PHQ-9 data storage setting change
+                                    analyticsManager.trackSettingChanged(
+                                        "phq9_data_storage",
+                                        phq9DataStorageEnabled.toString(),
+                                        enabled.toString()
+                                    )
+                                    phq9DataStorageEnabled = enabled
+                                    preferencesManager.isPhq9DataStorageEnabled = enabled
+                                }
                             )
                         }
-
-                        var phq9DataStorageEnabled by remember(refreshKey) { mutableStateOf(preferencesManager.isPhq9DataStorageEnabled) }
-
-                        Switch(
-                            checked = phq9DataStorageEnabled,
-                            onCheckedChange = { enabled ->
-                                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-                                // Track PHQ-9 data storage setting change
-                                analyticsManager.trackSettingChanged("phq9_data_storage", phq9DataStorageEnabled.toString(), enabled.toString())
-                                phq9DataStorageEnabled = enabled
-                                preferencesManager.isPhq9DataStorageEnabled = enabled
-                            }
-                        )
                     }
                 }
             }

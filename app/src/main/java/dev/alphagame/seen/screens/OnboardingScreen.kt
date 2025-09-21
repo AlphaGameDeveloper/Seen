@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import dev.alphagame.seen.FeatureFlags
 import dev.alphagame.seen.data.PreferencesManager
 import dev.alphagame.seen.translations.rememberTranslation
 import kotlinx.coroutines.launch
@@ -48,7 +49,7 @@ fun OnboardingScreen(
     val translation = rememberTranslation()
     val preferencesManager = remember { PreferencesManager(context) }
 
-    val pages = listOf(
+    val pages = mutableListOf<OnboardingPage>(
         OnboardingPage(
             title = translation.onboardingWelcomeTitle,
             description = translation.onboardingWelcomeDesc,
@@ -69,11 +70,7 @@ fun OnboardingScreen(
             description = translation.onboardingPrivacyDesc,
             emoji = "🔒"
         ),
-        OnboardingPage(
-            title = translation.onboardingNoAdsTitle,
-            description = translation.onboardingNoAdsDesc,
-            emoji = "🚫"
-        ),
+
         OnboardingPage(
             title = translation.onboardingNotificationsTitle,
             description = translation.onboardingNotificationsDesc,
@@ -81,6 +78,13 @@ fun OnboardingScreen(
             isNotificationPage = true
         )
     )
+
+    if (FeatureFlags.ONBOARDING_NO_ADS) {
+        pages.add(OnboardingPage(
+            title = translation.onboardingNoAdsTitle,
+            description = translation.onboardingNoAdsDesc,
+            emoji = "🚫"))
+    }
 
     val pagerState = rememberPagerState(pageCount = { pages.size })
     val coroutineScope = rememberCoroutineScope()
