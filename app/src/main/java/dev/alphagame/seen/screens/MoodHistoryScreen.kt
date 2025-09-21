@@ -1,6 +1,7 @@
 package dev.alphagame.seen.screens
 
 import android.util.Log
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,6 +44,7 @@ import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.marker.rememberDefaultCartesianMarker
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.common.rememberHorizontalLegend
 import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
@@ -56,10 +58,12 @@ import dev.alphagame.seen.data.NotesManager
 import dev.alphagame.seen.data.PHQ9Response
 import dev.alphagame.seen.data.WidgetMoodManager
 import dev.alphagame.seen.translations.rememberTranslation
+import dev.alphagame.seen.data.PreferencesManager
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import java.util.Date
+
 
 @Composable
 fun MoodHistoryScreen(
@@ -74,6 +78,7 @@ fun MoodHistoryScreen(
     var showDeleteDialog by remember { mutableStateOf(false) }
     var phq9Results by remember { mutableStateOf<List<PHQ9Response>>(emptyList()) }
     val modelProducer = remember { CartesianChartModelProducer() }
+    var preferencesManager = remember { PreferencesManager(context) }
 
     // Load mood entries
     LaunchedEffect(Unit) {
@@ -118,7 +123,7 @@ fun MoodHistoryScreen(
                     Icons.Default.Delete,
                     contentDescription = translation.clearHistory,
                     tint = if (moodEntries.isNotEmpty()) MaterialTheme.colorScheme.onSurface
-                           else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                 )
             }
         }
@@ -133,19 +138,26 @@ fun MoodHistoryScreen(
 
         val phq9Map = (phq9Results.map { it.total }).reversed()
 
+        //Experimenting with using a time on the x axis. Can't seem to use anything but intergers
         val formatter = SimpleDateFormat("MM/dd/yy", Locale.getDefault())
         val dateMap = (phq9Results.map { formatter.format(Date(it.timestamp)) }).reversed()
+
         Log.d("MoodHistoryScreen", phq9Map.toString())
         Log.d("MoodHistoryScreen", dateMap.toString())
+
+        //making the x axis start at 1 instead of 0
+        val x = (1..phq9Map.size).toList()
 
         // Only update chart data if we have PHQ-9 results
         LaunchedEffect(phq9Results) {
             if (phq9Map.isNotEmpty()) {
                 modelProducer.runTransaction {
-                    lineSeries { series(phq9Map) }
+                    lineSeries { series(x, phq9Map) }
                 }
             }
         }
+
+
         if (phq9Map.isNotEmpty()) {
             Text(
                 text = "PHQ-9 Responses",
@@ -153,13 +165,28 @@ fun MoodHistoryScreen(
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onSurface
             )
+
+            //Function to determine what color the numbers will use
+            @Composable
+            fun findColor(): Int {
+                if (preferencesManager.themeMode == "dark") {
+                    return 0xFFFFFFFF.toInt()
+                } else {
+                    return 0xFF000000.toInt()
+                }
+            }
+            Log.e("MoodHistoryScreen", findColor().toString())
+
+            //Creates text component with correct color
+            val axisLabelComponent = TextComponent(
+                color = findColor()
+            )
             CartesianChartHost(
                 rememberCartesianChart(
                     rememberLineCartesianLayer(),
-                    startAxis = VerticalAxis.rememberStart(),
-                    bottomAxis = HorizontalAxis.rememberBottom(label = TextComponent()),
-
-                ),
+                    startAxis = VerticalAxis.rememberStart(label = axisLabelComponent),
+                    bottomAxis = HorizontalAxis.rememberBottom(label = axisLabelComponent),
+                    ),
                 modelProducer,
             )
         }
