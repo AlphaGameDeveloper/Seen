@@ -190,7 +190,7 @@ fun MoodHistoryScreen(
                 modelProducer,
             )
         }
-
+        if (phq9Map.isNotEmpty()) {
         HorizontalDivider(
             modifier = Modifier.fillMaxWidth().padding(
                 PaddingValues(2.dp)
@@ -198,6 +198,7 @@ fun MoodHistoryScreen(
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.tertiary
         )
+        }
 
         // Mood entries list
         if (moodEntries.isEmpty()) {
