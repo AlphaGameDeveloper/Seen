@@ -10,5 +10,7 @@ class FeatureFlags {
         const val ONBOARDING_NO_ADS = false;
 
         const val UI_ONBOARDING_BUTTON = false;
+
+        const val UI_JOURNAL_ADDBUTTON = false;
     }
 }

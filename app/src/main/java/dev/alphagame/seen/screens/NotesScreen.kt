@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.alphagame.seen.FeatureFlags
 import dev.alphagame.seen.analytics.AnalyticsManager
 import dev.alphagame.seen.data.Note
 import dev.alphagame.seen.data.NotesManager
@@ -80,7 +81,7 @@ fun NotesScreen(onBackToHome: () -> Unit) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = translation.back,
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
 
@@ -88,13 +89,13 @@ fun NotesScreen(onBackToHome: () -> Unit) {
                     text = translation.notes,
                     fontSize = titleSize,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.weight(1f),
-                    textAlign = TextAlign.Center
+                    // textAlign = TextAlign.Center
                 )
 
                 // Add note FAB as icon button in header for compact screens
-                if (isCompact && false) { // alexander doesn't like it
+                if (isCompact && FeatureFlags.UI_JOURNAL_ADDBUTTON) { // alexander doesn't like it
                     IconButton(
                         onClick = { isAddingNote = !isAddingNote }
                     ) {

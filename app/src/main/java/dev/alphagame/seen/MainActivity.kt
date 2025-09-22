@@ -267,7 +267,7 @@ fun SeenApplication(
                         onBack = {
                             if (currentQuestion > 0) {
                                 currentQuestion--
-                                if (scores.isNotEmpty()) scores.removeLast()
+                                if (scores.isNotEmpty()) scores.removeAt(scores.lastIndex)
                             } else {
                                 navigateBack()
                             }

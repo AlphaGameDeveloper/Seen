@@ -31,7 +31,8 @@ class AIManager(private val context: Context) {
 
     companion object {
         private const val TAG = "AIManager"
-        private const val BASE_URL = "https://seen.alphagame.dev/api"
+        // private const val BASE_URL = "https://seen.alphagame.dev/api"
+        private const val BASE_URL = "http://10.133.57.135:5000/api"
         private const val PHQ9_ENDPOINT = "$BASE_URL/ai/phq9"
         private const val JSON_MEDIA_TYPE = "application/json; charset=utf-8"
     }
