@@ -387,7 +387,7 @@ fun SeenApplication(
             }
             // text in the bottom right corner with version info
             Text(
-                text = "Version: ${BuildConfig.VERSION_FULL}\nBuilt: ${BuildConfig.PRETTY_BUILD_TIME}",
+                text = "Version: ${BuildConfig.VERSION_FULL}\nBuilt: ${BuildConfig.PRETTY_BUILD_TIME}\nPackage: ${BuildConfig.APPLICATION_ID}@${BuildConfig.GIT_BRANCH}",
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(20.dp),
