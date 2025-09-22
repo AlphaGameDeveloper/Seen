@@ -9,8 +9,8 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dev.alphagame.seen.analytics.models.AnalyticsBatchRequest
-import dev.alphagame.seen.analytics.models.AnalyticsEvent
 import dev.alphagame.seen.analytics.models.AnalyticsErrorResponse
+import dev.alphagame.seen.analytics.models.AnalyticsEvent
 import dev.alphagame.seen.analytics.models.SessionInfo
 import dev.alphagame.seen.analytics.models.UserProperties
 import dev.alphagame.seen.data.AppVersionInfo
@@ -23,7 +23,8 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import java.util.*
+import java.util.Locale
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 
 /**

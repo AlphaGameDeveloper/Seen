@@ -12,7 +12,7 @@ import dev.alphagame.seen.analytics.AnalyticsManager
 import dev.alphagame.seen.data.Mood
 import dev.alphagame.seen.data.WidgetMoodManager
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 class MoodWidgetProvider : AppWidgetProvider() {
 

@@ -1,7 +1,6 @@
 package dev.alphagame.seen.screens
 
 import android.util.Log
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,9 +43,7 @@ import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
-import com.patrykandpatrick.vico.compose.cartesian.marker.rememberDefaultCartesianMarker
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
-import com.patrykandpatrick.vico.compose.common.rememberHorizontalLegend
 import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
@@ -57,13 +54,13 @@ import dev.alphagame.seen.analytics.AnalyticsManager
 import dev.alphagame.seen.data.MoodEntry
 import dev.alphagame.seen.data.NotesManager
 import dev.alphagame.seen.data.PHQ9Response
+import dev.alphagame.seen.data.PreferencesManager
 import dev.alphagame.seen.data.WidgetMoodManager
 import dev.alphagame.seen.translations.rememberTranslation
-import dev.alphagame.seen.data.PreferencesManager
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
 import java.util.Date
+import java.util.Locale
 
 
 @Composable
