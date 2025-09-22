@@ -10,7 +10,9 @@ class FeatureFlags {
         const val ONBOARDING_NO_ADS = false;
 
         const val UI_ONBOARDING_BUTTON = false;
+        const val UI_JOURNAL_ADD_BUTTON = false;
+        const val UI_MOOD_HISTORY_GLOBAL_DELETE = false;
 
-        const val UI_JOURNAL_ADDBUTTON = false;
+        const val UI_DEBUG_BUILD_TEXT = true;
     }
 }

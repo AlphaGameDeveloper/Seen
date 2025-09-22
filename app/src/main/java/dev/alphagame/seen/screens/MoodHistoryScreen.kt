@@ -52,6 +52,7 @@ import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
 import com.patrykandpatrick.vico.core.common.component.TextComponent
+import dev.alphagame.seen.FeatureFlags
 import dev.alphagame.seen.analytics.AnalyticsManager
 import dev.alphagame.seen.data.MoodEntry
 import dev.alphagame.seen.data.NotesManager
@@ -115,16 +116,18 @@ fun MoodHistoryScreen(
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.weight(1f)
             )
-            IconButton(
-                onClick = { showDeleteDialog = true },
-                enabled = moodEntries.isNotEmpty()
-            ) {
-                Icon(
-                    Icons.Default.Delete,
-                    contentDescription = translation.clearHistory,
-                    tint = if (moodEntries.isNotEmpty()) MaterialTheme.colorScheme.onSurface
-                    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                )
+            if (FeatureFlags.UI_MOOD_HISTORY_GLOBAL_DELETE) {
+                IconButton(
+                    onClick = { showDeleteDialog = true },
+                    enabled = moodEntries.isNotEmpty()
+                ) {
+                    Icon(
+                        Icons.Default.Delete,
+                        contentDescription = translation.clearHistory,
+                        tint = if (moodEntries.isNotEmpty()) MaterialTheme.colorScheme.onSurface
+                        else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                    )
+                }
             }
         }
 

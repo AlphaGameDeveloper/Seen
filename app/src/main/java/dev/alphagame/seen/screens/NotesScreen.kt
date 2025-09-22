@@ -95,7 +95,7 @@ fun NotesScreen(onBackToHome: () -> Unit) {
                 )
 
                 // Add note FAB as icon button in header for compact screens
-                if (isCompact && FeatureFlags.UI_JOURNAL_ADDBUTTON) { // alexander doesn't like it
+                if (isCompact && FeatureFlags.UI_JOURNAL_ADD_BUTTON) { // alexander doesn't like it
                     IconButton(
                         onClick = { isAddingNote = !isAddingNote }
                     ) {

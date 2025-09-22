@@ -396,7 +396,7 @@ fun SeenApplication(
             )
         }
 
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG && FeatureFlags.UI_DEBUG_BUILD_TEXT) {
             // red DEBUG BUILD in top left corner
             Box(
                 modifier = Modifier
