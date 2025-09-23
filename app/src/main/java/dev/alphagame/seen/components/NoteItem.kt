@@ -19,6 +19,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -27,9 +28,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.alphagame.seen.data.Mood
+import dev.alphagame.seen.data.MoodEntry
 import dev.alphagame.seen.data.Note
 import dev.alphagame.seen.translations.rememberTranslation
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -90,10 +93,13 @@ fun NoteItem(note: Note, onDelete: () -> Unit) {
                     modifier = Modifier.size(if (isCompact) 32.dp else 40.dp)
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Delete,
+                        Icons.Default.Delete,
+                        contentDescription = translation.deleteMoodEntry,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        /*imageVector = Icons.Default.Delete,
                         contentDescription = translation.deleteNote,
                         tint = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.size(if (isCompact) 18.dp else 20.dp)
+                        modifier = Modifier.size(if (isCompact) 18.dp else 20.dp)*/
                     )
                 }
             }
