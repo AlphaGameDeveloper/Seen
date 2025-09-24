@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import dev.alphagame.seen.analytics.AnalyticsManager
 import dev.alphagame.seen.components.UpdateDialog
@@ -400,14 +401,19 @@ fun SeenApplication(
                 }
             }
             // text in the bottom right corner with version info
-            Text(
-                text = "Version: ${BuildConfig.VERSION_FULL}\nBuilt: ${BuildConfig.PRETTY_BUILD_TIME}\nPackage: ${BuildConfig.APPLICATION_ID}@${BuildConfig.GIT_BRANCH}",
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(20.dp),
-                style = MaterialTheme.typography.bodySmall.copy(textAlign = TextAlign.Right),
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-            )
+            if (FeatureFlags.UI_BUILD_STRING) {
+                Text(
+                    text = "Version: ${BuildConfig.VERSION_FULL}",
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(20.dp),
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        textAlign = TextAlign.Right,
+                        fontSize = 12.sp // 1 pt ≈ 1 sp in Compose - what the actual fuck
+                    ),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                )
+            }
         }
 
         if (BuildConfig.DEBUG && FeatureFlags.UI_DEBUG_BUILD_TEXT) {

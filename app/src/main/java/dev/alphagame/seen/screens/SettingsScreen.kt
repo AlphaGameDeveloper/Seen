@@ -53,6 +53,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.alphagame.seen.BuildConfig
 import dev.alphagame.seen.FeatureFlags
 import dev.alphagame.seen.analytics.AnalyticsManager
 import dev.alphagame.seen.components.HealthStatusDots
@@ -193,11 +194,18 @@ fun SettingsScreen(
                     )
 
                     Text(
-                        text = "Built on ${AppVersionInfo.getBuildTime()}",
+                        text = "Built on ${BuildConfig.PRETTY_BUILD_TIME}",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )
 
+                    if (FeatureFlags.SETTINGS_PACKAGE) {
+                        Text(
+                            text = "Package: ${BuildConfig.APPLICATION_ID}@${BuildConfig.GIT_BRANCH}",
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                        )
+                    }
                     if (FeatureFlags.SETTINGS_EXTENDED_ABOUT) {
                         val gitBranch = AppVersionInfo.getGitBranch()
                         if (gitBranch != "unknown" && gitBranch != "dynamic") {
