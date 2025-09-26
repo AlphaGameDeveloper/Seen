@@ -119,6 +119,30 @@ abstract class Translation {
     abstract val dataDeletedText: String
     abstract val continueButton: String
 
+    // Encryption Settings
+    abstract val encryptionAndSecurity: String
+    abstract val encryptDatabase: String
+    abstract val encryptDatabaseDescription: String
+    abstract val setupEncryption: String
+    abstract val disableEncryption: String
+    abstract val changePin: String
+    abstract val enterCurrentPin: String
+    abstract val enterNewPin: String
+    abstract val confirmNewPin: String
+    abstract val pinSetupTitle: String
+    abstract val pinSetupMessage: String
+    abstract val pinChangeTitle: String
+    abstract val pinChangeMessage: String
+    abstract val pinVerifyTitle: String
+    abstract val pinVerifyMessage: String
+    abstract val encryptionEnabled: String
+    abstract val encryptionDisabled: String
+    abstract val incorrectPin: String
+    abstract val pinChangedSuccessfully: String
+    abstract val encryptionSetupSuccess: String
+    abstract val encryptionDisabledSuccess: String
+    abstract val disableEncryptionWarning: String
+
     // Common
     abstract val yes: String
     abstract val no: String

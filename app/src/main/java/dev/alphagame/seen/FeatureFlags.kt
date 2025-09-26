@@ -6,6 +6,7 @@ class FeatureFlags {
         const val SETTINGS_AI_FEATURES = false;
         const val SETTINGS_ANALYTICS = false;
         const val SETTINGS_ASSESSMENT_SETTINGS = false;
+        const val SETTINGS_ENCRYPTION = true;
 
         const val ONBOARDING_NO_ADS = false;
 

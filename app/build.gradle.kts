@@ -213,6 +213,9 @@ dependencies {
     implementation(libs.vico.compose.m3)
     implementation(libs.vico.multiplatform)
     implementation(libs.vico.views)
+    
+    // Encryption dependencies
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
 }
 
 // Gradle task to display version information

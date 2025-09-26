@@ -57,6 +57,7 @@ import dev.alphagame.seen.FeatureFlags
 import dev.alphagame.seen.analytics.AnalyticsManager
 import dev.alphagame.seen.components.HealthStatusDots
 import dev.alphagame.seen.components.NoInternetDialog
+import dev.alphagame.seen.components.PinEntryDialog
 import dev.alphagame.seen.components.UpdateDialog
 import dev.alphagame.seen.data.AppVersionInfo
 import dev.alphagame.seen.data.DatabaseHelper
@@ -65,6 +66,7 @@ import dev.alphagame.seen.data.UpdateCheckManager
 import dev.alphagame.seen.data.UpdateChecker
 import dev.alphagame.seen.data.UpdateInfo
 import dev.alphagame.seen.data.WidgetMoodManager
+import dev.alphagame.seen.security.EncryptionSettingsManager
 import dev.alphagame.seen.health.HealthStatusManager
 import dev.alphagame.seen.translations.Translation
 import dev.alphagame.seen.translations.rememberTranslation
@@ -86,6 +88,7 @@ fun SettingsScreen(
     val widgetMoodManager = remember { WidgetMoodManager(context) }
     val updateChecker = remember { UpdateChecker(context) }
     val updateCheckManager = remember { UpdateCheckManager(context) }
+    val encryptionSettingsManager = remember { EncryptionSettingsManager(context) }
     val translation = rememberTranslation()
     val scope = rememberCoroutineScope()
 
@@ -99,7 +102,16 @@ fun SettingsScreen(
     var showNoUpdateDialog by remember { mutableStateOf(false) }
     var showUpdateErrorDialog by remember { mutableStateOf(false) }
     var showNetworkErrorDialog by remember { mutableStateOf(false) }
-    var updateInfo by remember { mutableStateOf<UpdateInfo?>(null) }    // Keep local state in sync with preference changes
+    var updateInfo by remember { mutableStateOf<UpdateInfo?>(null) }
+    
+    // Encryption-related state
+    var showPinSetupDialog by remember { mutableStateOf(false) }
+    var showChangePinDialog by remember { mutableStateOf(false) }
+    var showDisableEncryptionDialog by remember { mutableStateOf(false) }
+    var showEncryptionSuccessDialog by remember { mutableStateOf(false) }
+    var showEncryptionErrorDialog by remember { mutableStateOf(false) }
+    var encryptionSuccessMessage by remember { mutableStateOf("") }
+    var encryptionErrorMessage by remember { mutableStateOf("") }    // Keep local state in sync with preference changes
     LaunchedEffect(preferencesManager.themeMode, preferencesManager.language, refreshKey) {
         currentTheme = preferencesManager.themeMode
         currentLanguage = preferencesManager.language
@@ -507,6 +519,107 @@ fun SettingsScreen(
                     }
                 }
             }
+
+            // Encryption Settings Section
+            if (FeatureFlags.SETTINGS_ENCRYPTION) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier.padding(20.dp)
+                    ) {
+                        var encryptionEnabled by remember(refreshKey) { 
+                            mutableStateOf(preferencesManager.encryptionEnabled) 
+                        }
+                        
+                        Text(
+                            text = translation.encryptionAndSecurity,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // Encryption Toggle
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text(
+                                    text = translation.encryptDatabase,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                Text(
+                                    text = translation.encryptDatabaseDescription,
+                                    fontSize = 14.sp,
+                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                                )
+                            }
+
+                            Switch(
+                                checked = encryptionEnabled,
+                                onCheckedChange = { enabled ->
+                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    
+                                    if (enabled) {
+                                        // Show PIN setup dialog
+                                        showPinSetupDialog = true
+                                    } else {
+                                        // Show disable confirmation
+                                        showDisableEncryptionDialog = true
+                                    }
+                                }
+                            )
+                        }
+
+                        // Show encryption status
+                        Spacer(modifier = Modifier.height(12.dp))
+                        
+                        val encryptionStatusText = if (encryptionEnabled) {
+                            translation.encryptionEnabled
+                        } else {
+                            translation.encryptionDisabled
+                        }
+                        
+                        Text(
+                            text = encryptionStatusText,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = if (encryptionEnabled) {
+                                MaterialTheme.colorScheme.primary
+                            } else {
+                                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                            }
+                        )
+
+                        // Change PIN button (only show if encryption is enabled)
+                        if (encryptionEnabled && preferencesManager.pinHash != null) {
+                            Spacer(modifier = Modifier.height(16.dp))
+                            
+                            OutlinedButton(
+                                onClick = {
+                                    showChangePinDialog = true
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(translation.changePin)
+                            }
+                        }
+                    }
+                }
+            }
+
             if (FeatureFlags.SETTINGS_AI_FEATURES) {
                 // Privacy & Assessment Settings Section
                 Card(
@@ -992,6 +1105,191 @@ fun SettingsScreen(
     if (showNetworkErrorDialog) {
         NoInternetDialog(
             onDismiss = { showNetworkErrorDialog = false }
+        )
+    }
+
+    // PIN Setup Dialog
+    if (showPinSetupDialog) {
+        PinEntryDialog(
+            title = translation.pinSetupTitle,
+            message = translation.pinSetupMessage,
+            confirmText = translation.setupEncryption,
+            showConfirmPin = true,
+            onConfirm = { pin ->
+                scope.launch {
+                    try {
+                        val success = encryptionSettingsManager.setupEncryption(pin)
+                        if (success) {
+                            preferencesManager.encryptionEnabled = true
+                            encryptionSuccessMessage = translation.encryptionSetupSuccess
+                            showEncryptionSuccessDialog = true
+                            analyticsManager.trackEvent("encryption_enabled")
+                            refreshKey++ // Force refresh
+                        } else {
+                            encryptionErrorMessage = "Failed to set up encryption"
+                            showEncryptionErrorDialog = true
+                        }
+                    } catch (e: Exception) {
+                        encryptionErrorMessage = e.message ?: "Unknown error"
+                        showEncryptionErrorDialog = true
+                    }
+                }
+                showPinSetupDialog = false
+            },
+            onCancel = {
+                showPinSetupDialog = false
+            }
+        )
+    }
+
+    // Change PIN Dialog
+    if (showChangePinDialog) {
+        var currentPinEntered by remember { mutableStateOf(false) }
+        var currentPin by remember { mutableStateOf("") }
+        
+        if (!currentPinEntered) {
+            PinEntryDialog(
+                title = translation.pinChangeTitle,
+                message = translation.enterCurrentPin,
+                confirmText = "Next",
+                onConfirm = { pin ->
+                    if (encryptionSettingsManager.verifyPin(pin)) {
+                        currentPin = pin
+                        currentPinEntered = true
+                    } else {
+                        encryptionErrorMessage = translation.incorrectPin
+                        showEncryptionErrorDialog = true
+                        showChangePinDialog = false
+                    }
+                },
+                onCancel = {
+                    showChangePinDialog = false
+                }
+            )
+        } else {
+            PinEntryDialog(
+                title = translation.pinChangeTitle,
+                message = translation.enterNewPin,
+                confirmText = translation.changePin,
+                showConfirmPin = true,
+                onConfirm = { newPin ->
+                    scope.launch {
+                        val success = encryptionSettingsManager.changePin(currentPin, newPin)
+                        if (success) {
+                            encryptionSuccessMessage = translation.pinChangedSuccessfully
+                            showEncryptionSuccessDialog = true
+                            analyticsManager.trackEvent("pin_changed")
+                        } else {
+                            encryptionErrorMessage = "Failed to change PIN"
+                            showEncryptionErrorDialog = true
+                        }
+                    }
+                    showChangePinDialog = false
+                    currentPinEntered = false
+                },
+                onCancel = {
+                    showChangePinDialog = false
+                    currentPinEntered = false
+                }
+            )
+        }
+    }
+
+    // Disable Encryption Confirmation Dialog
+    if (showDisableEncryptionDialog) {
+        AlertDialog(
+            onDismissRequest = { showDisableEncryptionDialog = false },
+            title = {
+                Text(
+                    text = translation.disableEncryption,
+                    fontWeight = FontWeight.SemiBold
+                )
+            },
+            text = {
+                Text(
+                    text = translation.disableEncryptionWarning,
+                    lineHeight = 20.sp
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        encryptionSettingsManager.disableEncryption()
+                        preferencesManager.encryptionEnabled = false
+                        encryptionSuccessMessage = translation.encryptionDisabledSuccess
+                        showEncryptionSuccessDialog = true
+                        analyticsManager.trackEvent("encryption_disabled")
+                        refreshKey++
+                        showDisableEncryptionDialog = false
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Text(translation.disableEncryption)
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showDisableEncryptionDialog = false }
+                ) {
+                    Text(translation.cancel)
+                }
+            }
+        )
+    }
+
+    // Encryption Success Dialog
+    if (showEncryptionSuccessDialog) {
+        AlertDialog(
+            onDismissRequest = { showEncryptionSuccessDialog = false },
+            title = {
+                Text(
+                    text = "Success",
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            },
+            text = {
+                Text(
+                    text = encryptionSuccessMessage,
+                    lineHeight = 20.sp
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = { showEncryptionSuccessDialog = false }
+                ) {
+                    Text(translation.ok)
+                }
+            }
+        )
+    }
+
+    // Encryption Error Dialog
+    if (showEncryptionErrorDialog) {
+        AlertDialog(
+            onDismissRequest = { showEncryptionErrorDialog = false },
+            title = {
+                Text(
+                    text = translation.error,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.error
+                )
+            },
+            text = {
+                Text(
+                    text = encryptionErrorMessage,
+                    lineHeight = 20.sp
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = { showEncryptionErrorDialog = false }
+                ) {
+                    Text(translation.ok)
+                }
+            }
         )
     }
 }
