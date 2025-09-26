@@ -108,6 +108,7 @@ fun SettingsScreen(
     var showPinSetupDialog by remember { mutableStateOf(false) }
     var showChangePinDialog by remember { mutableStateOf(false) }
     var showDisableEncryptionDialog by remember { mutableStateOf(false) }
+    var showPinVerifyForDisableDialog by remember { mutableStateOf(false) }
     var showEncryptionSuccessDialog by remember { mutableStateOf(false) }
     var showEncryptionErrorDialog by remember { mutableStateOf(false) }
     var encryptionSuccessMessage by remember { mutableStateOf("") }
@@ -1118,23 +1119,27 @@ fun SettingsScreen(
             onConfirm = { pin ->
                 scope.launch {
                     try {
+                        showPinSetupDialog = false
+                        // Show loading state
+                        encryptionSuccessMessage = "Setting up encryption..."
+                        showEncryptionSuccessDialog = true
+                        
                         val success = encryptionSettingsManager.setupEncryption(pin)
                         if (success) {
-                            preferencesManager.encryptionEnabled = true
                             encryptionSuccessMessage = translation.encryptionSetupSuccess
-                            showEncryptionSuccessDialog = true
                             analyticsManager.trackEvent("encryption_enabled")
                             refreshKey++ // Force refresh
                         } else {
-                            encryptionErrorMessage = "Failed to set up encryption"
+                            showEncryptionSuccessDialog = false
+                            encryptionErrorMessage = "Failed to set up encryption. Please try again."
                             showEncryptionErrorDialog = true
                         }
                     } catch (e: Exception) {
-                        encryptionErrorMessage = e.message ?: "Unknown error"
+                        showEncryptionSuccessDialog = false
+                        encryptionErrorMessage = e.message ?: "Unknown error occurred"
                         showEncryptionErrorDialog = true
                     }
                 }
-                showPinSetupDialog = false
             },
             onCancel = {
                 showPinSetupDialog = false
@@ -1214,13 +1219,9 @@ fun SettingsScreen(
             confirmButton = {
                 Button(
                     onClick = {
-                        encryptionSettingsManager.disableEncryption()
-                        preferencesManager.encryptionEnabled = false
-                        encryptionSuccessMessage = translation.encryptionDisabledSuccess
-                        showEncryptionSuccessDialog = true
-                        analyticsManager.trackEvent("encryption_disabled")
-                        refreshKey++
                         showDisableEncryptionDialog = false
+                        // Show PIN verification dialog for disabling
+                        showPinVerifyForDisableDialog = true
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.error
@@ -1289,6 +1290,43 @@ fun SettingsScreen(
                 ) {
                     Text(translation.ok)
                 }
+            }
+        )
+    }
+
+    // PIN Verification for Disable Dialog
+    if (showPinVerifyForDisableDialog) {
+        PinEntryDialog(
+            title = translation.disableEncryption,
+            message = translation.enterCurrentPin,
+            confirmText = translation.disableEncryption,
+            onConfirm = { pin ->
+                scope.launch {
+                    try {
+                        showPinVerifyForDisableDialog = false
+                        // Show loading state
+                        encryptionSuccessMessage = "Disabling encryption..."
+                        showEncryptionSuccessDialog = true
+                        
+                        val success = encryptionSettingsManager.disableEncryption(pin)
+                        if (success) {
+                            encryptionSuccessMessage = translation.encryptionDisabledSuccess
+                            analyticsManager.trackEvent("encryption_disabled")
+                            refreshKey++ // Force refresh
+                        } else {
+                            showEncryptionSuccessDialog = false
+                            encryptionErrorMessage = translation.incorrectPin
+                            showEncryptionErrorDialog = true
+                        }
+                    } catch (e: Exception) {
+                        showEncryptionSuccessDialog = false
+                        encryptionErrorMessage = e.message ?: "Unknown error occurred"
+                        showEncryptionErrorDialog = true
+                    }
+                }
+            },
+            onCancel = {
+                showPinVerifyForDisableDialog = false
             }
         )
     }

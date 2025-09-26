@@ -50,10 +50,12 @@ import dev.alphagame.seen.onboarding.EnhancedOnboardingScreen
 import dev.alphagame.seen.screens.DatabaseDebugScreen
 import dev.alphagame.seen.screens.MoodHistoryScreen
 import dev.alphagame.seen.screens.NotesScreen
+import dev.alphagame.seen.screens.PinVerificationScreen
 import dev.alphagame.seen.screens.QuestionScreen
 import dev.alphagame.seen.screens.ResultScreen
 import dev.alphagame.seen.screens.SettingsScreen
 import dev.alphagame.seen.screens.WelcomeScreen
+import dev.alphagame.seen.security.EncryptionSettingsManager
 import dev.alphagame.seen.translations.TranslationProvider
 import dev.alphagame.seen.translations.rememberTranslation
 import dev.alphagame.seen.ui.theme.SeenTheme
@@ -111,6 +113,11 @@ fun SeenApplication(
     val updateChecker = remember { UpdateChecker(context) }
     val updateCheckManager = remember { UpdateCheckManager(context) }
     val scope = rememberCoroutineScope()
+    
+    // Encryption state
+    val encryptionManager = remember { EncryptionSettingsManager(context) }
+    var isPinVerified by remember { mutableStateOf(!encryptionManager.requiresPinOnStartup()) }
+    var showPinVerification by remember { mutableStateOf(encryptionManager.requiresPinOnStartup()) }
 
     // Update check state
     var updateInfo by remember { mutableStateOf<UpdateInfo?>(null) }
@@ -221,16 +228,24 @@ fun SeenApplication(
             navigateBack()
         }
 
-        // Main content
-        when (currentScreen) {
-            "onboarding" -> {
-                EnhancedOnboardingScreen(
-                    onOnboardingComplete = {
-                        preferencesManager.isOnboardingCompleted = true
-                        currentScreen = "welcome"
-                    }
-                )
-            }
+        // Main content - Show PIN verification if needed
+        if (showPinVerification && !isPinVerified) {
+            PinVerificationScreen(
+                onPinVerified = {
+                    isPinVerified = true
+                    showPinVerification = false
+                }
+            )
+        } else {
+            when (currentScreen) {
+                "onboarding" -> {
+                    EnhancedOnboardingScreen(
+                        onOnboardingComplete = {
+                            preferencesManager.isOnboardingCompleted = true
+                            currentScreen = "welcome"
+                        }
+                    )
+                }
             "welcome" -> {
                 WelcomeScreen(
                     onStartQuiz = {
@@ -337,6 +352,7 @@ fun SeenApplication(
                     }
                 )
             }
+        }
         }
 
         // Settings button - only show on welcome screen

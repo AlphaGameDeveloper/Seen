@@ -23,24 +23,44 @@ class EncryptionSettingsManager(private val context: Context) {
     /**
      * Set up encryption with a PIN
      */
-    fun setupEncryption(pin: String): Boolean {
+    suspend fun setupEncryption(pin: String): Boolean {
         if (!PinUtils.isValidPin(pin)) {
             return false
         }
         
-        val hashedPin = PinUtils.hashPin(pin)
-        preferencesManager.pinHash = hashedPin
-        preferencesManager.encryptionEnabled = true
+        // Try to migrate data first
+        val migrationManager = DataMigrationManager(context)
+        val migrationSuccess = migrationManager.migrateToEncrypted(pin)
         
-        return true
+        if (migrationSuccess) {
+            val hashedPin = PinUtils.hashPin(pin)
+            preferencesManager.pinHash = hashedPin
+            preferencesManager.encryptionEnabled = true
+            return true
+        }
+        
+        return false
     }
     
     /**
      * Disable encryption and remove PIN
      */
-    fun disableEncryption() {
-        preferencesManager.encryptionEnabled = false
-        preferencesManager.pinHash = null
+    suspend fun disableEncryption(pin: String): Boolean {
+        if (!verifyPin(pin)) {
+            return false
+        }
+        
+        // Try to migrate data back to unencrypted
+        val migrationManager = DataMigrationManager(context)
+        val migrationSuccess = migrationManager.migrateToUnencrypted(pin)
+        
+        if (migrationSuccess) {
+            preferencesManager.encryptionEnabled = false
+            preferencesManager.pinHash = null
+            return true
+        }
+        
+        return false
     }
     
     /**
@@ -78,6 +98,20 @@ class EncryptionSettingsManager(private val context: Context) {
             !isPinSetup() -> EncryptionStatus.SETUP_REQUIRED
             else -> EncryptionStatus.ENABLED
         }
+    }
+    
+    /**
+     * Check if PIN verification is required on app startup
+     */
+    fun requiresPinOnStartup(): Boolean {
+        return isEncryptionEnabled() && isPinSetup()
+    }
+    
+    /**
+     * Get data migration manager
+     */
+    fun getDataMigrationManager(): DataMigrationManager {
+        return DataMigrationManager(context)
     }
 }
 
