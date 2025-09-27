@@ -60,7 +60,7 @@ import dev.alphagame.seen.components.HealthStatusDots
 import dev.alphagame.seen.components.NoInternetDialog
 import dev.alphagame.seen.components.UpdateDialog
 import dev.alphagame.seen.data.AppVersionInfo
-import dev.alphagame.seen.data.DatabaseHelper
+import dev.alphagame.seen.data.EncryptedDatabaseHelper
 import dev.alphagame.seen.data.PreferencesManager
 import dev.alphagame.seen.data.UpdateCheckManager
 import dev.alphagame.seen.data.UpdateChecker
@@ -83,7 +83,7 @@ fun SettingsScreen(
     val preferencesManager = remember { PreferencesManager(context) }
     val analyticsManager = remember { AnalyticsManager(context) }
     val healthStatusManager = remember { HealthStatusManager(context) }
-    val databaseHelper = remember { DatabaseHelper(context) }
+    val databaseHelper = remember { EncryptedDatabaseHelper(context) }
     val widgetMoodManager = remember { WidgetMoodManager(context) }
     val updateChecker = remember { UpdateChecker(context) }
     val updateCheckManager = remember { UpdateCheckManager(context) }

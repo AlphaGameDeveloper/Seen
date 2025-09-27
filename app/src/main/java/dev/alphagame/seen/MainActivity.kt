@@ -49,6 +49,7 @@ import dev.alphagame.seen.data.UpdateChecker
 import dev.alphagame.seen.data.UpdateInfo
 import dev.alphagame.seen.onboarding.EnhancedOnboardingScreen
 import dev.alphagame.seen.screens.DatabaseDebugScreen
+import dev.alphagame.seen.screens.EncryptionDebugScreen
 import dev.alphagame.seen.screens.MoodHistoryScreen
 import dev.alphagame.seen.screens.NotesScreen
 import dev.alphagame.seen.screens.QuestionScreen
@@ -331,6 +332,13 @@ fun SeenApplication(
                     }
                 )
             }
+            "debug_encryption" -> {
+                EncryptionDebugScreen(
+                    onBackToHome = {
+                        navigateBack()
+                    }
+                )
+            }
             "info_onboarding" -> {
                 EnhancedOnboardingScreen(
                     onOnboardingComplete = {
@@ -402,8 +410,14 @@ fun SeenApplication(
             }
             // text in the bottom right corner with version info
             if (FeatureFlags.UI_BUILD_STRING) {
+                val extra = "\nBuilt on ${BuildConfig.PRETTY_BUILD_TIME}\nPackage: ${BuildConfig.APPLICATION_ID}@${BuildConfig.GIT_BRANCH}"
+                var text = "Version: ${BuildConfig.VERSION_FULL}"
+                if (BuildConfig.DEBUG) {
+                    Log.d("MainActivity", "Using debug extended version information :3");
+                    text = text + "\n" + extra
+                }
                 Text(
-                    text = "Version: ${BuildConfig.VERSION_FULL}",
+                    text = text,
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .padding(20.dp),
