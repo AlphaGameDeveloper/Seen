@@ -3,8 +3,6 @@ package dev.alphagame.seen.data
 import android.content.Context
 import android.util.Log
 import java.io.*
-import javax.crypto.Cipher
-import javax.crypto.spec.SecretKeySpec
 
 /**
  * Utility class for handling database encryption and decryption operations.
@@ -19,6 +17,15 @@ class DatabaseEncryption {
         // File names
         const val ENCRYPTED_DB_NAME = "seen_database_encrypted.db"
         const val TEMP_DB_NAME = "seen_database_temp.db"
+
+        /**
+         * For debug, turn bytes/s to KBytes/s and MBytes/s
+         * @param bps = Bytes per second
+         */
+        fun bps2String(bps: Number): String {
+            // note to self - 1 KB is 1000 bytes, and 1 KiB (kibibyte) is 1024 (2^10) bytes.
+            return "${bps.toDouble()/1024} KiB/s; ${bps.toDouble() / 1048576} MiB/s"
+        }
 
         /**
          * Encrypts a file using XOR cipher with the predefined key
@@ -41,7 +48,7 @@ class DatabaseEncryption {
                 } else {
                     inputBytes.size
                 }
-                Log.d("Encryption", "Encryption completed in ${endTime - startTime} ms (${bytesPerSecond.toDouble() / 1000} KBytes/sec)")
+                Log.d("Encryption", "Encryption completed in ${endTime - startTime} ms (${bps2String(bytesPerSecond)}).  Total file size is ${inputFile.length()/1024} KiB")
             } catch (e: Exception) {
                 throw Exception("Failed to encrypt database file: ${e.message}", e)
             }
@@ -74,7 +81,7 @@ class DatabaseEncryption {
                 } else {
                     inputFile.length().toInt()
                 }
-                Log.d("Encryption", "Decryption completed in ${endTime - startTime} ms (${bytesPerSecond.toDouble() / 1000} KBytes/sec)")
+                Log.d("Encryption", "Decryption completed in ${endTime - startTime} ms (${bps2String(bytesPerSecond)}).  Total file size is ${inputFile.length()/1024} KiB")
             } catch (e: Exception) {
                 throw Exception("Failed to decrypt database file: ${e.message}", e)
             }
