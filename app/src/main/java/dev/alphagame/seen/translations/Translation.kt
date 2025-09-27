@@ -2,7 +2,14 @@ package dev.alphagame.seen.translations
 
 import dev.alphagame.seen.data.PreferencesManager
 
+enum class TranslationCode {
+    ENGLISH,
+    FRENCH,
+    SPANISH
+}
+
 abstract class Translation {
+    abstract val TRANSLATION: TranslationCode
     // General App Strings
     abstract val appName: String
     abstract val version: String
@@ -17,6 +24,7 @@ abstract class Translation {
     abstract val startQuiz: String
     abstract val viewNotes: String
     abstract val viewMoodHistory: String
+    abstract val welcomeScreenMessages: List<String>
 
     // PHQ-9 Questions
     abstract val phq9Questions: List<String>

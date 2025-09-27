@@ -1,6 +1,8 @@
 package dev.alphagame.seen.translations
 
 class FrenchTranslation : Translation() {
+    override val TRANSLATION = TranslationCode.FRENCH
+
     override val appName = "Seen"
     override val version = "Version"
     override val settings = "Paramètres"
@@ -14,6 +16,19 @@ class FrenchTranslation : Translation() {
     override val startQuiz = "Commencer l'évaluation"
     override val viewNotes = "Voir les notes"
     override val viewMoodHistory = "Voir l'historique de l'humeur"
+
+    override val welcomeScreenMessages = listOf(
+        "Prenez un moment pour faire le point sur vous-même",
+        "Ce n'est pas grave de ne pas aller bien",
+        "Il y a de l'espoir, même quand votre cerveau vous dit le contraire",
+        "Vous n'êtes pas seul(e). Vous êtes vu(e).",
+        "Content de vous revoir !",
+        "Ravi de vous revoir !",
+        "Commençons quelque chose de formidable !",
+        "Prêt(e) à faire des progrès ?",
+        "J'espère que vous passez une bonne journée !",
+        "Faisons que cette journée compte !"
+    )
 
     // PHQ-9 Questions
     override val phq9Questions = listOf(
