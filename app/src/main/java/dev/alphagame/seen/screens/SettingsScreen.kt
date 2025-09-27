@@ -420,7 +420,7 @@ fun SettingsScreen(
                     modifier = Modifier.padding(20.dp)
                 ) {
                     Text(
-                        text = "Notifications",
+                        text = translation.notifications,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -437,13 +437,13 @@ fun SettingsScreen(
                             modifier = Modifier.weight(1f)
                         ) {
                             Text(
-                                text = "Enable Reminders",
+                                text = translation.enableReminders,
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Medium,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
-                                text = "Receive gentle reminders for mental health check-ins",
+                                text = translation.enableRemindersDescription,
                                 fontSize = 12.sp,
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                                 lineHeight = 16.sp
@@ -528,7 +528,7 @@ fun SettingsScreen(
                     modifier = Modifier.padding(20.dp)
                 ) {
                     Text(
-                        text = "Encryption",
+                        text = translation.encryption,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -543,14 +543,14 @@ fun SettingsScreen(
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "Enable on-device Encryption",
+                                text = translation.enableEncryption,
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Medium,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
 
                             Text(
-                                text = "Secure & Private data, saved on your device.",
+                                text = translation.encryptionDescription,
                                 fontSize = 12.sp,
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                                 lineHeight = 16.sp
@@ -581,7 +581,7 @@ fun SettingsScreen(
                     ) {
 
                         Text(
-                            text = "AI Features",
+                            text = translation.aiFeatures,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -598,13 +598,13 @@ fun SettingsScreen(
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Text(
-                                    text = "Enable AI Features",
+                                    text = translation.enableAIFeatures,
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Medium,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Text(
-                                    text = "Get personalized insights and suggestions (Coming Soon)",
+                                    text = translation.aiFeaturesDescription,
                                     fontSize = 12.sp,
                                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                                     lineHeight = 16.sp
@@ -640,7 +640,7 @@ fun SettingsScreen(
                         modifier = Modifier.padding(20.dp)
                     ) {
                         Text(
-                            text = "Analytics",
+                            text = translation.analytics,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -657,13 +657,13 @@ fun SettingsScreen(
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Text(
-                                    text = "Enable Analytics",
+                                    text = translation.enableAnalytics,
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Medium,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Text(
-                                    text = "Help improve Seen by sharing anonymous usage data",
+                                    text = translation.analyticsDescription,
                                     fontSize = 12.sp,
                                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                                     lineHeight = 16.sp

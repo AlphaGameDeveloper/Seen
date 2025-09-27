@@ -119,6 +119,43 @@ abstract class Translation {
     abstract val dataDeletedText: String
     abstract val continueButton: String
 
+    // Settings Screen - Additional Sections
+    abstract val notifications: String
+    abstract val enableReminders: String
+    abstract val enableRemindersDescription: String
+    abstract val encryption: String
+    abstract val enableEncryption: String
+    abstract val encryptionDescription: String
+    abstract val aiFeatures: String
+    abstract val enableAIFeatures: String
+    abstract val aiFeaturesDescription: String
+    abstract val analytics: String
+    abstract val enableAnalytics: String
+    abstract val analyticsDescription: String
+
+    // Welcome Screen - Additional
+    abstract val phq9AssessmentTitle: String
+    abstract val phq9AssessmentDescription: String
+
+    // Notes Screen - Additional
+    abstract val noEntriesMessage: String
+
+    // Debug Screens
+    abstract val databaseEncryptionDebug: String
+
+    // Resources Screen
+    abstract val backToResults: String
+    abstract val resourcesAndSupport: String
+    abstract val yourScore: String
+
+    // AI Analysis & Results
+    abstract val aiAnalysisInProgress: String
+    abstract val aiAnalysisReady: String
+    abstract val aiAnalysisUnavailable: String
+    abstract val preparingAiAnalysis: String
+    abstract val viewAiAnalysis: String
+    abstract val viewResourcesAndSupport: String
+
     // Common
     abstract val yes: String
     abstract val no: String

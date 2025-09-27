@@ -164,6 +164,43 @@ class EnglishTranslation : Translation() {
     override val analyticsPrivacyNote = "We only collect anonymous usage statistics to improve the app. No personal health data is ever shared."
     override val analyticsDataUsage = "Data collected includes app usage patterns, feature interactions, and crash reports. All data is anonymous and cannot be linked back to you."
 
+    // Settings Screen - Additional Sections
+    override val notifications = "Notifications"
+    override val enableReminders = "Enable Reminders"
+    override val enableRemindersDescription = "Receive gentle reminders for mental health check-ins"
+    override val encryption = "Encryption"
+    override val enableEncryption = "Enable on-device Encryption"
+    override val encryptionDescription = "Secure & Private data, saved on your device."
+    override val aiFeatures = "AI Features"
+    override val enableAIFeatures = "Enable AI Features"
+    override val aiFeaturesDescription = "Get personalized insights and suggestions (Coming Soon)"
+    override val analytics = "Analytics"
+    override val enableAnalytics = "Enable Analytics"
+    override val analyticsDescription = "Help improve Seen by sharing anonymous usage data"
+
+    // Welcome Screen - Additional
+    override val phq9AssessmentTitle = "PHQ-9 Assessment"
+    override val phq9AssessmentDescription = "A confidential questionnaire to help assess your mental health and well-being over the past two weeks."
+
+    // Notes Screen - Additional
+    override val noEntriesMessage = "No entry data yet.\nUse the \"Add Entry\" button in the bottom-right corner to get started!"
+
+    // Debug Screens
+    override val databaseEncryptionDebug = "Database Encryption Debug"
+
+    // Resources Screen
+    override val backToResults = "Back to results"
+    override val resourcesAndSupport = "Resources & Support"
+    override val yourScore = "Your Score"
+
+    // AI Analysis & Results
+    override val aiAnalysisInProgress = "AI analysis in progress..."
+    override val aiAnalysisReady = "AI analysis ready! Tap below to view insights."
+    override val aiAnalysisUnavailable = "AI analysis unavailable. View basic resources instead."
+    override val preparingAiAnalysis = "Preparing AI analysis..."
+    override val viewAiAnalysis = "View AI Analysis"
+    override val viewResourcesAndSupport = "View Resources & Support"
+
     // Common
     override val yes = "Yes"
     override val no = "No"

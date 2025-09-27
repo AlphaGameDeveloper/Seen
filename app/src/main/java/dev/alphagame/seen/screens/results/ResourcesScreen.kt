@@ -89,13 +89,13 @@ fun ResourcesScreen(
                     IconButton(onClick = onBackToResults) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back to results",
+                            contentDescription = translation.backToResults,
                             tint = MaterialTheme.colorScheme.onSecondaryContainer
                         )
                     }
 
                     Text(
-                        text = "Resources & Support",
+                        text = translation.resourcesAndSupport,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSecondaryContainer
@@ -111,7 +111,7 @@ fun ResourcesScreen(
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            text = "Your Score",
+                            text = translation.yourScore,
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
                         )
