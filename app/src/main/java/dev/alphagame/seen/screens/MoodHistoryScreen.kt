@@ -276,7 +276,7 @@ fun MoodHistoryScreen(
         }
     }
 
-    if (showPHQ9DeleteDialog) {
+    if (showPHQ9DeleteDialog && phq9Results.isNotEmpty()) {
         // show dialog to select which PHQ-9 entries to delete
         // on confirm, delete selected entries and update phq9Results
         // on dismiss, set showPHQ9DeleteDialog = false
@@ -332,7 +332,7 @@ fun MoodHistoryScreen(
                                 )
                                 notesManager.deletePHQ9Response(entryToDelete.id)
                                 phq9Results = notesManager.getPHQ9Responses()
-                            },
+                                            },
                             entry = entry
                         )
                         Spacer(modifier = Modifier.height(8.dp))
