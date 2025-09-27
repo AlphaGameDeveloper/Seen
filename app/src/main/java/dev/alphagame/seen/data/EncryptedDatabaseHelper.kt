@@ -2,6 +2,7 @@ package dev.alphagame.seen.data
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
+import android.util.Log
 import java.io.File
 
 /**
@@ -14,6 +15,7 @@ import java.io.File
  */
 class EncryptedDatabaseHelper(private val context: Context) : DatabaseHelper(context, DatabaseEncryption.getTempDbPath(context), null, DATABASE_VERSION) {
 
+    private val TAG = "EncryptedDatabaseHelper"
     init {
         // Decrypt the database on initialization
         decryptDatabase()
@@ -41,6 +43,7 @@ class EncryptedDatabaseHelper(private val context: Context) : DatabaseHelper(con
      * Encrypts the current database and saves it to persistent storage
      */
     private fun encryptAndSaveDatabase() {
+        Log.i(TAG, "Encrypting & saving database...")
         val tempDbFile = File(DatabaseEncryption.getTempDbPath(context))
         val encryptedDbFile = File(DatabaseEncryption.getEncryptedDbPath(context))
 
@@ -153,6 +156,7 @@ class EncryptedDatabaseHelper(private val context: Context) : DatabaseHelper(con
      * Clean up temporary files when database helper is closed
      */
     override fun close() {
+        Log.i(TAG, "Closing database")
         super.close()
         // Note: We don't clean up temp files here as they might still be needed
         // Cleanup will be handled by the Application class or activity lifecycle
@@ -162,6 +166,7 @@ class EncryptedDatabaseHelper(private val context: Context) : DatabaseHelper(con
      * Force encryption of current database state
      */
     fun forceEncrypt() {
+        Log.w(TAG, "Forcibly encrypting & saving the database")
         encryptAndSaveDatabase()
     }
 
