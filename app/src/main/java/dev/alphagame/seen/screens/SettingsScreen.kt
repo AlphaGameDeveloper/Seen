@@ -561,7 +561,7 @@ fun SettingsScreen(
                             checked = true,
                             enabled = false, // purely visual
                             onCheckedChange = { checked ->
-                                Log.e("SettingsScreen", "haha nope")
+                                Log.e("SettingsScreen", "haha nope") // purely cosmetic
                             }
                         )
                     }
