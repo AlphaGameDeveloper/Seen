@@ -548,7 +548,7 @@ private fun PHQ9DeletionItem(
                     )
                     .border(
                         width = 1.dp, // Border width
-                        color = Color.Black, // Border color
+                        color = MaterialTheme.colorScheme.onSurfaceVariant, // Border color
                         shape = CircleShape // Circular shape
                     ),
                 contentAlignment = Alignment.Center
