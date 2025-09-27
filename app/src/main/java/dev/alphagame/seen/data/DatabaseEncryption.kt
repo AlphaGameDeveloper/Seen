@@ -2,7 +2,7 @@ package dev.alphagame.seen.data
 
 import android.content.Context
 import android.util.Log
-import java.io.*
+import java.io.File
 
 /**
  * Utility class for handling database encryption and decryption operations.
@@ -24,7 +24,7 @@ class DatabaseEncryption {
          */
         fun bps2String(bps: Number): String {
             // note to self - 1 KB is 1000 bytes, and 1 KiB (kibibyte) is 1024 (2^10) bytes.
-            return "${bps.toDouble()/1024} KiB/s; ${bps.toDouble() / 1048576} MiB/s"
+            return "${"%.3f".format(bps.toDouble() / 1024)} KiB/s; ${"%.3f".format(bps.toDouble() / 1048576)} MiB/s"
         }
 
         /**
@@ -38,6 +38,9 @@ class DatabaseEncryption {
                 val startTime = System.currentTimeMillis()
                 for (i in inputBytes.indices) {
                     encryptedBytes[i] = (inputBytes[i].toInt() xor ENCRYPTION_KEY.toInt()).toByte()
+                    if (i % (10 * 1024) == 0) { // 10 KiB
+                        Log.v("Encryption", "Encrypting at 0x${i.toString(16)} / 0x${inputBytes.size.toString(16)} (${(i * 100) / inputBytes.size}%)")
+                    }
                 }
 
                 outputFile.writeBytes(encryptedBytes)
