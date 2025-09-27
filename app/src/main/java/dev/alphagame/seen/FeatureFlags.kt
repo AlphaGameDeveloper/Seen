@@ -21,6 +21,6 @@ class FeatureFlags {
 
         const val DEBUG_DB_SCREEN_TOAST_MESSAGE = false;
 
-        const val MOODHISTORY_TODAYATAGLANCE_CARD = true;
+        const val MOOD_HISTORY_TODAY_AT_A_GLANCE_CARD = true;
     }
 }
