@@ -104,9 +104,9 @@ class EnglishTranslation : Translation() {
 
     // Notes Screen
     override val notes = "Journal"
-    override val addNote = "Add Note"
-    override val editNote = "Edit Note"
-    override val deleteNote = "Delete Note"
+    override val addNote = "Add Journal Entry"
+    override val editNote = "Edit Journal Entry"
+    override val deleteNote = "Delete Journal Entry"
     override val noteHint = "Write your thoughts here..."
     override val save = "Save"
     override val howAreYouFeeling = "How are you feeling?"

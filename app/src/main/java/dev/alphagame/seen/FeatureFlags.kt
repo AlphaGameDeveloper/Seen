@@ -20,5 +20,7 @@ class FeatureFlags {
         const val UI_DEBUG_BUILD_TEXT = true;
 
         const val DEBUG_DB_SCREEN_TOAST_MESSAGE = false;
+
+        const val MOODHISTORY_TODAYATAGLANCE_CARD = true;
     }
 }
