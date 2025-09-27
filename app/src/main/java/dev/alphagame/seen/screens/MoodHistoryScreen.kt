@@ -377,47 +377,51 @@ private fun MoodStatistics(
     moodEntries: List<MoodEntry>,
     translation: Translation
 ) {
-    val todaysMoods = remember(moodEntries) {
-        val today = Calendar.getInstance()
-        today.set(Calendar.HOUR_OF_DAY, 0)
-        today.set(Calendar.MINUTE, 0)
-        today.set(Calendar.SECOND, 0)
-        today.set(Calendar.MILLISECOND, 0)
-        val startOfDay = today.time
+    if (FeatureFlags.MOODHISTORY_TODAYATAGLANCE_CARD) {
+        val todaysMoods = remember(moodEntries) {
+            val today = Calendar.getInstance()
+            today.set(Calendar.HOUR_OF_DAY, 0)
+            today.set(Calendar.MINUTE, 0)
+            today.set(Calendar.SECOND, 0)
+            today.set(Calendar.MILLISECOND, 0)
+            val startOfDay = today.time
 
-        moodEntries.filter { it.timestamp >= startOfDay }
-    }
+            moodEntries.filter { it.timestamp >= startOfDay }
+        }
 
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer
-        )
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = translation.todaysStats,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer
             )
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
             ) {
-                Text(String.format(translation.entriesToday, todaysMoods.size))
-                Text(String.format(translation.totalEntries, moodEntries.size))
-            }
-
-            if (todaysMoods.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = String.format(translation.todaysMoods, todaysMoods.joinToString(" ") { it.mood.emoji }),
-                    fontSize = 16.sp
+                    text = translation.todaysStats,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
                 )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(String.format(translation.entriesToday, todaysMoods.size))
+                    Text(String.format(translation.totalEntries, moodEntries.size))
+                }
+
+                if (todaysMoods.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = String.format(
+                            translation.todaysMoods,
+                            todaysMoods.joinToString(" ") { it.mood.emoji }),
+                        fontSize = 16.sp
+                    )
+                }
             }
         }
     }
@@ -548,7 +552,7 @@ private fun PHQ9DeletionItem(
                     )
                     .border(
                         width = 1.dp, // Border width
-                        color = Color.Black, // Border color
+                        color = MaterialTheme.colorScheme.onSurface, // Border color
                         shape = CircleShape // Circular shape
                     ),
                 contentAlignment = Alignment.Center

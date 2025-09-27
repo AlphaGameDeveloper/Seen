@@ -24,10 +24,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.FloatingActionButton
@@ -59,6 +61,7 @@ import dev.alphagame.seen.data.Note
 import dev.alphagame.seen.data.NotesManager
 import dev.alphagame.seen.translations.rememberTranslation
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotesScreen(onBackToHome: () -> Unit) {
     val context = LocalContext.current
@@ -70,6 +73,8 @@ fun NotesScreen(onBackToHome: () -> Unit) {
     var notes by remember { mutableStateOf(listOf<Note>()) }
     var selectedMood by remember { mutableStateOf<Mood?>(null) }
     var isAddingNote by remember { mutableStateOf(false) }
+    var isDeletingNote by remember { mutableStateOf(false) }
+    var currentlyDeletingNoteId by remember { mutableStateOf<Long?>(null) }
 
     // Screen dimensions for responsive design
     val screenWidth = configuration.screenWidthDp.dp
@@ -194,8 +199,10 @@ fun NotesScreen(onBackToHome: () -> Unit) {
                                 "had_mood" to (note.mood?.isNotEmpty() == true).toString(),
                                 "note_length" to note.content.length.toString()
                             ))
-                            notesManager.deleteNote(note.id)
-                            notes = notesManager.getAllNotes()
+                            isDeletingNote = true
+                            currentlyDeletingNoteId = note.id
+//                            notesManager.deleteNote(note.id)
+//                            notes = notesManager.getAllNotes()
                         }
                     )
                 }
@@ -230,6 +237,49 @@ fun NotesScreen(onBackToHome: () -> Unit) {
                     tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
+        }
+        if (isDeletingNote) {
+            // dialog
+            var note = currentlyDeletingNoteId?.let { notesManager.getNoteById(it) }
+            var formattedTimestamp = note?.let {
+                val sdf = java.text.SimpleDateFormat("yyyy-MM-dd 'at' hh:mm")
+                sdf.format(java.util.Date(it.timestamp))
+            }
+
+            AlertDialog(
+                onDismissRequest = {
+                    isDeletingNote = false
+                    currentlyDeletingNoteId = null
+                },
+                title = {
+                    Text(text = translation.deleteNote)
+                },
+                text = {
+                    if (note != null) {
+                        Text(text = "On ${formattedTimestamp}, you wrote \"${note.content}\"\n\nDeleted notes cannot be recovered.")
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = {
+                        currentlyDeletingNoteId?.let { noteId ->
+                            notesManager.deleteNote(noteId)
+                            notes = notesManager.getAllNotes()
+                        }
+                        isDeletingNote = false
+                        currentlyDeletingNoteId = null
+                    }) {
+                        Text(text = translation.delete)
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = {
+                        isDeletingNote = false
+                        currentlyDeletingNoteId = null
+                    }) {
+                        Text(text = translation.cancel)
+                    }
+                }
+            )
         }
     }
 }

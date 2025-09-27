@@ -48,6 +48,37 @@ class NotesManager(context: Context) {
         return notes
     }
 
+
+    fun getNoteById(noteId: Long): Note? {
+        val db = dbHelper.readableDatabase
+
+        val cursor: Cursor = db.query(
+            DatabaseHelper.TABLE_NOTES,
+            null,
+            "${DatabaseHelper.COLUMN_ID} = ?",
+            arrayOf(noteId.toString()),
+            null,
+            null,
+            null
+        )
+
+        var note: Note? = null
+        with(cursor) {
+            if (moveToFirst()) {
+                val id = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ID))
+                val content = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_CONTENT))
+                val timestamp = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_TIMESTAMP))
+                val mood = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_MOOD))
+
+                note = Note(id, content, timestamp, mood)
+            }
+        }
+
+        cursor.close()
+        db.close()
+        return note
+    }
+
     fun deleteNote(noteId: Long): Boolean {
         val deletedRows = dbHelper.deleteWithEncryption(
             DatabaseHelper.TABLE_NOTES,
