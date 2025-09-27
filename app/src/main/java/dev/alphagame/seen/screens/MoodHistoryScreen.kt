@@ -1,9 +1,13 @@
 package dev.alphagame.seen.screens
 
 import android.util.Log
+import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,8 +16,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
@@ -56,6 +62,7 @@ import dev.alphagame.seen.data.NotesManager
 import dev.alphagame.seen.data.PHQ9Response
 import dev.alphagame.seen.data.PreferencesManager
 import dev.alphagame.seen.data.WidgetMoodManager
+import dev.alphagame.seen.translations.Translation
 import dev.alphagame.seen.translations.rememberTranslation
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -74,6 +81,7 @@ fun MoodHistoryScreen(
     val analyticsManager = remember { AnalyticsManager(context) }
     var moodEntries by remember { mutableStateOf<List<MoodEntry>>(emptyList()) }
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var showPHQ9DeleteDialog by remember { mutableStateOf(false) }
     var phq9Results by remember { mutableStateOf<List<PHQ9Response>>(emptyList()) }
     val modelProducer = remember { CartesianChartModelProducer() }
     var preferencesManager = remember { PreferencesManager(context) }
@@ -159,12 +167,31 @@ fun MoodHistoryScreen(
 
 
         if (phq9Map.isNotEmpty()) {
-            Text(
-                text = "PHQ-9 Responses",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onSurface
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "PHQ-9 Responses",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                IconButton(onClick = {
+                    Log.d("MoodHistoryScreen","PHQ-9 Responses Delete Button pressed")
+
+                    // Cover the existing UI with a dialog listing all the entries, where the user can
+                    // select which ones to delete
+                    showPHQ9DeleteDialog = true
+                }) {
+                    Icon(
+                        Icons.Default.Delete,
+                        contentDescription = translation.clearHistory,
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
 
             //Function to determine what color the numbers will use
             @Composable
@@ -249,6 +276,71 @@ fun MoodHistoryScreen(
         }
     }
 
+    if (showPHQ9DeleteDialog) {
+        // show dialog to select which PHQ-9 entries to delete
+        // on confirm, delete selected entries and update phq9Results
+        // on dismiss, set showPHQ9DeleteDialog = false
+
+        // show a card that covers the whole screen (minus the top bar) with a list of PHQ-9 entries
+        // each entry has a checkbox to select it for deletion
+        // at the bottom, there are Cancel and Delete buttons
+        Card(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            )
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().statusBarsPadding(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = { showPHQ9DeleteDialog = false }) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = translation.back,
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                    Text(
+                        text = "Delete PHQ-9 Responses",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                // List of PHQ-9 entries
+                LazyColumn(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    items(phq9Results) { entry ->
+                        PHQ9DeletionItem(
+                            onDeleteClick = { entryToDelete ->
+                                // Track individual PHQ-9 entry deletion
+                                analyticsManager.trackEvent(
+                                    "phq9_entry_deleted", mapOf(
+                                        "score" to entryToDelete.total.toString()
+                                    )
+                                )
+                                notesManager.deletePHQ9Response(entryToDelete.id)
+                                phq9Results = notesManager.getPHQ9Responses()
+                            },
+                            entry = entry
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                }
+            }
+        }
+    }
     // Delete confirmation dialog
     if (showDeleteDialog) {
         AlertDialog(
@@ -283,7 +375,7 @@ fun MoodHistoryScreen(
 @Composable
 private fun MoodStatistics(
     moodEntries: List<MoodEntry>,
-    translation: dev.alphagame.seen.translations.Translation
+    translation: Translation
 ) {
     val todaysMoods = remember(moodEntries) {
         val today = Calendar.getInstance()
@@ -334,7 +426,7 @@ private fun MoodStatistics(
 @Composable
 private fun MoodEntryItem(
     entry: MoodEntry,
-    translation: dev.alphagame.seen.translations.Translation,
+    translation: Translation,
     onDeleteClick: (MoodEntry) -> Unit
 ) {
     val dateFormat = remember { SimpleDateFormat("MMM dd, yyyy 'at' HH:mm", Locale.getDefault()) }
@@ -406,6 +498,133 @@ private fun MoodEntryItem(
             dismissButton = {
                 TextButton(onClick = { showDeleteDialog = false }) {
                     Text(translation.cancel)
+                }
+            }
+        )
+    }
+}
+
+@Composable
+private fun PHQ9DeletionItem(
+    entry: PHQ9Response,
+    onDeleteClick: (PHQ9Response) -> Unit
+) {
+    val dateFormat = remember { SimpleDateFormat("MMM dd, yyyy 'at' HH:mm", Locale.getDefault()) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            @Composable
+            fun findColor(_entry: Int): Color {
+                return when (_entry) {
+                    in 0..4 -> Color(0xFF00C853) // Green
+                    in 5..9 -> Color(0xFFFFAB00) // Yellow
+                    in 10..14 -> Color(0xFFFF6D00) // Orange
+                    in 15..19 -> Color(0xFFD50000) // Red
+                    in 20..27 -> Color(0xFFB00020) // Dark Red
+                    else -> Color.Black // Fallback color
+                }
+            }
+
+            Box(
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .width(50.dp)
+                    .height(50.dp) // Set a fixed height to make it circular
+                    .align(Alignment.CenterVertically)
+                    .background(
+                        color = Color.Transparent,
+                        shape = CircleShape
+                    )
+                    .border(
+                        width = 1.dp, // Border width
+                        color = Color.Black, // Border color
+                        shape = CircleShape // Circular shape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = entry.total.toString(),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = findColor(entry.total) // Text color to contrast with the black background
+                )
+            }
+
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = when( entry.total ) {
+                        in 0..4 -> "Minimal Depression"
+                        in 5..9 -> "Mild Depression"
+                        in 10..14 -> "Moderate Depression"
+                        in 15..19 -> "Moderately Severe Depression"
+                        in 20..27 -> "Severe Depression"
+                        else -> "Unknown"
+                    },
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium
+                )
+                Text(
+                    text = dateFormat.format(entry.timestamp),
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
+            IconButton(
+                onClick = { showDeleteDialog = true }
+            ) {
+                Icon(
+                    Icons.Default.Delete,
+                    contentDescription = "OwO what's this",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+
+    // Individual delete confirmation dialog
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+
+            title = { Text("Delete PHQ9 Entry?") },
+            text = {
+                val id = entry.id
+
+                Text(
+                    String.format(
+                        "Delete PHQ-9 result with score %s from %s?\n\nDeleted data cannot be recovered.",
+                        entry.total.toString(),
+                        dateFormat.format(entry.timestamp)
+                    )
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onDeleteClick(entry)
+                        showDeleteDialog = false
+                    }
+                ) {
+                    Text("Delete")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text("Cancel")
                 }
             }
         )

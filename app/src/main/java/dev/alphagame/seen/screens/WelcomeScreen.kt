@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.alphagame.seen.FeatureFlags
 import dev.alphagame.seen.analytics.AnalyticsManager
 import dev.alphagame.seen.data.WelcomeScreenMessage
 import dev.alphagame.seen.translations.rememberTranslation
@@ -83,16 +84,18 @@ fun WelcomeScreen(
                     }
                     clickCount >= 6 -> {
                         // Show toast for remaining clicks
-                        val remaining = 10 - clickCount
-                        // Cancel any existing toast
-                        Toast.makeText(context, "", Toast.LENGTH_SHORT).cancel()
+                        if (FeatureFlags.DEBUG_DB_SCREEN_TOAST_MESSAGE) {
+                            val remaining = 10 - clickCount
+                            // Cancel any existing toast
+                            Toast.makeText(context, "", Toast.LENGTH_SHORT).cancel()
 
-                        // Show new toast
-                        Toast.makeText(
-                            context,
-                            "🔧 Press $remaining more times to view the internal database",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                            // Show new toast
+                            Toast.makeText(
+                                context,
+                                "🔧 Press $remaining more times to view the internal database",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
             }

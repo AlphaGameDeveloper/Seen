@@ -146,6 +146,17 @@ class NotesManager(context: Context) {
         return id
     }
 
+    fun deletePHQ9Response(responseId: Long): Boolean {
+        val db = dbHelper.writableDatabase
+        val deletedRows = db.delete(
+            DatabaseHelper.TABLE_PHQ9_RESPONSES,
+            "${DatabaseHelper.COLUMN_ID} = ?",
+            arrayOf(responseId.toString())
+        )
+        db.close()
+        return deletedRows > 0
+    }
+
     fun getPHQ9Responses(): List<PHQ9Response> {
         val responses = mutableListOf<PHQ9Response>()
         val db = dbHelper.readableDatabase

@@ -18,5 +18,7 @@ class FeatureFlags {
         const val UI_BUILD_STRING = true;
 
         const val UI_DEBUG_BUILD_TEXT = true;
+
+        const val DEBUG_DB_SCREEN_TOAST_MESSAGE = false;
     }
 }
