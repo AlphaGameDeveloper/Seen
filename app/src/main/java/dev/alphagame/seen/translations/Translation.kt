@@ -156,6 +156,27 @@ abstract class Translation {
     abstract val viewAiAnalysis: String
     abstract val viewResourcesAndSupport: String
 
+    // Resources Screen - Additional Content
+    abstract val crisisSupport: String
+    abstract val crisisSupportDescription: String
+    abstract val maintainingMentalWellness: String
+    abstract val maintainingWellnessDescription: String
+    abstract val supportTreatmentOptions: String
+    abstract val supportTreatmentDescription: String
+    abstract val immediateProfessionalHelp: String
+    abstract val immediateProfessionalDescription: String
+    abstract val educationalResources: String
+    abstract val educationalResourcesDescription: String
+    abstract val backToResults2: String
+    abstract val mentalHealthTips: String
+    abstract val mindfulnessResources: String
+    abstract val findATherapist: String
+    abstract val findProfessionalHelpNow: String
+    abstract val crisisResources: String
+    abstract val nimhDepressionInfo: String
+    abstract val mentalHealthGov: String
+    abstract val namiResources: String
+
     // Common
     abstract val yes: String
     abstract val no: String
