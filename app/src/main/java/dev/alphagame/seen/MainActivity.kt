@@ -409,7 +409,7 @@ fun SeenApplication(
                 }
             }
             // text in the bottom right corner with version info
-            if (FeatureFlags.UI_BUILD_STRING) {
+            if (FeatureFlags.UI_BUILD_STRING && BuildConfig.DEBUG) {
                 val extra = "\nBuilt on ${BuildConfig.PRETTY_BUILD_TIME}\nPackage: ${BuildConfig.APPLICATION_ID}@${BuildConfig.GIT_BRANCH}"
                 var text = "Version: ${BuildConfig.VERSION_FULL}"
                 if (BuildConfig.DEBUG) {
