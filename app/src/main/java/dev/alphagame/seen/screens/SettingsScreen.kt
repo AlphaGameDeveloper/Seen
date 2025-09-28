@@ -281,132 +281,132 @@ fun SettingsScreen(
                         }
                     }
                 }
-            }
 
-            // Theme Settings Section
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
-            ) {
-                Column(
-                    modifier = Modifier.padding(20.dp)
+                // Language Settings Section
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
                 ) {
-                    Text(
-                        text = translation.appearance,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
+                    Column(
+                        modifier = Modifier.padding(20.dp)
+                    ) {
+                        Text(
+                            text = translation.language,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
 
-                    Text(
-                        text = translation.colorScheme,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
+                        val languageOptions = Translation.getAvailableLanguages()
 
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    val themeOptions = listOf(
-                        "auto" to translation.themeAuto,
-                        "light" to translation.themeLight,
-                        "dark" to translation.themeDark
-                    )
-
-                    themeOptions.forEach { (value, label) ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .selectable(
-                                    selected = currentTheme == value,
-                                    onClick = {
-                                        if (currentTheme != value) {
-                                            hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-                                            currentTheme = value
-                                            preferencesManager.themeMode = value
-                                            onThemeChanged(value)
-                                        }
-                                    },
-                                    role = Role.RadioButton
-                                )
-                                .padding(vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            RadioButton(
-                                selected = currentTheme == value,
-                                onClick = null
-                            )
-                            Text(
-                                text = label,
-                                modifier = Modifier.padding(start = 8.dp),
-                                fontSize = 14.sp,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
-                    }
-                }
-            }
-
-            // Language Settings Section
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
-            ) {
-                Column(
-                    modifier = Modifier.padding(20.dp)
-                ) {
-                    Text(
-                        text = translation.language,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    val languageOptions = Translation.getAvailableLanguages()
-
-                    languageOptions.forEach { (code, label) ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .selectable(
+                        languageOptions.forEach { (code, label) ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .selectable(
+                                        selected = currentLanguage == code,
+                                        onClick = {
+                                            if (currentLanguage != code) {
+                                                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                                                currentLanguage = code
+                                                preferencesManager.language = code
+                                                onLanguageChanged(code)
+                                            }
+                                        },
+                                        role = Role.RadioButton
+                                    )
+                                    .padding(vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                RadioButton(
                                     selected = currentLanguage == code,
-                                    onClick = {
-                                        if (currentLanguage != code) {
-                                            hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-                                            currentLanguage = code
-                                            preferencesManager.language = code
-                                            onLanguageChanged(code)
-                                        }
-                                    },
-                                    role = Role.RadioButton
+                                    onClick = null
                                 )
-                                .padding(vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            RadioButton(
-                                selected = currentLanguage == code,
-                                onClick = null
-                            )
-                            Text(
-                                text = label,
-                                modifier = Modifier.padding(start = 8.dp),
-                                fontSize = 14.sp,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
+                                Text(
+                                    text = label,
+                                    modifier = Modifier.padding(start = 8.dp),
+                                    fontSize = 14.sp,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
                         }
                     }
                 }
             }
+
+                // Theme Settings Section
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier.padding(20.dp)
+                    ) {
+                        Text(
+                            text = translation.appearance,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text(
+                            text = translation.colorScheme,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        val themeOptions = listOf(
+                            "auto" to translation.themeAuto,
+                            "light" to translation.themeLight,
+                            "dark" to translation.themeDark
+                        )
+
+                        themeOptions.forEach { (value, label) ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .selectable(
+                                        selected = currentTheme == value,
+                                        onClick = {
+                                            if (currentTheme != value) {
+                                                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                                                currentTheme = value
+                                                preferencesManager.themeMode = value
+                                                onThemeChanged(value)
+                                            }
+                                        },
+                                        role = Role.RadioButton
+                                    )
+                                    .padding(vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                RadioButton(
+                                    selected = currentTheme == value,
+                                    onClick = null
+                                )
+                                Text(
+                                    text = label,
+                                    modifier = Modifier.padding(start = 8.dp),
+                                    fontSize = 14.sp,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        }
+                    }
+                }
 
             // Notifications Settings Section
             Card(

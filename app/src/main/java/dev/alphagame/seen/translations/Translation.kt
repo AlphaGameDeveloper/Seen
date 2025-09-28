@@ -274,8 +274,8 @@ abstract class Translation {
         fun getAvailableLanguages(): List<Pair<String, String>> {
             return listOf(
                 PreferencesManager.LANGUAGE_ENGLISH to "English",
-                PreferencesManager.LANGUAGE_FRENCH to "Français",
-                PreferencesManager.LANGUAGE_SPANISH to "Español"
+                PreferencesManager.LANGUAGE_SPANISH to "Español",
+                PreferencesManager.LANGUAGE_FRENCH to "Français"
             )
         }
     }
