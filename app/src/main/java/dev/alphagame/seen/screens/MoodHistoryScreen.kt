@@ -166,7 +166,7 @@ fun MoodHistoryScreen(
         }
 
 
-        if (phq9Map.isNotEmpty()) {
+        if (phq9Map.size > 1) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,

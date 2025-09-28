@@ -232,7 +232,7 @@ class FrenchTranslation : Translation() {
     override val phq9AssessmentDescription = "Un questionnaire confidentiel pour aider à évaluer votre santé mentale et bien-être au cours des deux dernières semaines."
 
     // Notes Screen - Additional
-    override val noEntriesMessage = "Aucune donnée d'entrée pour le moment.\nUtilisez le bouton \"Ajouter une entrée\" dans le coin inférieur droit pour commencer !"
+    override val noEntriesMessage = "Aucune donnée de journal pour le moment. \nPour commencer, utilisez le bouton \" Ajouter une entrée \" dans le coin inférieur droit !"
 
     // Debug Screens
     override val databaseEncryptionDebug = "Debug du chiffrement de base de données"
