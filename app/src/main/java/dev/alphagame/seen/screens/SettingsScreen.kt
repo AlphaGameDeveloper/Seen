@@ -233,53 +233,60 @@ fun SettingsScreen(
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                         )
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
 
-                    OutlinedButton(
-                        onClick = {
-                            scope.launch {
-                                isCheckingForUpdates = true
-                                try {
-                                    val result = updateChecker.checkForUpdatesForCompose()
-                                    when (result) {
-                                        is UpdateChecker.UpdateCheckResult.UpdateAvailable -> {
-                                            updateInfo = result.updateInfo
-                                            showUpdateDialog = true
+                    if (FeatureFlags.SETTINGS_UPDATE_BUTTON) {
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        OutlinedButton(
+                            onClick = {
+                                scope.launch {
+                                    isCheckingForUpdates = true
+                                    try {
+                                        val result = updateChecker.checkForUpdatesForCompose()
+                                        when (result) {
+                                            is UpdateChecker.UpdateCheckResult.UpdateAvailable -> {
+                                                updateInfo = result.updateInfo
+                                                showUpdateDialog = true
+                                            }
+
+                                            is UpdateChecker.UpdateCheckResult.NoUpdate -> {
+                                                showNoUpdateDialog = true
+                                            }
+
+                                            is UpdateChecker.UpdateCheckResult.NetworkError -> {
+                                                showNetworkErrorDialog = true
+                                            }
+
+                                            is UpdateChecker.UpdateCheckResult.Error -> {
+                                                showUpdateErrorDialog = true
+                                            }
                                         }
-                                        is UpdateChecker.UpdateCheckResult.NoUpdate -> {
-                                            showNoUpdateDialog = true
-                                        }
-                                        is UpdateChecker.UpdateCheckResult.NetworkError -> {
-                                            showNetworkErrorDialog = true
-                                        }
-                                        is UpdateChecker.UpdateCheckResult.Error -> {
-                                            showUpdateErrorDialog = true
-                                        }
+                                        preferencesManager.lastUpdateCheckTime =
+                                            System.currentTimeMillis()
+                                    } finally {
+                                        isCheckingForUpdates = false
                                     }
-                                    preferencesManager.lastUpdateCheckTime = System.currentTimeMillis()
-                                } finally {
-                                    isCheckingForUpdates = false
                                 }
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            enabled = !isCheckingForUpdates
+                        ) {
+                            if (isCheckingForUpdates) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(16.dp),
+                                    strokeWidth = 2.dp
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(translation.checkingForUpdates)
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Default.Refresh,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(translation.checkForUpdates)
                             }
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        enabled = !isCheckingForUpdates
-                    ) {
-                        if (isCheckingForUpdates) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(16.dp),
-                                strokeWidth = 2.dp
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(translation.checkingForUpdates)
-                        } else {
-                            Icon(
-                                imageVector = Icons.Default.Refresh,
-                                contentDescription = null,
-                                modifier = Modifier.size(18.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(translation.checkForUpdates)
                         }
                     }
                 }

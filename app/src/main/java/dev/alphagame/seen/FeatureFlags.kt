@@ -25,6 +25,8 @@ class FeatureFlags {
 
         const val SETTINGS_STATUS_DOTS = false;
 
+        const val SETTINGS_UPDATE_BUTTON = false
+
         const val HOME_SEEN_LOGO = true;
 
         const val ENABLE_ONBOARDING = false;
