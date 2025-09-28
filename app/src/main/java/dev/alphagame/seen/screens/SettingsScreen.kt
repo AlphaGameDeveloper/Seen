@@ -144,7 +144,9 @@ fun SettingsScreen(
                 }
             },
             actions = {
-                HealthStatusDots(healthStatusManager = healthStatusManager)
+                if (FeatureFlags.SETTINGS_STATUS_DOTS) {
+                    HealthStatusDots(healthStatusManager = healthStatusManager)
+                }
             },
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.surface,
