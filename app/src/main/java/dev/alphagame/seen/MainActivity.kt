@@ -123,7 +123,7 @@ fun SeenApplication(
 
     var currentScreen by remember {
         mutableStateOf(
-            if (preferencesManager.isOnboardingCompleted) "welcome" else "onboarding"
+            if (!preferencesManager.isOnboardingCompleted && FeatureFlags.ENABLE_ONBOARDING) "onboarding" else "welcome"
         )
     }
     var currentQuestion by remember { mutableStateOf(0) }
