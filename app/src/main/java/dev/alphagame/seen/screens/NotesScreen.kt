@@ -215,8 +215,7 @@ fun NotesScreen(onBackToHome: () -> Unit) {
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    // TODO: Add translations for this entry; if not, don't show in different language!
-                    text = "No entry data yet.\nUse the \"Add Entry\" button in the bottom-right corner to get started!",
+                    text = translation.noEntriesMessage,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(PaddingValues(60.dp, 0.dp)),
                     color = MaterialTheme.colorScheme.onSurfaceVariant

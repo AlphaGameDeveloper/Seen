@@ -114,7 +114,7 @@ fun BasicResultsScreen(
                             strokeWidth = 2.dp
                         )
                         Text(
-                            text = "AI analysis in progress...",
+                            text = translation.aiAnalysisInProgress,
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
@@ -128,7 +128,7 @@ fun BasicResultsScreen(
                             modifier = Modifier.size(24.dp)
                         )
                         Text(
-                            text = "AI analysis ready! Tap below to view insights.",
+                            text = translation.aiAnalysisReady,
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.onTertiaryContainer
                         )
@@ -142,7 +142,7 @@ fun BasicResultsScreen(
                             modifier = Modifier.size(24.dp)
                         )
                         Text(
-                            text = "AI analysis unavailable. View basic resources instead.",
+                            text = translation.aiAnalysisUnavailable,
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.onErrorContainer
                         )
@@ -156,7 +156,7 @@ fun BasicResultsScreen(
                             modifier = Modifier.size(24.dp)
                         )
                         Text(
-                            text = "Preparing AI analysis...",
+                            text = translation.preparingAiAnalysis,
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -191,7 +191,7 @@ fun BasicResultsScreen(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = "View AI Analysis",
+                        text = translation.viewAiAnalysis,
                         fontWeight = FontWeight.Medium
                     )
                     Icon(
@@ -221,7 +221,7 @@ fun BasicResultsScreen(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = "View Resources & Support",
+                        text = translation.viewResourcesAndSupport,
                         fontWeight = FontWeight.Medium
                     )
                     Icon(

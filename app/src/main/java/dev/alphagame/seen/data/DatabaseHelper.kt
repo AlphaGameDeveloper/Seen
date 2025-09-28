@@ -4,11 +4,11 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+open class DatabaseHelper(context: Context, databaseName: String = DATABASE_NAME, factory: SQLiteDatabase.CursorFactory? = null, version: Int = DATABASE_VERSION) : SQLiteOpenHelper(context, databaseName, factory, version) {
 
     companion object {
-        private const val DATABASE_NAME = "seen_database.db"
-        private const val DATABASE_VERSION = 2
+        const val DATABASE_NAME = "seen_database.db"
+        const val DATABASE_VERSION = 2
 
         // Notes table
         const val TABLE_NOTES = "notes"
@@ -103,7 +103,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         }
     }
 
-    fun clearAllData() {
+    open fun clearAllData() {
         val db = writableDatabase
         db.execSQL("DELETE FROM $TABLE_NOTES")
         db.execSQL("DELETE FROM $TABLE_PHQ9_RESULTS")

@@ -1,6 +1,8 @@
 package dev.alphagame.seen.translations
 
 class SpanishTranslation : Translation() {
+    override val TRANSLATION = TranslationCode.SPANISH
+
     override val appName = "Seen"
     override val version = "Versión"
     override val settings = "Configuración"
@@ -14,6 +16,19 @@ class SpanishTranslation : Translation() {
     override val startQuiz = "Comenzar evaluación"
     override val viewNotes = "Ver notas"
     override val viewMoodHistory = "Ver historial de estado de ánimo"
+
+    override val welcomeScreenMessages = listOf(
+        "Tómate un momento para reflexionar sobre ti mismo",
+        "Está bien no estar bien",
+        "Hay esperanza, incluso cuando tu mente te dice lo contrario",
+        "No estás solo. Eres visto.",
+        "¡Bienvenido de nuevo!",
+        "¡Qué bueno verte otra vez!",
+        "¡Comencemos algo genial!",
+        "¿Listo para progresar?",
+        "¡Espero que tengas un buen día!",
+        "¡Hagamos que este día cuente!"
+    )
 
     // PHQ-9 Questions
     override val phq9Questions = listOf(
@@ -197,6 +212,64 @@ class SpanishTranslation : Translation() {
     override val onboardingAnalyticsDisabled = "🥺 Mantener datos privados"
     override val analyticsPrivacyNote = "Solo recopilamos estadísticas de uso anónimas para mejorar la aplicación. Nunca se comparten datos de salud personal."
     override val analyticsDataUsage = "Los datos recopilados incluyen patrones de uso de la aplicación, interacciones con funciones e informes de fallos. Todos los datos son anónimos y no se pueden vincular a ti."
+
+    // Settings Screen - Additional Sections
+    override val notifications = "Notificaciones"
+    override val enableReminders = "Habilitar recordatorios"
+    override val enableRemindersDescription = "Recibe recordatorios suaves para chequeos de salud mental"
+    override val encryption = "Encriptación"
+    override val enableEncryption = "Habilitar encriptación en el dispositivo"
+    override val encryptionDescription = "Datos seguros y privados, guardados en tu dispositivo."
+    override val aiFeatures = "Funciones de IA"
+    override val enableAIFeatures = "Habilitar funciones de IA"
+    override val aiFeaturesDescription = "Obtén perspectivas y sugerencias personalizadas (Próximamente)"
+    override val analytics = "Análisis"
+    override val enableAnalytics = "Habilitar análisis"
+    override val analyticsDescription = "Ayuda a mejorar Seen compartiendo datos de uso anónimos"
+
+    // Welcome Screen - Additional
+    override val phq9AssessmentTitle = "Evaluación PHQ-9"
+    override val phq9AssessmentDescription = "Un cuestionario confidencial para ayudar a evaluar tu salud mental y bienestar durante las últimas dos semanas."
+
+    // Notes Screen - Additional
+    override val noEntriesMessage = "Aún no hay datos de entrada.\n¡Usa el botón \"Agregar entrada\" en la esquina inferior derecha para comenzar!"
+
+    // Debug Screens
+    override val databaseEncryptionDebug = "Debug de encriptación de base de datos"
+
+    // Resources Screen
+    override val backToResults = "Volver a resultados"
+    override val resourcesAndSupport = "Recursos y apoyo"
+    override val yourScore = "Tu puntuación"
+
+    // AI Analysis & Results
+    override val aiAnalysisInProgress = "Análisis de IA en progreso..."
+    override val aiAnalysisReady = "¡Análisis de IA listo! Toca abajo para ver las perspectivas."
+    override val aiAnalysisUnavailable = "Análisis de IA no disponible. Ve recursos básicos en su lugar."
+    override val preparingAiAnalysis = "Preparando análisis de IA..."
+    override val viewAiAnalysis = "Ver análisis de IA"
+    override val viewResourcesAndSupport = "Ver recursos y apoyo"
+
+    // Resources Screen - Additional Content
+    override val crisisSupport = "Apoyo en Crisis"
+    override val crisisSupportDescription = "Si tienes pensamientos de autolesión o suicidio, por favor busca ayuda inmediatamente."
+    override val maintainingMentalWellness = "Mantener el Bienestar Mental"
+    override val maintainingWellnessDescription = "Tu puntuación indica síntomas mínimos. Aquí hay recursos para mantener tu salud mental."
+    override val supportTreatmentOptions = "Opciones de Apoyo y Tratamiento"
+    override val supportTreatmentDescription = "Tu puntuación sugiere síntomas leves a moderados. Considera estas opciones de apoyo."
+    override val immediateProfessionalHelp = "Ayuda Profesional Inmediata"
+    override val immediateProfessionalDescription = "Tu puntuación indica síntomas más severos. Se recomienda fuertemente ayuda profesional."
+    override val educationalResources = "Recursos Educativos"
+    override val educationalResourcesDescription = "Aprende más sobre salud mental y depresión."
+    override val backToResults2 = "Volver a Resultados"
+    override val mentalHealthTips = "Consejos de Salud Mental"
+    override val mindfulnessResources = "Recursos de Atención Plena"
+    override val findATherapist = "Encontrar un Terapeuta"
+    override val findProfessionalHelpNow = "Encontrar Ayuda Profesional Ahora"
+    override val crisisResources = "Recursos de Crisis"
+    override val nimhDepressionInfo = "Información sobre Depresión NIMH"
+    override val mentalHealthGov = "MentalHealth.gov"
+    override val namiResources = "Recursos NAMI"
 
     // Health Status
     override val serviceHealthStatus = "Estado de salud de servicios"

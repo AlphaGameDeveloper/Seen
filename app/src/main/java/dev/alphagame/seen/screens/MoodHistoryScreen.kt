@@ -276,7 +276,7 @@ fun MoodHistoryScreen(
         }
     }
 
-    if (showPHQ9DeleteDialog) {
+    if (showPHQ9DeleteDialog && phq9Results.isNotEmpty()) {
         // show dialog to select which PHQ-9 entries to delete
         // on confirm, delete selected entries and update phq9Results
         // on dismiss, set showPHQ9DeleteDialog = false
@@ -332,7 +332,7 @@ fun MoodHistoryScreen(
                                 )
                                 notesManager.deletePHQ9Response(entryToDelete.id)
                                 phq9Results = notesManager.getPHQ9Responses()
-                            },
+                                            },
                             entry = entry
                         )
                         Spacer(modifier = Modifier.height(8.dp))
@@ -377,7 +377,7 @@ private fun MoodStatistics(
     moodEntries: List<MoodEntry>,
     translation: Translation
 ) {
-    if (FeatureFlags.MOODHISTORY_TODAYATAGLANCE_CARD) {
+    if (FeatureFlags.MOOD_HISTORY_TODAY_AT_A_GLANCE_CARD) {
         val todaysMoods = remember(moodEntries) {
             val today = Calendar.getInstance()
             today.set(Calendar.HOUR_OF_DAY, 0)

@@ -1,5 +1,6 @@
 package dev.alphagame.seen.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -60,7 +61,7 @@ import dev.alphagame.seen.components.HealthStatusDots
 import dev.alphagame.seen.components.NoInternetDialog
 import dev.alphagame.seen.components.UpdateDialog
 import dev.alphagame.seen.data.AppVersionInfo
-import dev.alphagame.seen.data.DatabaseHelper
+import dev.alphagame.seen.data.EncryptedDatabaseHelper
 import dev.alphagame.seen.data.PreferencesManager
 import dev.alphagame.seen.data.UpdateCheckManager
 import dev.alphagame.seen.data.UpdateChecker
@@ -83,7 +84,7 @@ fun SettingsScreen(
     val preferencesManager = remember { PreferencesManager(context) }
     val analyticsManager = remember { AnalyticsManager(context) }
     val healthStatusManager = remember { HealthStatusManager(context) }
-    val databaseHelper = remember { DatabaseHelper(context) }
+    val databaseHelper = remember { EncryptedDatabaseHelper(context) }
     val widgetMoodManager = remember { WidgetMoodManager(context) }
     val updateChecker = remember { UpdateChecker(context) }
     val updateCheckManager = remember { UpdateCheckManager(context) }
@@ -421,7 +422,7 @@ fun SettingsScreen(
                     modifier = Modifier.padding(20.dp)
                 ) {
                     Text(
-                        text = "Notifications",
+                        text = translation.notifications,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -438,13 +439,13 @@ fun SettingsScreen(
                             modifier = Modifier.weight(1f)
                         ) {
                             Text(
-                                text = "Enable Reminders",
+                                text = translation.enableReminders,
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Medium,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
-                                text = "Receive gentle reminders for mental health check-ins",
+                                text = translation.enableRemindersDescription,
                                 fontSize = 12.sp,
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                                 lineHeight = 16.sp
@@ -517,6 +518,57 @@ fun SettingsScreen(
                     }
                 }
             }
+
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
+            ) {
+                Column(
+                    modifier = Modifier.padding(20.dp)
+                ) {
+                    Text(
+                        text = translation.encryption,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = translation.enableEncryption,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+
+                            Text(
+                                text = translation.encryptionDescription,
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                                lineHeight = 16.sp
+                            )
+                        }
+
+                        Switch(
+                            checked = true,
+                            enabled = false, // purely visual
+                            onCheckedChange = { checked ->
+                                Log.e("SettingsScreen", "haha nope") // purely cosmetic
+                            }
+                        )
+                    }
+                }
+            }
             if (FeatureFlags.SETTINGS_AI_FEATURES) {
                 // Privacy & Assessment Settings Section
                 Card(
@@ -531,7 +583,7 @@ fun SettingsScreen(
                     ) {
 
                         Text(
-                            text = "AI Features",
+                            text = translation.aiFeatures,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -548,13 +600,13 @@ fun SettingsScreen(
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Text(
-                                    text = "Enable AI Features",
+                                    text = translation.enableAIFeatures,
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Medium,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Text(
-                                    text = "Get personalized insights and suggestions (Coming Soon)",
+                                    text = translation.aiFeaturesDescription,
                                     fontSize = 12.sp,
                                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                                     lineHeight = 16.sp
@@ -590,7 +642,7 @@ fun SettingsScreen(
                         modifier = Modifier.padding(20.dp)
                     ) {
                         Text(
-                            text = "Analytics",
+                            text = translation.analytics,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -607,13 +659,13 @@ fun SettingsScreen(
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Text(
-                                    text = "Enable Analytics",
+                                    text = translation.enableAnalytics,
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Medium,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Text(
-                                    text = "Help improve Seen by sharing anonymous usage data",
+                                    text = translation.analyticsDescription,
                                     fontSize = 12.sp,
                                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                                     lineHeight = 16.sp
