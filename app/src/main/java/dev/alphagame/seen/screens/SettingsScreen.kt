@@ -736,7 +736,7 @@ fun SettingsScreen(
                     modifier = Modifier.padding(20.dp)
                 ) {
                     Text(
-                        text = "Data Management",
+                        text = translation.dataManagement,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -789,7 +789,7 @@ fun SettingsScreen(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "Delete All Local Data",
+                            text = translation.deleteAllData,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Medium
                         )
@@ -798,7 +798,7 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = "This will permanently delete all your notes, assessment results, mood entries, and reset all app settings to defaults. This action cannot be undone.",
+                        text = translation.deleteAllDataDescription,
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                         lineHeight = 16.sp
@@ -818,7 +818,7 @@ fun SettingsScreen(
                     modifier = Modifier.padding(20.dp)
                 ) {
                     Text(
-                        text = "Privacy & Data",
+                        text = translation.privacyAndData,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -827,7 +827,7 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.height(12.dp))
 
                     Text(
-                        text = "• All data is stored locally on your device\n• No personal information is shared with third parties\n• Assessment results remain completely private\n• You can delete your data at any time",
+                        text = translation.privacyDescription,
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
                         lineHeight = 20.sp
@@ -847,7 +847,7 @@ fun SettingsScreen(
                     modifier = Modifier.padding(20.dp)
                 ) {
                     Text(
-                        text = "Important Notice",
+                        text = translation.importantNotice,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.error
@@ -856,7 +856,7 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.height(12.dp))
 
                     Text(
-                        text = "This app is not a substitute for professional medical advice, diagnosis, or treatment. If you're experiencing a mental health crisis, please contact emergency services or consult with a qualified healthcare provider immediately.",
+                        text = translation.disclaimerText,
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
                         lineHeight = 20.sp
@@ -872,13 +872,13 @@ fun SettingsScreen(
             onDismissRequest = { showDeleteDialog = false },
             title = {
                 Text(
-                    text = "Delete All Data?",
+                    text = translation.deleteConfirmTitle,
                     fontWeight = FontWeight.SemiBold
                 )
             },
             text = {
                 Text(
-                    text = "This will permanently delete all your notes, assessment results, mood entries, and app settings. All data will be cleared and settings will be reset to default values. This action cannot be undone.\n\nAre you sure you want to continue?",
+                    text = translation.deleteConfirmText,
                     lineHeight = 20.sp
                 )
             },

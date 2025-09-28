@@ -198,7 +198,7 @@ class EnglishTranslation : Translation() {
     override val phq9AssessmentDescription = "A confidential questionnaire to help assess your mental health and well-being over the past two weeks."
 
     // Notes Screen - Additional
-    override val noEntriesMessage = "No entry data yet.\nUse the \"Add Entry\" button in the bottom-right corner to get started!"
+    override val noEntriesMessage = "No journal entry data yet. \nTo get started, use the \"Add Entry\" button in the bottom-right corner!"
 
     // Debug Screens
     override val databaseEncryptionDebug = "Database Encryption Debug"
