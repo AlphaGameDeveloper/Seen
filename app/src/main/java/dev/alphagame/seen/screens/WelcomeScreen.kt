@@ -66,6 +66,14 @@ fun WelcomeScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        if (FeatureFlags.HOME_SEEN_LOGO) {
+            androidx.compose.foundation.Image(
+                painter = androidx.compose.ui.res.painterResource(dev.alphagame.seen.R.drawable.seen_logo_transparent),
+                contentDescription = "App Logo",
+                modifier = Modifier
+                    .height(120.dp)
+            )
+        }
         // App Title
         Text(
             text = translation.appName,
