@@ -166,7 +166,7 @@ fun MoodHistoryScreen(
         }
 
 
-        if (phq9Map.size > 1) {
+        if (phq9Map.isNotEmpty() && phq9Map.size >= 2) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -216,6 +216,14 @@ fun MoodHistoryScreen(
                     ),
                 modelProducer,
             )
+        } else {
+            Row(modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically) {
+                Text(text = "A graph'll show here once you complete two or more PHQ-9 assessments. Come back later!",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
         }
         if (phq9Map.isNotEmpty()) {
         HorizontalDivider(
