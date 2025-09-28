@@ -21,8 +21,6 @@ class FeatureFlags {
 
         const val DEBUG_DB_SCREEN_TOAST_MESSAGE = false;
 
-        const val MOODHISTORY_TODAYATAGLANCE_CARD = true;
-
         const val SETTINGS_STATUS_DOTS = false;
 
         const val SETTINGS_UPDATE_BUTTON = false
@@ -30,5 +28,7 @@ class FeatureFlags {
         const val HOME_SEEN_LOGO = true;
 
         const val ENABLE_ONBOARDING = false;
+
+        const val MOOD_HISTORY_TODAY_AT_A_GLANCE_CARD = true;
     }
 }
