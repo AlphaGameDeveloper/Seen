@@ -6,19 +6,16 @@ import android.database.Cursor
 import android.util.Log
 
 class NotesManager(context: Context) {
-    private val dbHelper = DatabaseHelper(context)
+    private val dbHelper = EncryptedDatabaseHelper(context)
 
     fun saveNote(content: String, mood: String? = null): Long {
-        val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
             put(DatabaseHelper.COLUMN_CONTENT, content)
             put(DatabaseHelper.COLUMN_TIMESTAMP, System.currentTimeMillis())
             put(DatabaseHelper.COLUMN_MOOD, mood)
         }
 
-        val id = db.insert(DatabaseHelper.TABLE_NOTES, null, values)
-        db.close()
-        return id
+        return dbHelper.insertWithEncryption(DatabaseHelper.TABLE_NOTES, null, values)
     }
 
     fun getAllNotes(): List<Note> {
@@ -83,44 +80,37 @@ class NotesManager(context: Context) {
     }
 
     fun deleteNote(noteId: Long): Boolean {
-        val db = dbHelper.writableDatabase
-        val deletedRows = db.delete(
+        val deletedRows = dbHelper.deleteWithEncryption(
             DatabaseHelper.TABLE_NOTES,
             "${DatabaseHelper.COLUMN_ID} = ?",
             arrayOf(noteId.toString())
         )
-        db.close()
         return deletedRows > 0
     }
 
     fun updateNote(noteId: Long, content: String, mood: String? = null): Boolean {
-        val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
             put(DatabaseHelper.COLUMN_CONTENT, content)
             put(DatabaseHelper.COLUMN_MOOD, mood)
         }
 
-        val updatedRows = db.update(
+        val updatedRows = dbHelper.updateWithEncryption(
             DatabaseHelper.TABLE_NOTES,
             values,
             "${DatabaseHelper.COLUMN_ID} = ?",
             arrayOf(noteId.toString())
         )
-        db.close()
         return updatedRows > 0
     }
 
     fun savePHQ9Result(score: Int, level: String): Long {
-        val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
             put(DatabaseHelper.COLUMN_SCORE, score)
             put(DatabaseHelper.COLUMN_LEVEL, level)
             put(DatabaseHelper.COLUMN_TIMESTAMP, System.currentTimeMillis())
         }
 
-        val id = db.insert(DatabaseHelper.TABLE_PHQ9_RESULTS, null, values)
-        db.close()
-        return id
+        return dbHelper.insertWithEncryption(DatabaseHelper.TABLE_PHQ9_RESULTS, null, values)
     }
 
     fun getPHQ9History(): List<PHQ9Result> {
@@ -156,7 +146,6 @@ class NotesManager(context: Context) {
     }
 
     fun savePHQ9Responses(responses: List<Int>): Long {
-        val db = dbHelper.writableDatabase
         val total = responses.sum()
         val values = ContentValues().apply {
             put(DatabaseHelper.COLUMN_Q1, responses.getOrElse(0) { 0 })
@@ -172,19 +161,15 @@ class NotesManager(context: Context) {
             put(DatabaseHelper.COLUMN_TIMESTAMP, System.currentTimeMillis())
         }
 
-        val id = db.insert(DatabaseHelper.TABLE_PHQ9_RESPONSES, null, values)
-        db.close()
-        return id
+        return dbHelper.insertWithEncryption(DatabaseHelper.TABLE_PHQ9_RESPONSES, null, values)
     }
 
     fun deletePHQ9Response(responseId: Long): Boolean {
-        val db = dbHelper.writableDatabase
-        val deletedRows = db.delete(
+        val deletedRows = dbHelper.deleteWithEncryption(
             DatabaseHelper.TABLE_PHQ9_RESPONSES,
             "${DatabaseHelper.COLUMN_ID} = ?",
             arrayOf(responseId.toString())
         )
-        db.close()
         return deletedRows > 0
     }
 

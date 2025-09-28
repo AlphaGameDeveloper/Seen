@@ -2,7 +2,14 @@ package dev.alphagame.seen.translations
 
 import dev.alphagame.seen.data.PreferencesManager
 
+enum class TranslationCode {
+    ENGLISH,
+    FRENCH,
+    SPANISH
+}
+
 abstract class Translation {
+    abstract val TRANSLATION: TranslationCode
     // General App Strings
     abstract val appName: String
     abstract val version: String
@@ -17,6 +24,7 @@ abstract class Translation {
     abstract val startQuiz: String
     abstract val viewNotes: String
     abstract val viewMoodHistory: String
+    abstract val welcomeScreenMessages: List<String>
 
     // PHQ-9 Questions
     abstract val phq9Questions: List<String>
@@ -118,6 +126,64 @@ abstract class Translation {
     abstract val dataDeletedTitle: String
     abstract val dataDeletedText: String
     abstract val continueButton: String
+
+    // Settings Screen - Additional Sections
+    abstract val notifications: String
+    abstract val enableReminders: String
+    abstract val enableRemindersDescription: String
+    abstract val encryption: String
+    abstract val enableEncryption: String
+    abstract val encryptionDescription: String
+    abstract val aiFeatures: String
+    abstract val enableAIFeatures: String
+    abstract val aiFeaturesDescription: String
+    abstract val analytics: String
+    abstract val enableAnalytics: String
+    abstract val analyticsDescription: String
+
+    // Welcome Screen - Additional
+    abstract val phq9AssessmentTitle: String
+    abstract val phq9AssessmentDescription: String
+
+    // Notes Screen - Additional
+    abstract val noEntriesMessage: String
+
+    // Debug Screens
+    abstract val databaseEncryptionDebug: String
+
+    // Resources Screen
+    abstract val backToResults: String
+    abstract val resourcesAndSupport: String
+    abstract val yourScore: String
+
+    // AI Analysis & Results
+    abstract val aiAnalysisInProgress: String
+    abstract val aiAnalysisReady: String
+    abstract val aiAnalysisUnavailable: String
+    abstract val preparingAiAnalysis: String
+    abstract val viewAiAnalysis: String
+    abstract val viewResourcesAndSupport: String
+
+    // Resources Screen - Additional Content
+    abstract val crisisSupport: String
+    abstract val crisisSupportDescription: String
+    abstract val maintainingMentalWellness: String
+    abstract val maintainingWellnessDescription: String
+    abstract val supportTreatmentOptions: String
+    abstract val supportTreatmentDescription: String
+    abstract val immediateProfessionalHelp: String
+    abstract val immediateProfessionalDescription: String
+    abstract val educationalResources: String
+    abstract val educationalResourcesDescription: String
+    abstract val backToResults2: String
+    abstract val mentalHealthTips: String
+    abstract val mindfulnessResources: String
+    abstract val findATherapist: String
+    abstract val findProfessionalHelpNow: String
+    abstract val crisisResources: String
+    abstract val nimhDepressionInfo: String
+    abstract val mentalHealthGov: String
+    abstract val namiResources: String
 
     // Common
     abstract val yes: String

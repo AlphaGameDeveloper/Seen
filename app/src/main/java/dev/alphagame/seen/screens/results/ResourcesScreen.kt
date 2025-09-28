@@ -89,13 +89,13 @@ fun ResourcesScreen(
                     IconButton(onClick = onBackToResults) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back to results",
+                            contentDescription = translation.backToResults,
                             tint = MaterialTheme.colorScheme.onSecondaryContainer
                         )
                     }
 
                     Text(
-                        text = "Resources & Support",
+                        text = translation.resourcesAndSupport,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSecondaryContainer
@@ -111,7 +111,7 @@ fun ResourcesScreen(
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            text = "Your Score",
+                            text = translation.yourScore,
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
                         )
@@ -137,8 +137,8 @@ fun ResourcesScreen(
         ) {
             // Crisis Support (always shown)
             ResourceCard(
-                title = "Crisis Support",
-                description = "If you're having thoughts of self-harm or suicide, please reach out immediately.",
+                title = translation.crisisSupport,
+                description = translation.crisisSupportDescription,
                 icon = Icons.Default.Phone,
                 backgroundColor = MaterialTheme.colorScheme.errorContainer,
                 onBackgroundColor = MaterialTheme.colorScheme.onErrorContainer
@@ -164,8 +164,8 @@ fun ResourcesScreen(
             when {
                 totalScore <= 4 -> {
                     ResourceCard(
-                        title = "Maintaining Mental Wellness",
-                        description = "Your score indicates minimal symptoms. Here are resources to maintain your mental health.",
+                        title = translation.maintainingMentalWellness,
+                        description = translation.maintainingWellnessDescription,
                         icon = Icons.Default.Info,
                         backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
                         onBackgroundColor = MaterialTheme.colorScheme.onTertiaryContainer
@@ -178,7 +178,7 @@ fun ResourcesScreen(
                                 },
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text("Mental Health Tips")
+                                Text(translation.mentalHealthTips)
                             }
                             OutlinedButton(
                                 onClick = {
@@ -187,7 +187,7 @@ fun ResourcesScreen(
                                 },
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text("Mindfulness Resources")
+                                Text(translation.mindfulnessResources)
                             }
                         }
                     }
@@ -195,8 +195,8 @@ fun ResourcesScreen(
 
                 totalScore <= 14 -> {
                     ResourceCard(
-                        title = "Support & Treatment Options",
-                        description = "Your score suggests mild to moderate symptoms. Consider these support options.",
+                        title = translation.supportTreatmentOptions,
+                        description = translation.supportTreatmentDescription,
                         icon = Icons.Default.Info,
                         backgroundColor = MaterialTheme.colorScheme.primaryContainer,
                         onBackgroundColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -209,7 +209,7 @@ fun ResourcesScreen(
                                 },
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text("Find a Therapist")
+                                Text(translation.findATherapist)
                             }
                             OutlinedButton(
                                 onClick = {
@@ -226,8 +226,8 @@ fun ResourcesScreen(
 
                 else -> {
                     ResourceCard(
-                        title = "Immediate Professional Help",
-                        description = "Your score indicates more severe symptoms. Professional help is strongly recommended.",
+                        title = translation.immediateProfessionalHelp,
+                        description = translation.immediateProfessionalDescription,
                         icon = Icons.Default.Phone,
                         backgroundColor = MaterialTheme.colorScheme.errorContainer,
                         onBackgroundColor = MaterialTheme.colorScheme.onErrorContainer
@@ -243,7 +243,7 @@ fun ResourcesScreen(
                                 ),
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text("Find Professional Help Now")
+                                Text(translation.findProfessionalHelpNow)
                             }
                             OutlinedButton(
                                 onClick = {
@@ -252,7 +252,7 @@ fun ResourcesScreen(
                                 },
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text("Crisis Resources")
+                                Text(translation.crisisResources)
                             }
                         }
                     }
@@ -261,8 +261,8 @@ fun ResourcesScreen(
 
             // General Mental Health Resources
             ResourceCard(
-                title = "Educational Resources",
-                description = "Learn more about mental health and depression.",
+                title = translation.educationalResources,
+                description = translation.educationalResourcesDescription,
                 icon = Icons.Default.Settings,
                 backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
                 onBackgroundColor = MaterialTheme.colorScheme.onSurfaceVariant
@@ -275,7 +275,7 @@ fun ResourcesScreen(
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("NIMH Depression Info")
+                        Text(translation.nimhDepressionInfo)
                     }
                     OutlinedButton(
                         onClick = {
@@ -284,7 +284,7 @@ fun ResourcesScreen(
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("MentalHealth.gov")
+                        Text(translation.mentalHealthGov)
                     }
                     OutlinedButton(
                         onClick = {
@@ -293,7 +293,7 @@ fun ResourcesScreen(
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("NAMI Resources")
+                        Text(translation.namiResources)
                     }
                 }
             }
@@ -313,7 +313,7 @@ fun ResourcesScreen(
                     .border(width = 0.dp, color = Color.Transparent)
             ) {
                 Text(
-                    text = "Back to Results",
+                    text = translation.backToResults2,
                     fontWeight = FontWeight.Medium
                 )
             }
