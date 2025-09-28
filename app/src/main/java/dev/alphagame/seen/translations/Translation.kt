@@ -85,6 +85,9 @@ abstract class Translation {
     abstract val entriesToday: String
     abstract val totalEntries: String
     abstract val todaysMoods: String
+    abstract val graphText: String
+    abstract val moodEntries: String
+    abstract val phqResponses: String
 
     // Onboarding Screen
     abstract val onboardingTitle: String

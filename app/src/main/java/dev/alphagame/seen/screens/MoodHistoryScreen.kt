@@ -173,7 +173,7 @@ fun MoodHistoryScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "PHQ-9 Responses",
+                    text = translation.phqResponses,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
@@ -220,12 +220,11 @@ fun MoodHistoryScreen(
             Row(modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically) {
-                Text(text = "A graph'll show here once you complete two or more PHQ-9 assessments. Come back later!",
+                Text(text = translation.graphText,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
-        if (phq9Map.isNotEmpty()) {
         HorizontalDivider(
             modifier = Modifier.fillMaxWidth().padding(
                 PaddingValues(2.dp)
@@ -233,7 +232,7 @@ fun MoodHistoryScreen(
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.tertiary
         )
-        }
+
 
         // Mood entries list
         if (moodEntries.isEmpty()) {
@@ -259,7 +258,7 @@ fun MoodHistoryScreen(
 
                 item {
                     Text(
-                        text = "Mood Entries",
+                        text = translation.moodEntries,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface

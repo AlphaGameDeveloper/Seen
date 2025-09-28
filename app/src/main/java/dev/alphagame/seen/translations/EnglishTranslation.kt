@@ -126,6 +126,9 @@ class EnglishTranslation : Translation() {
     override val entriesToday = "Entries today: %d"
     override val totalEntries = "Total entries: %d"
     override val todaysMoods = "Today's moods: %s"
+    override val graphText = "A graph will show here once you complete two or more PHQ-9 assessments.\nCome back later!"
+    override val moodEntries = "Mood Entries"
+    override val phqResponses = "PHQ-9 Responses"
 
     // Onboarding Screen
     override val onboardingTitle = "Welcome to Seen"
