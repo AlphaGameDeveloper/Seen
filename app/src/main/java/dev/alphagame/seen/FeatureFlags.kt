@@ -24,5 +24,7 @@ class FeatureFlags {
         const val MOODHISTORY_TODAYATAGLANCE_CARD = true;
 
         const val SETTINGS_STATUS_DOTS = false;
+
+        const val HOME_SEEN_LOGO = true;
     }
 }
