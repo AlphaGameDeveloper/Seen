@@ -1,4 +1,6 @@
 package dev.alphagame.seen.data
+import dev.alphagame.seen.translations.Translation
+import dev.alphagame.seen.translations.rememberTranslation
 
 enum class Mood(val id: Int, val emoji: String, val label: String) {
     VERY_HAPPY(1, "😄", "Very Happy"),

@@ -281,4 +281,14 @@ class FrenchTranslation : Translation() {
     override val unknownStatus = "Inconnu"
     override val refreshStatus = "Actualiser"
     override val closeDialog = "Fermer"
+
+    //Moods
+    override val veryHappy = "Très heureux"
+    override val happy = "Heureux"
+    override val neutral = "Neutre"
+    override val sad = "Triste"
+    override val verySad = "Très triste"
+    override val angry = "En colère"
+    override val anxious = "Anxieux"
+    override val excited = "Excité"
 }

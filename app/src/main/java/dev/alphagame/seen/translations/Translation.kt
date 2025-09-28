@@ -262,6 +262,15 @@ abstract class Translation {
     abstract val refreshStatus: String
     abstract val closeDialog: String
 
+    abstract val veryHappy: String
+    abstract val happy: String
+    abstract val neutral: String
+    abstract val sad: String
+    abstract val verySad: String
+    abstract val angry: String
+    abstract val anxious: String
+    abstract val excited: String
+
     companion object {
         fun getTranslation(languageCode: String): Translation {
             return when (languageCode) {

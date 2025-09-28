@@ -281,4 +281,15 @@ class EnglishTranslation : Translation() {
     override val unknownStatus = "Unknown"
     override val refreshStatus = "Refresh"
     override val closeDialog = "Close"
+
+    //Moods
+    override val veryHappy = "Very Happy"
+    override val happy = "Happy"
+    override val neutral = "Neutral"
+    override val sad = "Sad"
+    override val verySad = "Very Sad"
+    override val angry = "Angry"
+    override val anxious = "Anxious"
+    override val excited = "Excited"
+
 }

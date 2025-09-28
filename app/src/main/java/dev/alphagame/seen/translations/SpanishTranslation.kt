@@ -281,4 +281,14 @@ class SpanishTranslation : Translation() {
     override val unknownStatus = "Desconocido"
     override val refreshStatus = "Actualizar"
     override val closeDialog = "Cerrar"
+
+    //Moods
+    override val veryHappy = "Muy Felizoverride"
+    override val happy = "Feliz"
+    override val neutral = "Neutral"
+    override val sad = "Triste"
+    override val verySad = "Muy Triste"
+    override val angry = "Enojado"
+    override val anxious = "Ansioso"
+    override val excited = "Emocionado"
 }
