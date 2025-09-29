@@ -92,7 +92,7 @@ class FrenchTranslation : Translation() {
     override val dataManagement = "Gestion des données"
     override val deleteAllDataDescription = "Cela supprimera définitivement toutes vos notes, résultats d'évaluation, entrées d'humeur et réinitialisera tous les paramètres de l'application aux valeurs par défaut. Cette action ne peut pas être annulée."
     override val privacyAndData = "Confidentialité et données"
-    override val privacyDescription = "• Toutes les données sont stockées localement sur votre appareil\n• Aucune information personnelle n'est partagée avec des tiers\n• Les résultats d'évaluation restent entièrement privés\n• Vous pouvez supprimer vos données à tout moment"
+    override val privacyDescription = "• Toutes les données sont cryptées et stockées localement sur votre appareil\n• Aucune information personnelle n'est partagée avec des tiers\n• Les résultats d'évaluation restent entièrement privés\n• Vous pouvez supprimer vos données à tout moment"
     override val importantNotice = "Avis important"
     override val disclaimerText = "Cette application ne remplace pas les conseils médicaux professionnels, le diagnostic ou le traitement. Si vous vivez une crise de santé mentale, veuillez contacter les services d'urgence ou consulter un professionnel de la santé qualifié immédiatement."
     override val deleteConfirmTitle = "Supprimer toutes les données ?"

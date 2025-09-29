@@ -92,7 +92,7 @@ class EnglishTranslation : Translation() {
     override val dataManagement = "Data Management"
     override val deleteAllDataDescription = "This will permanently delete all your notes, assessment results, mood entries, and reset all app settings to defaults. This action cannot be undone."
     override val privacyAndData = "Privacy & Data"
-    override val privacyDescription = "• All data is stored locally on your device\n• No personal information is shared with third parties\n• Assessment results remain completely private\n• You can delete your data at any time"
+    override val privacyDescription = "• All data is encrypted and stored locally on your device\n• No personal information is shared with third parties\n• Assessment results remain completely private\n• You can delete your data at any time"
     override val importantNotice = "Important Notice"
     override val disclaimerText = "This app is not a substitute for professional medical advice, diagnosis, or treatment. If you're experiencing a mental health crisis, please contact emergency services or consult with a qualified healthcare provider immediately."
     override val deleteConfirmTitle = "Delete All Data?"

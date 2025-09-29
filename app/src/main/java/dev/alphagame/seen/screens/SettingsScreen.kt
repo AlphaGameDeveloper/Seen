@@ -172,8 +172,9 @@ fun SettingsScreen(
                 )
             ) {
                 Column(
-                    modifier = Modifier.padding(20.dp)
+                    //modifier = Modifier.padding(20.dp)
                 ) {
+                    if (FeatureFlags.SETTINGS_PACKAGE) {
                     Text(
                         text = translation.about,
                         fontSize = 18.sp,
@@ -184,7 +185,7 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.height(12.dp))
 
                     Text(
-                        text = "Seen - Mental Health Assessment",
+                        text = "Seen",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onSurface
@@ -200,7 +201,7 @@ fun SettingsScreen(
                         text = "Built on ${BuildConfig.PRETTY_BUILD_TIME}",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                    )
+                    ) }
 
                     if (FeatureFlags.SETTINGS_PACKAGE) {
                         Text(
@@ -478,10 +479,10 @@ fun SettingsScreen(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    //Spacer(modifier = Modifier.height(16.dp))
 
                     // Background Update Checks Setting
-                    Row(
+                    """Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
@@ -522,7 +523,7 @@ fun SettingsScreen(
                                 }
                             }
                         )
-                    }
+                    }"""
                 }
             }
 
@@ -749,7 +750,7 @@ fun SettingsScreen(
                         color = MaterialTheme.colorScheme.onSurface
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    """Spacer(modifier = Modifier.height(16.dp))
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -779,7 +780,7 @@ fun SettingsScreen(
                                 Log.e("SettingsScreen", "haha nope") // purely cosmetic
                             }
                         )
-                    }
+                    }"""
 
                     Spacer(modifier = Modifier.height(16.dp))
                     OutlinedButton(

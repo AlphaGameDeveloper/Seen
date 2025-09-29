@@ -15,9 +15,9 @@ class FeatureFlags {
         const val UI_JOURNAL_ADD_BUTTON = false;
         const val UI_MOOD_HISTORY_GLOBAL_DELETE = false;
 
-        const val UI_BUILD_STRING = true;
+        const val UI_BUILD_STRING = false;
 
-        const val UI_DEBUG_BUILD_TEXT = true;
+        const val UI_DEBUG_BUILD_TEXT = false;
 
         const val DEBUG_DB_SCREEN_TOAST_MESSAGE = false;
 
