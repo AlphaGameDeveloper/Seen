@@ -30,5 +30,7 @@ class FeatureFlags {
         const val HOME_SEEN_LOGO = true;
 
         const val ENABLE_ONBOARDING = false;
+
+        const val WELCOME_ANIMATED_SUBTITLE = true;
     }
 }

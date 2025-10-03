@@ -21,5 +21,20 @@ class WelcomeScreenMessage {
             Log.d("WelcomeScreenMessage","Chose welcome screen message index $index ($message)")
             return message
         }
+
+        @Composable
+        fun getRandomWelcomeScreenMessageGenerator(): () -> String {
+            val translation = rememberTranslation()
+            val messages = translation.welcomeScreenMessages
+            val random = Random()
+
+            fun _generator(): String {
+                val index = random.nextInt(messages.size)
+                val msg = messages[index]
+                Log.d("WelcomeScreenMessage", "Generator called, using index $index ($msg) :3")
+                return msg
+            }
+            return ::_generator
+        }
     }
 }

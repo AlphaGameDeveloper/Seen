@@ -110,7 +110,7 @@ fun QuestionScreen(
                             containerColor = MaterialTheme.colorScheme.surface
                         )
                     ) {
-                        Text(text, fontSize = 18.sp, color = MaterialTheme.colorScheme.onSurface)
+                        Text(text, fontSize = 21.sp, color = MaterialTheme.colorScheme.onSurface)
                     }
                 }
             }
