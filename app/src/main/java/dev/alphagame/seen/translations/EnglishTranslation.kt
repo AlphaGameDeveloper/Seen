@@ -109,7 +109,7 @@ class EnglishTranslation : Translation() {
     override val deleteNote = "Delete Journal Entry"
     override val noteHint = "Write your thoughts here..."
     override val save = "Save"
-    override val howAreYouFeeling = "How are you feeling?"
+    override val howAreYouFeeling = "What's new?"
     override val saveNote = "💾 Save Note"
 
     // Mood History Screen
