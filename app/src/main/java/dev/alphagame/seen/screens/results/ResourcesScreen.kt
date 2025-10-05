@@ -1,17 +1,17 @@
 // Seen - Mental Health Application
 //     Copyright (C) 2025  Damien Boisvert
 //                   2025  Alexander Cameron
-// 
+//
 //     Seen is free software: you can redistribute it and/or modify
 //     it under the terms of the GNU General Public License as published by
 //     the Free Software Foundation, either version 3 of the License, or
 //     (at your option) any later version.
-// 
+//
 //     Seen is distributed in the hope that it will be useful,
 //     but WITHOUT ANY WARRANTY; without even the implied warranty of
 //     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //     GNU General Public License for more details.
-// 
+//
 //     You should have received a copy of the GNU General Public License
 //     along with Seen.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -152,6 +152,41 @@ fun ResourcesScreen(
                 .padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
+
+            if (totalScore >= 0) {
+                ResourceCard(
+                    title = translation.immediateProfessionalHelp,
+                    description = translation.immediateProfessionalDescription,
+                    icon = Icons.Default.Phone,
+                    backgroundColor = MaterialTheme.colorScheme.errorContainer,
+                    onBackgroundColor = MaterialTheme.colorScheme.onErrorContainer
+                ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Button(
+                            onClick = {
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.psychologytoday.com/us/therapists"))
+                                context.startActivity(intent)
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.error
+                            ),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(translation.findProfessionalHelpNow)
+                        }
+                        OutlinedButton(
+                            onClick = {
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://suicidepreventionlifeline.org/"))
+                                context.startActivity(intent)
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(translation.crisisResources)
+                        }
+                    }
+                }
+            }
+
             // Crisis Support (always shown)
             ResourceCard(
                 title = translation.crisisSupport,
@@ -178,8 +213,7 @@ fun ResourcesScreen(
             }
 
             // Score-specific resources
-            when {
-                totalScore <= 4 -> {
+                if (totalScore >= 0) {
                     ResourceCard(
                         title = translation.maintainingMentalWellness,
                         description = translation.maintainingWellnessDescription,
@@ -210,7 +244,7 @@ fun ResourcesScreen(
                     }
                 }
 
-                totalScore <= 14 -> {
+                if (totalScore >= 0) {
                     ResourceCard(
                         title = translation.supportTreatmentOptions,
                         description = translation.supportTreatmentDescription,
@@ -240,41 +274,6 @@ fun ResourcesScreen(
                         }
                     }
                 }
-
-                else -> {
-                    ResourceCard(
-                        title = translation.immediateProfessionalHelp,
-                        description = translation.immediateProfessionalDescription,
-                        icon = Icons.Default.Phone,
-                        backgroundColor = MaterialTheme.colorScheme.errorContainer,
-                        onBackgroundColor = MaterialTheme.colorScheme.onErrorContainer
-                    ) {
-                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Button(
-                                onClick = {
-                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.psychologytoday.com/us/therapists"))
-                                    context.startActivity(intent)
-                                },
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = MaterialTheme.colorScheme.error
-                                ),
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(translation.findProfessionalHelpNow)
-                            }
-                            OutlinedButton(
-                                onClick = {
-                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://suicidepreventionlifeline.org/"))
-                                    context.startActivity(intent)
-                                },
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(translation.crisisResources)
-                            }
-                        }
-                    }
-                }
-            }
 
             // General Mental Health Resources
             ResourceCard(
@@ -384,3 +383,4 @@ private fun ResourceCard(
         }
     }
 }
+
