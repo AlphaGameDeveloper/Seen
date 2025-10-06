@@ -1,3 +1,20 @@
+// Seen - Mental Health Application
+//     Copyright (C) 2025  Damien Boisvert
+//                   2025  Alexander Cameron
+// 
+//     Seen is free software: you can redistribute it and/or modify
+//     it under the terms of the GNU General Public License as published by
+//     the Free Software Foundation, either version 3 of the License, or
+//     (at your option) any later version.
+// 
+//     Seen is distributed in the hope that it will be useful,
+//     but WITHOUT ANY WARRANTY; without even the implied warranty of
+//     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//     GNU General Public License for more details.
+// 
+//     You should have received a copy of the GNU General Public License
+//     along with Seen.  If not, see <https://www.gnu.org/licenses/>.
+
 package dev.alphagame.seen.screens
 
 import android.util.Log
@@ -172,8 +189,9 @@ fun SettingsScreen(
                 )
             ) {
                 Column(
-                    modifier = Modifier.padding(20.dp)
+                    //modifier = Modifier.padding(20.dp)
                 ) {
+                    if (FeatureFlags.SETTINGS_PACKAGE) {
                     Text(
                         text = translation.about,
                         fontSize = 18.sp,
@@ -184,7 +202,7 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.height(12.dp))
 
                     Text(
-                        text = "Seen - Mental Health Assessment",
+                        text = "Seen",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onSurface
@@ -200,7 +218,7 @@ fun SettingsScreen(
                         text = "Built on ${BuildConfig.PRETTY_BUILD_TIME}",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                    )
+                    ) }
 
                     if (FeatureFlags.SETTINGS_PACKAGE) {
                         Text(
@@ -478,10 +496,10 @@ fun SettingsScreen(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    //Spacer(modifier = Modifier.height(16.dp))
 
                     // Background Update Checks Setting
-                    Row(
+                    """Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
@@ -522,7 +540,7 @@ fun SettingsScreen(
                                 }
                             }
                         )
-                    }
+                    }"""
                 }
             }
 
@@ -749,7 +767,7 @@ fun SettingsScreen(
                         color = MaterialTheme.colorScheme.onSurface
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    """Spacer(modifier = Modifier.height(16.dp))
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -779,7 +797,7 @@ fun SettingsScreen(
                                 Log.e("SettingsScreen", "haha nope") // purely cosmetic
                             }
                         )
-                    }
+                    }"""
 
                     Spacer(modifier = Modifier.height(16.dp))
                     OutlinedButton(

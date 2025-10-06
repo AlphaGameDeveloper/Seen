@@ -1,6 +1,25 @@
+// Seen - Mental Health Application
+//     Copyright (C) 2025  Damien Boisvert
+//                   2025  Alexander Cameron
+// 
+//     Seen is free software: you can redistribute it and/or modify
+//     it under the terms of the GNU General Public License as published by
+//     the Free Software Foundation, either version 3 of the License, or
+//     (at your option) any later version.
+// 
+//     Seen is distributed in the hope that it will be useful,
+//     but WITHOUT ANY WARRANTY; without even the implied warranty of
+//     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//     GNU General Public License for more details.
+// 
+//     You should have received a copy of the GNU General Public License
+//     along with Seen.  If not, see <https://www.gnu.org/licenses/>.
+
 package dev.alphagame.seen.screens
 
 import android.widget.Toast
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +36,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,6 +50,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.alphagame.seen.FeatureFlags
 import dev.alphagame.seen.analytics.AnalyticsManager
+import dev.alphagame.seen.data.LogoSelector
+import dev.alphagame.seen.data.PreferencesManager
 import dev.alphagame.seen.data.WelcomeScreenMessage
 import dev.alphagame.seen.translations.rememberTranslation
 
@@ -44,6 +66,7 @@ fun WelcomeScreen(
     val translation = rememberTranslation()
     val analyticsManager = remember { AnalyticsManager(context) }
     var clickCount by remember { mutableStateOf(0) }
+    val preferencesManager = remember { PreferencesManager(context) }
 
     // Track welcome screen access
     LaunchedEffect(Unit) {
@@ -52,7 +75,7 @@ fun WelcomeScreen(
 
     // Reset click count after 30 seconds of inactivity
     LaunchedEffect(clickCount) {
-        if (clickCount > 0 && clickCount < 10) {
+        if (clickCount in 1..9) {
             kotlinx.coroutines.delay(30000) // 30 seconds
             clickCount = 0
         }
@@ -67,8 +90,11 @@ fun WelcomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (FeatureFlags.HOME_SEEN_LOGO) {
+            // are we in dark mode?
+            val logoRes = LogoSelector.themedIcon(context)
+
             androidx.compose.foundation.Image(
-                painter = androidx.compose.ui.res.painterResource(dev.alphagame.seen.R.drawable.seen_logo_transparent),
+                painter = androidx.compose.ui.res.painterResource(logoRes),
                 contentDescription = "App Logo",
                 modifier = Modifier
                     .height(120.dp)
@@ -111,60 +137,11 @@ fun WelcomeScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Subtitle
-        Text(
-            text = WelcomeScreenMessage.getRandomWelcomeScreenMessage(),
-            fontSize = 18.sp,
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(modifier = Modifier.height(48.dp))
-        /* <----------- PHQ-9 DESCRIPTION CARD
-        // Description
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            )
-        ) {
-
-            Column(
-                modifier = Modifier.padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "📋",
-                    fontSize = 48.sp,
-                    textAlign = TextAlign.Center
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    text = translation.phq9AssessmentTitle,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    textAlign = TextAlign.Center
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = translation.phq9AssessmentDescription,
-                    fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
-                    textAlign = TextAlign.Center,
-                    lineHeight = 24.sp
-                )
-            }
+        if (FeatureFlags.WELCOME_ANIMATED_SUBTITLE) {
+            WelcomeScreenMessageDisplayDynamic()
+        } else {
+            WelcomeScreenMessageDisplayStatic()
         }
-        <----------- PHQ-9 DESCRIPTION CARD > */
-        Spacer(modifier = Modifier.height(48.dp))
 
         // Start Button
         Button(
@@ -241,17 +218,65 @@ fun WelcomeScreen(
                 fontWeight = FontWeight.SemiBold
             )
         }
-        /*
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Disclaimer
-        Text(
-            text = "This assessment is not a substitute for professional medical advice. If you're experiencing a mental health crisis, please contact emergency services or a mental health professional.\n\nApplication by Damien Boisvert & Alexander Cameron",
-            fontSize = 12.sp,
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
-            textAlign = TextAlign.Center,
-            lineHeight = 18.sp,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        ) */
     }
+}
+
+@Composable
+private fun WelcomeScreenMessageDisplayStatic() {
+    val default = "Howdy!"
+    val message = remember { mutableStateOf<String>(default) }
+
+    @Composable
+    fun _Update() {
+        if (message.value == default) {
+            message.value = WelcomeScreenMessage.getRandomWelcomeScreenMessage()
+        }
+    }
+    _Update()
+
+    Text(
+        text = message.value,
+        fontSize = 18.sp,
+        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+        textAlign = TextAlign.Center
+    )
+    Spacer(modifier = Modifier.height(70.dp))
+}
+
+@Composable
+private fun WelcomeScreenMessageDisplayDynamic() {
+    // Update the message every x seconds
+
+    val message = remember { mutableStateOf<String>("Howdy!") }
+    @Composable
+    fun UpdateWelcomeMessage(message: MutableState<String>) {
+        val getMessage = WelcomeScreenMessage.getRandomWelcomeScreenMessageGenerator()
+        LaunchedEffect(Unit) {
+            while (true) {
+                message.value = getMessage()
+                kotlinx.coroutines.delay(5000) // Change message every 3 seconds
+            }
+        }
+    }
+
+    UpdateWelcomeMessage(message)
+
+    androidx.compose.animation.AnimatedContent(
+        targetState = message.value,
+        transitionSpec = {
+            androidx.compose.animation.ContentTransform(
+                targetContentEnter = fadeIn(),
+                initialContentExit = fadeOut()
+            )
+        }
+    ) { targetMessage ->
+        Text(
+            text = targetMessage,
+            fontSize = 18.sp,
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+            textAlign = TextAlign.Center
+        )
+    }
+
+    Spacer(modifier = Modifier.height(70.dp))
 }

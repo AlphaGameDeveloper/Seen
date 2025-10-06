@@ -1,3 +1,20 @@
+// Seen - Mental Health Application
+//     Copyright (C) 2025  Damien Boisvert
+//                   2025  Alexander Cameron
+// 
+//     Seen is free software: you can redistribute it and/or modify
+//     it under the terms of the GNU General Public License as published by
+//     the Free Software Foundation, either version 3 of the License, or
+//     (at your option) any later version.
+// 
+//     Seen is distributed in the hope that it will be useful,
+//     but WITHOUT ANY WARRANTY; without even the implied warranty of
+//     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//     GNU General Public License for more details.
+// 
+//     You should have received a copy of the GNU General Public License
+//     along with Seen.  If not, see <https://www.gnu.org/licenses/>.
+
 package dev.alphagame.seen.translations
 
 class FrenchTranslation : Translation() {
@@ -92,7 +109,7 @@ class FrenchTranslation : Translation() {
     override val dataManagement = "Gestion des données"
     override val deleteAllDataDescription = "Cela supprimera définitivement toutes vos notes, résultats d'évaluation, entrées d'humeur et réinitialisera tous les paramètres de l'application aux valeurs par défaut. Cette action ne peut pas être annulée."
     override val privacyAndData = "Confidentialité et données"
-    override val privacyDescription = "• Toutes les données sont stockées localement sur votre appareil\n• Aucune information personnelle n'est partagée avec des tiers\n• Les résultats d'évaluation restent entièrement privés\n• Vous pouvez supprimer vos données à tout moment"
+    override val privacyDescription = "• Toutes les données sont cryptées et stockées localement sur votre appareil\n• Aucune information personnelle n'est partagée avec des tiers\n• Les résultats d'évaluation restent entièrement privés\n• Vous pouvez supprimer vos données à tout moment"
     override val importantNotice = "Avis important"
     override val disclaimerText = "Cette application ne remplace pas les conseils médicaux professionnels, le diagnostic ou le traitement. Si vous vivez une crise de santé mentale, veuillez contacter les services d'urgence ou consulter un professionnel de la santé qualifié immédiatement."
     override val deleteConfirmTitle = "Supprimer toutes les données ?"
@@ -109,7 +126,7 @@ class FrenchTranslation : Translation() {
     override val deleteNote = "Supprimer la note"
     override val noteHint = "Écrivez vos pensées ici..."
     override val save = "Sauvegarder"
-    override val howAreYouFeeling = "Comment vous sentez-vous ?"
+    override val howAreYouFeeling = "Quoi de neuf ?"
     override val saveNote = "💾 Sauvegarder la note"
 
     // Mood History Screen

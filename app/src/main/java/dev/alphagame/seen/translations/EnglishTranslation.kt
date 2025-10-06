@@ -1,3 +1,20 @@
+// Seen - Mental Health Application
+//     Copyright (C) 2025  Damien Boisvert
+//                   2025  Alexander Cameron
+// 
+//     Seen is free software: you can redistribute it and/or modify
+//     it under the terms of the GNU General Public License as published by
+//     the Free Software Foundation, either version 3 of the License, or
+//     (at your option) any later version.
+// 
+//     Seen is distributed in the hope that it will be useful,
+//     but WITHOUT ANY WARRANTY; without even the implied warranty of
+//     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//     GNU General Public License for more details.
+// 
+//     You should have received a copy of the GNU General Public License
+//     along with Seen.  If not, see <https://www.gnu.org/licenses/>.
+
 package dev.alphagame.seen.translations
 
 class EnglishTranslation : Translation() {
@@ -92,7 +109,7 @@ class EnglishTranslation : Translation() {
     override val dataManagement = "Data Management"
     override val deleteAllDataDescription = "This will permanently delete all your notes, assessment results, mood entries, and reset all app settings to defaults. This action cannot be undone."
     override val privacyAndData = "Privacy & Data"
-    override val privacyDescription = "• All data is stored locally on your device\n• No personal information is shared with third parties\n• Assessment results remain completely private\n• You can delete your data at any time"
+    override val privacyDescription = "• All data is encrypted and stored locally on your device\n• No personal information is shared with third parties\n• Assessment results remain completely private\n• You can delete your data at any time"
     override val importantNotice = "Important Notice"
     override val disclaimerText = "This app is not a substitute for professional medical advice, diagnosis, or treatment. If you're experiencing a mental health crisis, please contact emergency services or consult with a qualified healthcare provider immediately."
     override val deleteConfirmTitle = "Delete All Data?"
@@ -109,7 +126,7 @@ class EnglishTranslation : Translation() {
     override val deleteNote = "Delete Journal Entry"
     override val noteHint = "Write your thoughts here..."
     override val save = "Save"
-    override val howAreYouFeeling = "How are you feeling?"
+    override val howAreYouFeeling = "What's new?"
     override val saveNote = "💾 Save Note"
 
     // Mood History Screen

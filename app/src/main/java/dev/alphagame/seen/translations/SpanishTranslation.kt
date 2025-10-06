@@ -1,3 +1,20 @@
+// Seen - Mental Health Application
+//     Copyright (C) 2025  Damien Boisvert
+//                   2025  Alexander Cameron
+// 
+//     Seen is free software: you can redistribute it and/or modify
+//     it under the terms of the GNU General Public License as published by
+//     the Free Software Foundation, either version 3 of the License, or
+//     (at your option) any later version.
+// 
+//     Seen is distributed in the hope that it will be useful,
+//     but WITHOUT ANY WARRANTY; without even the implied warranty of
+//     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//     GNU General Public License for more details.
+// 
+//     You should have received a copy of the GNU General Public License
+//     along with Seen.  If not, see <https://www.gnu.org/licenses/>.
+
 package dev.alphagame.seen.translations
 
 class SpanishTranslation : Translation() {
@@ -88,7 +105,7 @@ class SpanishTranslation : Translation() {
     override val deleteNote = "Eliminar nota"
     override val noteHint = "Escribe tus pensamientos aquí..."
     override val save = "Guardar"
-    override val howAreYouFeeling = "¿Cómo te sientes?"
+    override val howAreYouFeeling = "¿Qué hay de nuevo?"
     override val saveNote = "💾 Guardar nota"
 
     // Mood History Screen
@@ -140,7 +157,7 @@ class SpanishTranslation : Translation() {
     override val dataManagement = "Gestión de datos"
     override val deleteAllDataDescription = "Esto eliminará permanentemente todas tus notas, resultados de evaluación, entradas de estado de ánimo y restablecerá toda la configuración de la aplicación a los valores predeterminados. Esta acción no se puede deshacer."
     override val privacyAndData = "Privacidad y datos"
-    override val privacyDescription = "• Todos los datos se almacenan localmente en tu dispositivo\n• No se comparte información personal con terceros\n• Los resultados de evaluación permanecen completamente privados\n• Puedes eliminar tus datos en cualquier momento"
+    override val privacyDescription = "• Todos los datos están encriptados y almacenados localmente en su dispositivo\n• No se comparte información personal con terceros\n• Los resultados de evaluación permanecen completamente privados\n• Puedes eliminar tus datos en cualquier momento"
     override val importantNotice = "Aviso importante"
     override val disclaimerText = "Esta aplicación no es un sustituto del consejo médico profesional, diagnóstico o tratamiento. Si estás experimentando una crisis de salud mental, por favor contacta servicios de emergencia o consulta con un proveedor de atención médica calificado inmediatamente."
     override val deleteConfirmTitle = "¿Eliminar todos los datos?"
