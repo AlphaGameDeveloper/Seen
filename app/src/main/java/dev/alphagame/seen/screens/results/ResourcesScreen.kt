@@ -91,7 +91,7 @@ fun ResourcesScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top).asPaddingValues()),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary),
             shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
         ) {
             Column(
@@ -107,7 +107,7 @@ fun ResourcesScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = translation.backToResults,
-                            tint = MaterialTheme.colorScheme.onSecondaryContainer
+                            tint = MaterialTheme.colorScheme.onSecondary
                         )
                     }
 
@@ -115,7 +115,7 @@ fun ResourcesScreen(
                         text = translation.resourcesAndSupport,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                        color = MaterialTheme.colorScheme.onSecondary
                     )
 
                     Spacer(modifier = Modifier.width(48.dp))
@@ -130,7 +130,7 @@ fun ResourcesScreen(
                         Text(
                             text = translation.yourScore,
                             fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
+                            color = MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.8f)
                         )
                         Text(
                             text = "$totalScore - $levelText",
@@ -316,14 +316,14 @@ fun ResourcesScreen(
             }
 
         //Start implimentation:
-
-        if (totalScore >= 0) {
+        when {
+        totalScore >= 27 -> {
             ResourceCard(
                 title = translation.immediateProfessionalHelp,
                 description = translation.immediateProfessionalDescription,
                 icon = Icons.Default.Phone,
-                backgroundColor = MaterialTheme.colorScheme.errorContainer,
-                onBackgroundColor = MaterialTheme.colorScheme.onErrorContainer
+                backgroundColor = MaterialTheme.colorScheme.onSurface,
+                onBackgroundColor = MaterialTheme.colorScheme.surface
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(
@@ -332,7 +332,7 @@ fun ResourcesScreen(
                             context.startActivity(intent)
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.error
+                            containerColor = MaterialTheme.colorScheme.primary
                         ),
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -350,6 +350,43 @@ fun ResourcesScreen(
                 }
             }
         }
+            else -> {
+                ResourceCard(
+                    title = "Default proffessional Help Page",
+                    description = translation.immediateProfessionalDescription,
+                    icon = Icons.Default.Phone,
+                    backgroundColor = MaterialTheme.colorScheme.onSurface,
+                    onBackgroundColor = MaterialTheme.colorScheme.surface
+                ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Button(
+                            onClick = {
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.psychologytoday.com/us/therapists"))
+                                context.startActivity(intent)
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary
+                            ),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(translation.findProfessionalHelpNow)
+                        }
+                        OutlinedButton(
+                            onClick = {
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://suicidepreventionlifeline.org/"))
+                                context.startActivity(intent)
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(translation.crisisResources)
+                        }
+                    }
+                }
+            }
+        }
+
+        //Continue here
+
         if (false) {
         // Bottom back button
         Card(
