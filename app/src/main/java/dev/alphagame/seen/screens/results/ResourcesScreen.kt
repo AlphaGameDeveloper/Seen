@@ -142,7 +142,6 @@ fun ResourcesScreen(
                 }
             }
         }
-
         // Content
         Column(
             modifier = Modifier
@@ -152,7 +151,7 @@ fun ResourcesScreen(
                 .padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-
+            if (false) {
             if (totalScore >= 0) {
                 ResourceCard(
                     title = translation.immediateProfessionalHelp,
@@ -310,6 +309,42 @@ fun ResourcesScreen(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(translation.namiResources)
+                    }
+                }
+            }
+        }
+            }
+
+        //Start implimentation:
+        if (totalScore >= 0) {
+            ResourceCard(
+                title = translation.immediateProfessionalHelp,
+                description = translation.immediateProfessionalDescription,
+                icon = Icons.Default.Phone,
+                backgroundColor = MaterialTheme.colorScheme.errorContainer,
+                onBackgroundColor = MaterialTheme.colorScheme.onErrorContainer
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(
+                        onClick = {
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.psychologytoday.com/us/therapists"))
+                            context.startActivity(intent)
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.error
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(translation.findProfessionalHelpNow)
+                    }
+                    OutlinedButton(
+                        onClick = {
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://suicidepreventionlifeline.org/"))
+                            context.startActivity(intent)
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(translation.crisisResources)
                     }
                 }
             }
