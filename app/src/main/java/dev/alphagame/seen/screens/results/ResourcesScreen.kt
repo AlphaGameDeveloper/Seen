@@ -316,6 +316,7 @@ fun ResourcesScreen(
             }
 
         //Start implimentation:
+
         if (totalScore >= 0) {
             ResourceCard(
                 title = translation.immediateProfessionalHelp,
@@ -349,7 +350,7 @@ fun ResourcesScreen(
                 }
             }
         }
-
+        if (false) {
         // Bottom back button
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -370,7 +371,7 @@ fun ResourcesScreen(
             }
         }
     }
-}
+}}
 
 @Composable
 private fun ResourceCard(
