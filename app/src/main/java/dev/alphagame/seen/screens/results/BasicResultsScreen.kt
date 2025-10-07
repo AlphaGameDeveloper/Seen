@@ -133,7 +133,7 @@ fun BasicResultsScreen(
                         Text(
                             text = translation.aiAnalysisInProgress,
                             fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                            color = Color(0xFF000000)
                         )
                     }
 
@@ -141,13 +141,13 @@ fun BasicResultsScreen(
                         Icon(
                             imageVector = Icons.Default.Info,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(24.dp)
                         )
                         Text(
                             text = translation.aiAnalysisReady,
                             fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.onTertiaryContainer
+                            color = Color(0xFF000000)
                         )
                     }
 
