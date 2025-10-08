@@ -69,7 +69,8 @@ fun ResourcesScreen(
     totalScore: Int,
     levelText: String,
     color: Color,
-    onBackToResults: () -> Unit
+    onBackToResults: () -> Unit,
+    scores: List<Int>
 ) {
     val context = LocalContext.current
     val translation = rememberTranslation()
@@ -357,9 +358,9 @@ fun ResourcesScreen(
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             when {
-                totalScore >= 27 -> {
+                totalScore > 19 -> {
                     ResourceCard(
-                        title = translation.immediateProfessionalHelp,
+                        title = translation.crisisSupport,
                         description = translation.immediateProfessionalDescription,
                         icon = Icons.Default.Phone,
                         backgroundColor = resourceColor,
@@ -399,8 +400,8 @@ fun ResourcesScreen(
 
                 else -> {
                     ResourceCard(
-                        title = "Default proffessional Help Page",
-                        description = translation.immediateProfessionalDescription,
+                        title = translation.crisisSupport,
+                        description = translation.crisisSupportDescription,
                         icon = Icons.Default.Phone,
                         backgroundColor = resourceColor,
                         onBackgroundColor = Color(0xFF000000)
@@ -441,8 +442,8 @@ fun ResourcesScreen(
             //Continue here
 
             ResourceCard(
-                title = translation.maintainingMentalWellness,
-                description = translation.maintainingWellnessDescription,
+                title = "About Depression",
+                description = "It is important to understand how you are feeling, even if you do not have severe symptoms. Here are some resources on the subject of depression.",
                 icon = Icons.Default.Info,
                 backgroundColor = resourceColor,
                 onBackgroundColor = Color(0xFF000000)
@@ -452,7 +453,7 @@ fun ResourcesScreen(
                         onClick = {
                             val intent = Intent(
                                 Intent.ACTION_VIEW,
-                                Uri.parse("https://www.nimh.nih.gov/health/topics/caring-for-your-mental-health")
+                                Uri.parse("https://www.nimh.nih.gov/health/topics/depression")
                             )
                             context.startActivity(intent)
                         },
@@ -463,13 +464,13 @@ fun ResourcesScreen(
 
                     ) {
                         Text(
-                            text = translation.mentalHealthTips)
+                            "Learn About Depression")
 
                     }
                     Button(
                         onClick = {
                             val intent =
-                                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.mindful.org/"))
+                                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.nimh.nih.gov/health/topics/caring-for-your-mental-health"))
                             context.startActivity(intent)
                         },
                         colors = ButtonDefaults.buttonColors(
@@ -477,36 +478,39 @@ fun ResourcesScreen(
                         ),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(translation.mindfulnessResources)
+                        Text("Caring For Your Mental Health")
                     }
                 }
             }
 
             ResourceCard(
-                title = translation.maintainingMentalWellness,
-                description = translation.maintainingWellnessDescription,
-                icon = Icons.Default.Info,
+                title = "Recommended Resources",
+                description = "The following resources are recommended based on your responses to the PHQ-9.",
+                icon = Icons.Default.Settings,
                 backgroundColor = resourceColor,
                 onBackgroundColor = Color(0xFF000000)
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(
-                        onClick = {
-                            val intent = Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse("https://www.nimh.nih.gov/health/topics/caring-for-your-mental-health")
+                    if (scores[0]>1) {
+                        Button(
+                            onClick = {
+                                val intent = Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://www.nimh.nih.gov/health/topics/caring-for-your-mental-health")
+                                )
+                                context.startActivity(intent)
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.tertiary
+                            ),
+                            modifier = Modifier.fillMaxWidth()
+
+                        ) {
+                            Text(
+                                text = translation.mentalHealthTips
                             )
-                            context.startActivity(intent)
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.tertiary
-                        ),
-                        modifier = Modifier.fillMaxWidth()
 
-                    ) {
-                        Text(
-                            text = translation.mentalHealthTips)
-
+                        }
                     }
                     Button(
                         onClick = {
