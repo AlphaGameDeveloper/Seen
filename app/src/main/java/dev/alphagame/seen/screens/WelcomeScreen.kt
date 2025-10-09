@@ -97,7 +97,8 @@ fun WelcomeScreen(
                 painter = androidx.compose.ui.res.painterResource(logoRes),
                 contentDescription = "App Logo",
                 modifier = Modifier
-                    .height(120.dp)
+                    .height(150.dp)
+                    .padding(0.dp)
             )
         }
         // App Title
@@ -247,7 +248,7 @@ private fun WelcomeScreenMessageDisplayStatic() {
 private fun WelcomeScreenMessageDisplayDynamic() {
     // Update the message every x seconds
 
-    val message = remember { mutableStateOf<String>("Howdy!") }
+    val message = remember { mutableStateOf<String>("") }
     @Composable
     fun UpdateWelcomeMessage(message: MutableState<String>) {
         val getMessage = WelcomeScreenMessage.getRandomWelcomeScreenMessageGenerator()
