@@ -1,17 +1,17 @@
 // Seen - Mental Health Application
 //     Copyright (C) 2025  Damien Boisvert
 //                   2025  Alexander Cameron
-// 
+//
 //     Seen is free software: you can redistribute it and/or modify
 //     it under the terms of the GNU General Public License as published by
 //     the Free Software Foundation, either version 3 of the License, or
 //     (at your option) any later version.
-// 
+//
 //     Seen is distributed in the hope that it will be useful,
 //     but WITHOUT ANY WARRANTY; without even the implied warranty of
 //     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //     GNU General Public License for more details.
-// 
+//
 //     You should have received a copy of the GNU General Public License
 //     along with Seen.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -24,6 +24,7 @@ import com.google.gson.JsonSyntaxException
 import dev.alphagame.seen.ai.models.PHQ9Request
 import dev.alphagame.seen.ai.models.PHQ9Response
 import dev.alphagame.seen.data.AppVersionInfo
+import dev.alphagame.seen.data.PreferencesManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -94,12 +95,14 @@ class AIManager(private val context: Context) {
                     )
                 }
 
+                val preferencesManager = PreferencesManager(context)
                 // Create request
                 val phq9Request = PHQ9Request(
                     total = totalScore,
                     responses = responses,
                     notes = notes,
-                    moodEntries = moodEntries
+                    moodEntries = moodEntries,
+                    language = preferencesManager.language.uppercase()
                 )
 
                 val jsonBody = gson.toJson(phq9Request)
@@ -223,7 +226,8 @@ class AIManager(private val context: Context) {
                 // Create a minimal test request to see if the endpoint exists
                 val testRequest = PHQ9Request(
                     total = 0,
-                    responses = listOf(0, 0, 0, 0, 0, 0, 0, 0, 0)
+                    responses = listOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+                    language = "English" // test only LMAO
                 )
 
                 val jsonBody = gson.toJson(testRequest)
@@ -293,7 +297,8 @@ class AIManager(private val context: Context) {
                 results.add("\n--- Test 2: PHQ9 Endpoint Test ---")
                 val testRequest = PHQ9Request(
                     total = 5,
-                    responses = listOf(1, 0, 1, 1, 0, 1, 0, 1, 0)
+                    responses = listOf(1, 0, 1, 1, 0, 1, 0, 1, 0),
+                    language = "English"
                 )
 
                 val jsonBody = gson.toJson(testRequest)

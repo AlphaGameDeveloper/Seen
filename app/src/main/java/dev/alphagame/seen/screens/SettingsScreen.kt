@@ -58,6 +58,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -112,7 +113,7 @@ fun SettingsScreen(
     var currentLanguage by remember { mutableStateOf(preferencesManager.language) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showDeleteConfirmationDialog by remember { mutableStateOf(false) }
-    var refreshKey by remember { mutableStateOf(0) } // Force refresh after data deletion
+    var refreshKey by remember { mutableIntStateOf(0) } // Force refresh after data deletion
     var isCheckingForUpdates by remember { mutableStateOf(false) }
     var showUpdateDialog by remember { mutableStateOf(false) }
     var showNoUpdateDialog by remember { mutableStateOf(false) }
@@ -802,7 +803,7 @@ fun SettingsScreen(
                             Switch(
                                 checked = true,
                                 enabled = false, // purely visual
-                                onCheckedChange = { checked ->
+                                onCheckedChange = {
                                     Log.e("SettingsScreen", "haha nope") // purely cosmetic
                                 }
                             )

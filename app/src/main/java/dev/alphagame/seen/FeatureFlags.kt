@@ -20,7 +20,7 @@ package dev.alphagame.seen
 class FeatureFlags {
     companion object {
         const val SETTINGS_EXTENDED_ABOUT = false;
-        const val SETTINGS_TITLE = true;
+        const val SETTINGS_TITLE = false; // didn't look all that good :(
         const val SETTINGS_TITLE_PACKAGE = false;
 
         const val SETTINGS_TITLE_MORE_INFO = false;

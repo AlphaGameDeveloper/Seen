@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -14,7 +15,8 @@
         android:textColor="#FFFFFF"
         android:gravity="center"
         android:layout_marginBottom="8dp"
-        android:fontFamily="sans-serif-medium" />
+        android:fontFamily="sans-serif-medium"
+        tools:ignore="HardcodedText" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,7 +34,8 @@
             android:text="😰"
             android:textSize="24sp"
             android:background="@drawable/widget_button_background"
-            android:contentDescription="Anxious" />
+            android:contentDescription="Anxious"
+            tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/btn_sad"
@@ -43,7 +46,8 @@
             android:text="😞"
             android:textSize="24sp"
             android:background="@drawable/widget_button_background"
-            android:contentDescription="Sad" />
+            android:contentDescription="Sad"
+            tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/btn_happy"
@@ -54,7 +58,8 @@
             android:text="😊"
             android:textSize="24sp"
             android:background="@drawable/widget_button_background"
-            android:contentDescription="Happy" />
+            android:contentDescription="Happy"
+            tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/btn_very_happy"
@@ -65,7 +70,8 @@
             android:text="😄"
             android:textSize="24sp"
             android:background="@drawable/widget_button_background"
-            android:contentDescription="Very Happy" />
+            android:contentDescription="Very Happy"
+            tools:ignore="HardcodedText" />
 
     </LinearLayout>
 
@@ -77,6 +83,7 @@
         android:gravity="center"
         android:text="Tap to log your mood"
         android:textColor="#CCFFFFFF"
-        android:textSize="10sp" />
+        android:textSize="10sp"
+        tools:ignore="HardcodedText" />
 
 </LinearLayout>
