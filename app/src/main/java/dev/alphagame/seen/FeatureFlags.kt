@@ -1,17 +1,17 @@
 // Seen - Mental Health Application
 //     Copyright (C) 2025  Damien Boisvert
 //                   2025  Alexander Cameron
-// 
+//
 //     Seen is free software: you can redistribute it and/or modify
 //     it under the terms of the GNU General Public License as published by
 //     the Free Software Foundation, either version 3 of the License, or
 //     (at your option) any later version.
-// 
+//
 //     Seen is distributed in the hope that it will be useful,
 //     but WITHOUT ANY WARRANTY; without even the implied warranty of
 //     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //     GNU General Public License for more details.
-// 
+//
 //     You should have received a copy of the GNU General Public License
 //     along with Seen.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -38,8 +38,6 @@ class FeatureFlags {
 
         const val DEBUG_DB_SCREEN_TOAST_MESSAGE = false;
 
-        const val MOODHISTORY_TODAYATAGLANCE_CARD = true;
-
         const val SETTINGS_STATUS_DOTS = false;
 
         const val SETTINGS_UPDATE_BUTTON = false
@@ -48,6 +46,7 @@ class FeatureFlags {
 
         const val ENABLE_ONBOARDING = false;
 
+        const val MOOD_HISTORY_TODAY_AT_A_GLANCE_CARD = true;
         const val WELCOME_ANIMATED_SUBTITLE = true;
     }
 }
