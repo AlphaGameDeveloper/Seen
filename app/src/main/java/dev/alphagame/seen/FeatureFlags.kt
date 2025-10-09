@@ -20,7 +20,10 @@ package dev.alphagame.seen
 class FeatureFlags {
     companion object {
         const val SETTINGS_EXTENDED_ABOUT = false;
-        const val SETTINGS_PACKAGE = false;
+        const val SETTINGS_TITLE = true;
+        const val SETTINGS_TITLE_PACKAGE = false;
+
+        const val SETTINGS_TITLE_MORE_INFO = false;
 
         const val SETTINGS_AI_FEATURES = false;
         const val SETTINGS_ANALYTICS = false;
@@ -48,5 +51,8 @@ class FeatureFlags {
 
         const val MOOD_HISTORY_TODAY_AT_A_GLANCE_CARD = true;
         const val WELCOME_ANIMATED_SUBTITLE = true;
+
+        const val SETTINGS_BACKGROUND_UPDATE_CHECKS = false;
+        const val SETTINGS_ENCRYPTION = false;
     }
 }

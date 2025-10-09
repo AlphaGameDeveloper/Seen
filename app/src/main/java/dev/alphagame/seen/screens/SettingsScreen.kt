@@ -1,17 +1,17 @@
 // Seen - Mental Health Application
 //     Copyright (C) 2025  Damien Boisvert
 //                   2025  Alexander Cameron
-// 
+//
 //     Seen is free software: you can redistribute it and/or modify
 //     it under the terms of the GNU General Public License as published by
 //     the Free Software Foundation, either version 3 of the License, or
 //     (at your option) any later version.
-// 
+//
 //     Seen is distributed in the hope that it will be useful,
 //     but WITHOUT ANY WARRANTY; without even the implied warranty of
 //     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //     GNU General Public License for more details.
-// 
+//
 //     You should have received a copy of the GNU General Public License
 //     along with Seen.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -188,39 +188,44 @@ fun SettingsScreen(
                     containerColor = MaterialTheme.colorScheme.surface
                 )
             ) {
-                Column(
-                    //modifier = Modifier.padding(20.dp)
-                ) {
-                    if (FeatureFlags.SETTINGS_PACKAGE) {
-                    Text(
-                        text = translation.about,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
+                Column {
+                    if (FeatureFlags.SETTINGS_TITLE) {
+                        Text(
+                            text = translation.about,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                        Spacer(modifier = Modifier.height(12.dp))
 
-                    Text(
-                        text = "Seen",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
+                        Text(
+                            text = "Seen - Mental Health Assistant",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
 
-                    Text(
-                        text = "Version ${AppVersionInfo.getVersionFull()}",
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                    )
+                        Text(
+                            text = "Created by Damien Boisvert and Alexander Cameron.",
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = .7f)
+                        )
+                        if (FeatureFlags.SETTINGS_TITLE_MORE_INFO) {
+                            Text(
+                                text = "Version ${AppVersionInfo.getVersionFull()}",
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                            )
 
-                    Text(
-                        text = "Built on ${BuildConfig.PRETTY_BUILD_TIME}",
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                    ) }
-
-                    if (FeatureFlags.SETTINGS_PACKAGE) {
+                            Text(
+                                text = "Built on ${BuildConfig.PRETTY_BUILD_TIME}",
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                            )
+                        }
+                    }
+                    if (FeatureFlags.SETTINGS_TITLE_PACKAGE) {
                         Text(
                             text = "Package: ${BuildConfig.APPLICATION_ID}@${BuildConfig.GIT_BRANCH}",
                             fontSize = 12.sp,
@@ -499,48 +504,50 @@ fun SettingsScreen(
                     //Spacer(modifier = Modifier.height(16.dp))
 
                     // Background Update Checks Setting
-                    """Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column(
-                            modifier = Modifier.weight(1f)
+                    if (FeatureFlags.SETTINGS_BACKGROUND_UPDATE_CHECKS) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                text = translation.enableBackgroundUpdateChecks,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Text(
-                                text = translation.enableBackgroundUpdateChecksDescription,
-                                fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                                lineHeight = 16.sp
-                            )
-                        }
-
-                        var backgroundUpdateChecksEnabled by remember(refreshKey) {
-                            mutableStateOf(preferencesManager.backgroundUpdateChecksEnabled)
-                        }
-
-                        Switch(
-                            checked = backgroundUpdateChecksEnabled,
-                            onCheckedChange = { enabled ->
-                                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-                                backgroundUpdateChecksEnabled = enabled
-                                preferencesManager.backgroundUpdateChecksEnabled = enabled
-
-                                // Start or stop the background update service
-                                if (enabled && preferencesManager.notificationsEnabled) {
-                                    updateCheckManager.startBackgroundUpdateChecks()
-                                } else {
-                                    updateCheckManager.stopBackgroundUpdateChecks()
-                                }
+                            Column(
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text(
+                                    text = translation.enableBackgroundUpdateChecks,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                Text(
+                                    text = translation.enableBackgroundUpdateChecksDescription,
+                                    fontSize = 12.sp,
+                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                                    lineHeight = 16.sp
+                                )
                             }
-                        )
-                    }"""
+
+                            var backgroundUpdateChecksEnabled by remember(refreshKey) {
+                                mutableStateOf(preferencesManager.backgroundUpdateChecksEnabled)
+                            }
+
+                            Switch(
+                                checked = backgroundUpdateChecksEnabled,
+                                onCheckedChange = { enabled ->
+                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    backgroundUpdateChecksEnabled = enabled
+                                    preferencesManager.backgroundUpdateChecksEnabled = enabled
+
+                                    // Start or stop the background update service
+                                    if (enabled && preferencesManager.notificationsEnabled) {
+                                        updateCheckManager.startBackgroundUpdateChecks()
+                                    } else {
+                                        updateCheckManager.stopBackgroundUpdateChecks()
+                                    }
+                                }
+                            )
+                        }
+                    }
                 }
             }
 
@@ -767,37 +774,40 @@ fun SettingsScreen(
                         color = MaterialTheme.colorScheme.onSurface
                     )
 
-                    """Spacer(modifier = Modifier.height(16.dp))
+                    if (FeatureFlags.SETTINGS_ENCRYPTION) {
+                        Spacer(modifier = Modifier.height(16.dp))
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = translation.enableEncryption,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
 
-                            Text(
-                                text = translation.encryptionDescription,
-                                fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                                lineHeight = 16.sp
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = translation.enableEncryption,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+
+                                Text(
+                                    text = translation.encryptionDescription,
+                                    fontSize = 12.sp,
+                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                                    lineHeight = 16.sp
+                                )
+                            }
+
+                            Switch(
+                                checked = true,
+                                enabled = false, // purely visual
+                                onCheckedChange = { checked ->
+                                    Log.e("SettingsScreen", "haha nope") // purely cosmetic
+                                }
                             )
                         }
-
-                        Switch(
-                            checked = true,
-                            enabled = false, // purely visual
-                            onCheckedChange = { checked ->
-                                Log.e("SettingsScreen", "haha nope") // purely cosmetic
-                            }
-                        )
-                    }"""
+                    }
 
                     Spacer(modifier = Modifier.height(16.dp))
                     OutlinedButton(
