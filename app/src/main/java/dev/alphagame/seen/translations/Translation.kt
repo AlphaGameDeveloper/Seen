@@ -1,17 +1,17 @@
 // Seen - Mental Health Application
 //     Copyright (C) 2025  Damien Boisvert
 //                   2025  Alexander Cameron
-// 
+//
 //     Seen is free software: you can redistribute it and/or modify
 //     it under the terms of the GNU General Public License as published by
 //     the Free Software Foundation, either version 3 of the License, or
 //     (at your option) any later version.
-// 
+//
 //     Seen is distributed in the hope that it will be useful,
 //     but WITHOUT ANY WARRANTY; without even the implied warranty of
 //     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //     GNU General Public License for more details.
-// 
+//
 //     You should have received a copy of the GNU General Public License
 //     along with Seen.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -291,6 +291,20 @@ abstract class Translation {
     abstract val anxious: String
     abstract val excited: String
 
+    abstract val deletePHQ9Result: String
+    // PHQ-9 Deletion Dialog & Severity
+    abstract val deletePHQ9ResponsesTitle: String
+    abstract val phq9SeverityMinimal: String
+    abstract val phq9SeverityMild: String
+    abstract val phq9SeverityModerate: String
+    abstract val phq9SeverityModeratelySevere: String
+    abstract val phq9SeveritySevere: String
+    abstract val phq9SeverityUnknown: String
+    abstract val deletePHQ9EntryTitle: String
+    abstract val deletePHQ9EntryDescription: String
+    abstract val deletePHQ9EntryConfirm: String
+    abstract val deletePHQ9EntryCancel: String
+    abstract val deletePHQ9EntryContentDescription: String
     companion object {
         fun getTranslation(languageCode: String): Translation {
             return when (languageCode) {

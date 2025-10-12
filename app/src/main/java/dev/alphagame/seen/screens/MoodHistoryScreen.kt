@@ -1,17 +1,17 @@
 // Seen - Mental Health Application
 //     Copyright (C) 2025  Damien Boisvert
 //                   2025  Alexander Cameron
-// 
+//
 //     Seen is free software: you can redistribute it and/or modify
 //     it under the terms of the GNU General Public License as published by
 //     the Free Software Foundation, either version 3 of the License, or
 //     (at your option) any later version.
-// 
+//
 //     Seen is distributed in the hope that it will be useful,
 //     but WITHOUT ANY WARRANTY; without even the implied warranty of
 //     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //     GNU General Public License for more details.
-// 
+//
 //     You should have received a copy of the GNU General Public License
 //     along with Seen.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -74,6 +74,7 @@ import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
 import com.patrykandpatrick.vico.core.common.component.TextComponent
 import dev.alphagame.seen.FeatureFlags
 import dev.alphagame.seen.analytics.AnalyticsManager
+import dev.alphagame.seen.data.Mood
 import dev.alphagame.seen.data.MoodEntry
 import dev.alphagame.seen.data.NotesManager
 import dev.alphagame.seen.data.PHQ9Response
@@ -333,7 +334,7 @@ fun MoodHistoryScreen(
                         )
                     }
                     Text(
-                        text = "Delete PHQ-9 Responses",
+                        text = translation.deletePHQ9EntryTitle,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface,
@@ -482,7 +483,7 @@ private fun MoodEntryItem(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = entry.mood.label,
+                    text = Mood.getLocalizedLabel(entry.mood, translation),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium
                 )
@@ -539,6 +540,7 @@ private fun PHQ9DeletionItem(
 ) {
     val dateFormat = remember { SimpleDateFormat("MMM dd, yyyy 'at' HH:mm", Locale.getDefault()) }
     var showDeleteDialog by remember { mutableStateOf(false) }
+    val translation = rememberTranslation()
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -594,11 +596,11 @@ private fun PHQ9DeletionItem(
             ) {
                 Text(
                     text = when( entry.total ) {
-                        in 0..4 -> "Minimal Depression"
-                        in 5..9 -> "Mild Depression"
-                        in 10..14 -> "Moderate Depression"
-                        in 15..19 -> "Moderately Severe Depression"
-                        in 20..27 -> "Severe Depression"
+                        in 0..4 -> translation.resultMinimal
+                        in 5..9 -> translation.resultMild
+                        in 10..14 -> translation.resultModerate
+                        in 15..19 -> translation.phq9SeverityModerate
+                        in 20..27 -> translation.resultSevere
                         else -> "Unknown"
                     },
                     fontSize = 16.sp,
@@ -628,13 +630,13 @@ private fun PHQ9DeletionItem(
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
 
-            title = { Text("Delete PHQ9 Entry?") },
+            title = { Text(translation.deletePHQ9EntryTitle) },
             text = {
                 val id = entry.id
 
                 Text(
                     String.format(
-                        "Delete PHQ-9 result with score %s from %s?\n\nDeleted data cannot be recovered.",
+                        translation.deletePHQ9Result,
                         entry.total.toString(),
                         dateFormat.format(entry.timestamp)
                     )
@@ -647,12 +649,12 @@ private fun PHQ9DeletionItem(
                         showDeleteDialog = false
                     }
                 ) {
-                    Text("Delete")
+                    Text(translation.deletePHQ9EntryConfirm)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteDialog = false }) {
-                    Text("Cancel")
+                    Text(translation.deletePHQ9EntryCancel)
                 }
             }
         )
