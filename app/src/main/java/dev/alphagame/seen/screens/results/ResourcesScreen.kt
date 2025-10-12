@@ -372,9 +372,21 @@ fun ResourcesScreen(
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             Button(
                                 onClick = {
+                                    val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:988"))
+                                    context.startActivity(intent)
+                                },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.primary
+                                ),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(translation.talkToSomeone)
+                            }
+                            Button(
+                                onClick = {
                                     val intent = Intent(
                                         Intent.ACTION_VIEW,
-                                        Uri.parse("https://www.psychologytoday.com/us/therapists")
+                                        Uri.parse("https://suicidepreventionlifeline.org/")
                                     )
                                     context.startActivity(intent)
                                 },
@@ -383,19 +395,7 @@ fun ResourcesScreen(
                                 ),
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text(translation.findProfessionalHelpNow)
-                            }
-                            OutlinedButton(
-                                onClick = {
-                                    val intent = Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse("https://suicidepreventionlifeline.org/")
-                                    )
-                                    context.startActivity(intent)
-                                },
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(translation.crisisResources)
+                                Text("About 988")
                             }
                         }
                     }
