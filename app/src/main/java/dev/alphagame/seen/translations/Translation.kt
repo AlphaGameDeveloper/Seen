@@ -195,7 +195,12 @@ abstract class Translation {
     abstract val caringForMentalHealth: String
     abstract val recommendedResources: String
     abstract val recommendedResourcesDescription: String
-    abstract val localResources: String
+    abstract val aboutLosingInterest: String
+    abstract val aboutSadness: String
+    abstract val aboutSleep: String
+    abstract val aboutFeelingBad: String
+    abstract val aboutConcentration: String
+    abstract val additionalYouthResources: String
 
     // Common
     abstract val yes: String
