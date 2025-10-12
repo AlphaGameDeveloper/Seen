@@ -252,23 +252,6 @@ class EnglishTranslation : Translation() {
     // Resources Screen - Additional Content
     override val crisisSupport = "Crisis Support"
     override val crisisSupportDescription = "If you're having thoughts of self-harm or suicide, please reach out immediately."
-    override val maintainingMentalWellness = "Maintaining Mental Wellness"
-    override val maintainingWellnessDescription = "Your score indicates minimal symptoms. Here are resources to maintain your mental health."
-    override val supportTreatmentOptions = "Support & Treatment Options"
-    override val supportTreatmentDescription = "Your score suggests mild to moderate symptoms. Consider these support options."
-    override val immediateProfessionalHelp = "Immediate Professional Help"
-    override val immediateProfessionalDescription = "Your score indicates more severe symptoms. Professional help is strongly recommended."
-    override val educationalResources = "Educational Resources"
-    override val educationalResourcesDescription = "Learn more about mental health and depression."
-    override val backToResults2 = "Back to Results"
-    override val mentalHealthTips = "Mental Health Tips"
-    override val mindfulnessResources = "Mindfulness Resources"
-    override val findATherapist = "Find a Therapist"
-    override val findProfessionalHelpNow = "Find Professional Help Now"
-    override val crisisResources = "Crisis Resources"
-    override val nimhDepressionInfo = "NIMH Depression Info"
-    override val mentalHealthGov = "MentalHealth.gov"
-    override val namiResources = "NAMI Resources"
 
     // Common
     override val yes = "Yes"

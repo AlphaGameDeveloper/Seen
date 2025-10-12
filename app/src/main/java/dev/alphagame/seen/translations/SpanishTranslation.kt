@@ -286,23 +286,6 @@ class SpanishTranslation : Translation() {
     // Resources Screen - Additional Content
     override val crisisSupport = "Apoyo en Crisis"
     override val crisisSupportDescription = "Si tienes pensamientos de autolesión o suicidio, por favor busca ayuda inmediatamente."
-    override val maintainingMentalWellness = "Mantener el Bienestar Mental"
-    override val maintainingWellnessDescription = "Tu puntuación indica síntomas mínimos. Aquí hay recursos para mantener tu salud mental."
-    override val supportTreatmentOptions = "Opciones de Apoyo y Tratamiento"
-    override val supportTreatmentDescription = "Tu puntuación sugiere síntomas leves a moderados. Considera estas opciones de apoyo."
-    override val immediateProfessionalHelp = "Ayuda Profesional Inmediata"
-    override val immediateProfessionalDescription = "Tu puntuación indica síntomas más severos. Se recomienda fuertemente ayuda profesional."
-    override val educationalResources = "Recursos Educativos"
-    override val educationalResourcesDescription = "Aprende más sobre salud mental y depresión."
-    override val backToResults2 = "Volver a Resultados"
-    override val mentalHealthTips = "Consejos de Salud Mental"
-    override val mindfulnessResources = "Recursos de Atención Plena"
-    override val findATherapist = "Encontrar un Terapeuta"
-    override val findProfessionalHelpNow = "Encontrar Ayuda Profesional Ahora"
-    override val crisisResources = "Recursos de Crisis"
-    override val nimhDepressionInfo = "Información sobre Depresión NIMH"
-    override val mentalHealthGov = "MentalHealth.gov"
-    override val namiResources = "Recursos NAMI"
 
     // Health Status
     override val serviceHealthStatus = "Estado de salud de servicios"
