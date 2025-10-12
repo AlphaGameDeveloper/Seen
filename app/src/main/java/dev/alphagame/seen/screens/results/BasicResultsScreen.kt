@@ -111,7 +111,7 @@ fun BasicResultsScreen(
             colors = CardDefaults.cardColors(
                 containerColor = when (aiAnalysisState) {
                     is AIAnalysisState.Loading -> Color(0xFFE6E6E6)
-                    is AIAnalysisState.Success -> MaterialTheme.colorScheme.tertiaryContainer
+                    is AIAnalysisState.Success -> Color(0xFFE6E6E6)
                     is AIAnalysisState.Error -> MaterialTheme.colorScheme.errorContainer
                     else -> MaterialTheme.colorScheme.surfaceVariant
                 }
@@ -141,7 +141,7 @@ fun BasicResultsScreen(
                         Icon(
                             imageVector = Icons.Default.Info,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
+                            tint = Color(0xFF000000),
                             modifier = Modifier.size(24.dp)
                         )
                         Text(
