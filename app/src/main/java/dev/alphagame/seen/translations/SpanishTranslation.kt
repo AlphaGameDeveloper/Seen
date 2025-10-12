@@ -1,17 +1,17 @@
 // Seen - Mental Health Application
 //     Copyright (C) 2025  Damien Boisvert
 //                   2025  Alexander Cameron
-// 
+//
 //     Seen is free software: you can redistribute it and/or modify
 //     it under the terms of the GNU General Public License as published by
 //     the Free Software Foundation, either version 3 of the License, or
 //     (at your option) any later version.
-// 
+//
 //     Seen is distributed in the hope that it will be useful,
 //     but WITHOUT ANY WARRANTY; without even the implied warranty of
 //     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //     GNU General Public License for more details.
-// 
+//
 //     You should have received a copy of the GNU General Public License
 //     along with Seen.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -125,6 +125,19 @@ class SpanishTranslation : Translation() {
     override val graphText = "Un gráfico se mostrará aquí una vez que completes dos o más evaluaciones PHQ-9.\n¡Vuelve más tarde!"
     override val moodEntries = "Entradas de estado de ánimo"
     override val phqResponses = "Respuestas del PHQ-9"
+    // PHQ-9 Deletion Dialog & Severity
+    override val deletePHQ9ResponsesTitle = "Eliminar respuestas PHQ-9"
+    override val phq9SeverityMinimal = "Depresión mínima"
+    override val phq9SeverityMild = "Depresión leve"
+    override val phq9SeverityModerate = "Depresión moderada"
+    override val phq9SeverityModeratelySevere = "Depresión moderadamente severa"
+    override val phq9SeveritySevere = "Depresión severa"
+    override val phq9SeverityUnknown = "Desconocido"
+    override val deletePHQ9EntryTitle = "¿Eliminar entrada PHQ9?"
+    override val deletePHQ9EntryDescription = "¿Eliminar resultado PHQ-9 con puntuación %s de %s?\n\nLos datos eliminados no se pueden recuperar."
+    override val deletePHQ9EntryConfirm = "Eliminar"
+    override val deletePHQ9EntryCancel = "Cancelar"
+    override val deletePHQ9EntryContentDescription = "Eliminar entrada PHQ-9"
 
     // Onboarding Screen
     override val onboardingTitle = "Bienvenido a Seen"
@@ -311,4 +324,6 @@ class SpanishTranslation : Translation() {
     override val angry = "Enojado"
     override val anxious = "Ansioso"
     override val excited = "Emocionado"
+
+    override val deletePHQ9Result = "¿Eliminar el resultado PHQ-9 con puntuación %s de %s?\n\nLos datos eliminados no se pueden recuperar."
 }
