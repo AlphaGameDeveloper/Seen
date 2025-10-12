@@ -485,7 +485,7 @@ fun ResourcesScreen(
                     }
                 }
             }
-
+            if (scores[0]>1 || scores[1]>1 || scores[2]>1 || scores[3]>1 || scores[5]>1 || scores[6]>1) {
             ResourceCard(
                 title = "Recommended Resources",
                 description = "The following resources are recommended based on your responses to the PHQ-9.",
@@ -616,7 +616,7 @@ fun ResourcesScreen(
                     ) {
                         Text("TEST")
                     }
-                }}
+                }}}
             }
 
         }
