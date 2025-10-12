@@ -87,6 +87,8 @@ abstract class Translation {
     abstract val save: String
     abstract val howAreYouFeeling: String
     abstract val saveNote: String
+        // Notes Screen - Deleted Note Dialog
+        abstract val deleteNoteDialogText: String
 
     // Mood History Screen
     abstract val moodHistory: String
