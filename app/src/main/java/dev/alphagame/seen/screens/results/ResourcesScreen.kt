@@ -75,6 +75,7 @@ fun ResourcesScreen(
     val context = LocalContext.current
     val translation = rememberTranslation()
     val resourceColor = Color(0xFFE6E6E6)
+    var activateSuicideHotline = false
 
     val buttonModifier = Modifier
         .border(
@@ -344,7 +345,9 @@ fun ResourcesScreen(
                 }
             }
         }
-
+        if (totalScore>19 || scores[8]>1) {
+            activateSuicideHotline = true
+        }
         //Start implimentation:
         Column(
             modifier = Modifier
@@ -358,10 +361,10 @@ fun ResourcesScreen(
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             when {
-                totalScore > 19 -> {
+                activateSuicideHotline -> {
                     ResourceCard(
                         title = translation.crisisSupport,
-                        description = translation.immediateProfessionalDescription,
+                        description = "Your responses indicate severe symptoms. Professional help is strongly recommended.",
                         icon = Icons.Default.Phone,
                         backgroundColor = resourceColor,
                         onBackgroundColor = Color(0xFF000000)
@@ -496,7 +499,7 @@ fun ResourcesScreen(
                             onClick = {
                                 val intent = Intent(
                                     Intent.ACTION_VIEW,
-                                    Uri.parse("https://www.nimh.nih.gov/health/topics/caring-for-your-mental-health")
+                                    Uri.parse("https://www.healthdirect.gov.au/amp/article/losing-interest")
                                 )
                                 context.startActivity(intent)
                             },
@@ -507,11 +510,99 @@ fun ResourcesScreen(
 
                         ) {
                             Text(
-                                text = translation.mentalHealthTips
+                                text = "About Losing Interest"
                             )
 
                         }
                     }
+                    if (scores[1]>1) {
+                        Button(
+                            onClick = {
+                                val intent = Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://www.google.com/url?q=https://www.cdc.gov/howrightnow/emotion/sadness/&sa=D&source=docs&ust=1760257749423011&usg=AOvVaw2rKzzn5INCvzhiHVxPLZL2")
+                                )
+                                context.startActivity(intent)
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.tertiary
+                            ),
+                            modifier = Modifier.fillMaxWidth()
+
+                        ) {
+                            Text(
+                                text = "About Sadness/Hopelessness"
+                            )
+
+                        }
+                    }
+                    if (scores[2]>1 || scores[3]>1) {
+                        Button(
+                            onClick = {
+                                val intent = Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://www.nami.org/complimentary-health-approaches/5-sleep-tips-that-can-help-with-depression/")
+                                )
+                                context.startActivity(intent)
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.tertiary
+                            ),
+                            modifier = Modifier.fillMaxWidth()
+
+                        ) {
+                            Text(
+                                text = "About Sleep/Fatigue"
+                            )
+
+                        }
+                    }
+                    //Appetite
+                    if (scores[5]>1) {
+                        Button(
+                            onClick = {
+                                val intent = Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://www.mayoclinic.org/healthy-lifestyle/adult-health/in-depth/self-esteem/art-20045374")
+                                )
+                                context.startActivity(intent)
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.tertiary
+                            ),
+                            modifier = Modifier.fillMaxWidth()
+
+                        ) {
+                            Text(
+                                text = "About Feeling Bad About Yourself"
+                            )
+
+                        }
+                    }
+                    if (scores[6]>1) {
+                        Button(
+                            onClick = {
+                                val intent = Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://www.nami.org/depression-disorders/five-ways-to-stay-productive-during-depression/")
+                                )
+                                context.startActivity(intent)
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.tertiary
+                            ),
+                            modifier = Modifier.fillMaxWidth()
+
+                        ) {
+                            Text(
+                                text = "About Concentration"
+                            )
+
+                        }
+                    }
+                    //moving speaking slowly, being figety restless
+                    //suicidal
+                    if (false) {
                     Button(
                         onClick = {
                             val intent =
@@ -523,9 +614,9 @@ fun ResourcesScreen(
                         ),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(translation.mindfulnessResources)
+                        Text("TEST")
                     }
-                }
+                }}
             }
 
         }
