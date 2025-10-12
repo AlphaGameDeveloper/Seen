@@ -273,7 +273,7 @@ fun NotesScreen(onBackToHome: () -> Unit) {
                 },
                 text = {
                     if (note != null) {
-                        Text(text = "On ${formattedTimestamp}, you wrote \"${note.content}\"\n\nDeleted notes cannot be recovered.")
+                        Text(text = String.format(translation.deleteNoteDialogText, formattedTimestamp, note.content))
                     }
                 },
                 confirmButton = {
