@@ -243,6 +243,7 @@ fun AIAnalysisScreen(
                 }
 
                 // Back to Results Button
+                if (false) {
                 OutlinedButton(
                     onClick = onBackToResults,
                     shape = RoundedCornerShape(20.dp),
@@ -255,7 +256,7 @@ fun AIAnalysisScreen(
                         text = "Back to Results",
                         fontWeight = FontWeight.Medium
                     )
-                }
+                } }
             }
         }
     }
