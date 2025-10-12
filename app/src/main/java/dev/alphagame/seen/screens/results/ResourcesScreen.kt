@@ -284,7 +284,6 @@ fun ResourcesScreen(
                     }
                 }
             }
-            if (scores[0]>1 || scores[1]>1 || scores[2]>1 || scores[3]>1 || scores[5]>1 || scores[6]>1) {
             ResourceCard(
                 title = "Recommended Resources",
                 description = "The following resources are recommended based on your responses to the PHQ-9.",
@@ -293,25 +292,6 @@ fun ResourcesScreen(
                 onBackgroundColor = Color(0xFF000000)
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(
-                        onClick = {
-                            val intent = Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse("https://www.healthdirect.gov.au/amp/article/losing-interest")
-                            )
-                            context.startActivity(intent)
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.tertiary
-                        ),
-                        modifier = Modifier.fillMaxWidth()
-
-                    ) {
-                        Text(
-                            text = "Local Resources"
-                        )
-
-                    }
                     if (scores[0]>1) {
                         Button(
                             onClick = {
@@ -418,6 +398,25 @@ fun ResourcesScreen(
 
                         }
                     }
+                    Button(
+                        onClick = {
+                            val intent = Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("https://ocpsc.ca.gov/resources/?_post_tag=youth&_category=mental-health")
+                            )
+                            context.startActivity(intent)
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.tertiary
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+
+                    ) {
+                        Text(
+                            text = "Additional Youth Resources"
+                        )
+
+                    }
                     //moving speaking slowly, being figety restless
                     //suicidal
                     if (false) {
@@ -434,7 +433,7 @@ fun ResourcesScreen(
                     ) {
                         Text("TEST")
                     }
-                }}}
+                }}
             }
 
         }
@@ -456,7 +455,7 @@ fun ResourcesScreen(
                     .border(width = 0.dp, color = Color.Transparent)
             ) {
                 Text(
-                    text = translation.backToResults2,
+                    text = "Back To Results",
                     fontWeight = FontWeight.Medium
                 )
             }
