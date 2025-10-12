@@ -107,6 +107,7 @@ class SpanishTranslation : Translation() {
     override val save = "Guardar"
     override val howAreYouFeeling = "¿Qué hay de nuevo?"
     override val saveNote = "💾 Guardar nota"
+        override val deleteNoteDialogText = "El %s escribiste \"%s\"\n\nLas notas eliminadas no se pueden recuperar."
 
     // Mood History Screen
     override val moodHistory = "Historial de estado de ánimo"
