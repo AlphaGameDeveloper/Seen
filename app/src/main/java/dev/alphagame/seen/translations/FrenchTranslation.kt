@@ -286,6 +286,20 @@ class FrenchTranslation : Translation() {
     // Resources Screen - Additional Content
     override val crisisSupport = "Support de Crise"
     override val crisisSupportDescription = "Si vous avez des pensées d'automutilation ou de suicide, veuillez chercher de l'aide immédiatement."
+    override val severeSymptoms = ""
+    override val about988 = ""
+    override val aboutDepression = ""
+    override val aboutDepressionDescription = ""
+    override val learnAboutDepression2 = ""
+    override val caringForMentalHealth = ""
+    override val recommendedResources = ""
+    override val recommendedResourcesDescription = ""
+    override val aboutLosingInterest = ""
+    override val aboutSadness = ""
+    override val aboutSleep = ""
+    override val aboutFeelingBad = ""
+    override val aboutConcentration = ""
+    override val additionalYouthResources = ""
 
     // Health Status
     override val serviceHealthStatus = "État de santé des services"

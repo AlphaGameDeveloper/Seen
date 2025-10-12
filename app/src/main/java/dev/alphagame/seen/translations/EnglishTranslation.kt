@@ -252,6 +252,20 @@ class EnglishTranslation : Translation() {
     // Resources Screen - Additional Content
     override val crisisSupport = "Crisis Support"
     override val crisisSupportDescription = "If you're having thoughts of self-harm or suicide, please reach out immediately."
+    override val severeSymptoms = "Your responses indicate severe symptoms. Professional help is strongly recommended."
+    override val about988 = "About 988"
+    override val aboutDepression = "About Depression"
+    override val aboutDepressionDescription = "It is important to understand how you are feeling, even if you do not have severe symptoms. Here are some resources on the subject of depression."
+    override val learnAboutDepression2 = "Learn About Depression"
+    override val caringForMentalHealth = "Caring For Your Mental Health"
+    override val recommendedResources = "Recommended Resources"
+    override val recommendedResourcesDescription = "The following resources are recommended based on your responses to the PHQ-9."
+    override val aboutLosingInterest = "About Losing Interest"
+    override val aboutSadness = "About Sadness/Hopelessness"
+    override val aboutSleep = "About Sleep/Fatigue"
+    override val aboutFeelingBad = "About Feeling Bad About Yourself"
+    override val aboutConcentration = "About Concentration"
+    override val additionalYouthResources = "Additional Youth Resources"
 
     // Common
     override val yes = "Yes"
