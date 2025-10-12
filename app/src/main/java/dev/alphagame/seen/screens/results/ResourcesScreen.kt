@@ -145,206 +145,6 @@ fun ResourcesScreen(
                 }
             }
         }
-        // Content
-        if (false) {
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .verticalScroll(rememberScrollState())
-                .padding(
-                    WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom)
-                        .asPaddingValues()
-                )
-                .padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-                if (totalScore >= 0) {
-                    ResourceCard(
-                        title = translation.immediateProfessionalHelp,
-                        description = translation.immediateProfessionalDescription,
-                        icon = Icons.Default.Phone,
-                        backgroundColor = MaterialTheme.colorScheme.errorContainer,
-                        onBackgroundColor = MaterialTheme.colorScheme.onErrorContainer
-                    ) {
-                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Button(
-                                onClick = {
-                                    val intent = Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse("https://www.psychologytoday.com/us/therapists")
-                                    )
-                                    context.startActivity(intent)
-                                },
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = MaterialTheme.colorScheme.error
-                                ),
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(translation.findProfessionalHelpNow)
-                            }
-                            OutlinedButton(
-                                onClick = {
-                                    val intent = Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse("https://suicidepreventionlifeline.org/")
-                                    )
-                                    context.startActivity(intent)
-                                },
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(translation.crisisResources)
-                            }
-                        }
-                    }
-                }
-
-                // Crisis Support (always shown)
-                ResourceCard(
-                    title = translation.crisisSupport,
-                    description = translation.crisisSupportDescription,
-                    icon = Icons.Default.Phone,
-                    backgroundColor = MaterialTheme.colorScheme.errorContainer,
-                    onBackgroundColor = MaterialTheme.colorScheme.onErrorContainer
-                ) {
-                    Button(
-                        onClick = {
-                            val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:988"))
-                            context.startActivity(intent)
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.error
-                        ),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = translation.talkToSomeone,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
-                }
-
-                // Score-specific resources
-                if (totalScore >= 0) {
-                    ResourceCard(
-                        title = translation.maintainingMentalWellness,
-                        description = translation.maintainingWellnessDescription,
-                        icon = Icons.Default.Info,
-                        backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
-                        onBackgroundColor = MaterialTheme.colorScheme.onTertiaryContainer
-                    ) {
-                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            OutlinedButton(
-                                onClick = {
-                                    val intent = Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse("https://www.nimh.nih.gov/health/topics/caring-for-your-mental-health")
-                                    )
-                                    context.startActivity(intent)
-                                },
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(translation.mentalHealthTips)
-                            }
-                            OutlinedButton(
-                                onClick = {
-                                    val intent = Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse("https://www.mindful.org/")
-                                    )
-                                    context.startActivity(intent)
-                                },
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(translation.mindfulnessResources)
-                            }
-                        }
-                    }
-                }
-
-                if (totalScore >= 0) {
-                    ResourceCard(
-                        title = translation.supportTreatmentOptions,
-                        description = translation.supportTreatmentDescription,
-                        icon = Icons.Default.Info,
-                        backgroundColor = MaterialTheme.colorScheme.primaryContainer,
-                        onBackgroundColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    ) {
-                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Button(
-                                onClick = {
-                                    val intent = Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse("https://www.psychologytoday.com/us/therapists")
-                                    )
-                                    context.startActivity(intent)
-                                },
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(translation.findATherapist)
-                            }
-                            OutlinedButton(
-                                onClick = {
-                                    val intent = Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse("https://www.nimh.nih.gov/health/topics/depression")
-                                    )
-                                    context.startActivity(intent)
-                                },
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(translation.learnAboutDepression)
-                            }
-                        }
-                    }
-                }
-
-                // General Mental Health Resources
-                ResourceCard(
-                    title = translation.educationalResources,
-                    description = translation.educationalResourcesDescription,
-                    icon = Icons.Default.Settings,
-                    backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
-                    onBackgroundColor = MaterialTheme.colorScheme.onSurfaceVariant
-                ) {
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        OutlinedButton(
-                            onClick = {
-                                val intent = Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse("https://www.nimh.nih.gov/health/topics/depression")
-                                )
-                                context.startActivity(intent)
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(translation.nimhDepressionInfo)
-                        }
-                        OutlinedButton(
-                            onClick = {
-                                val intent = Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse("https://www.mentalhealth.gov/")
-                                )
-                                context.startActivity(intent)
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(translation.mentalHealthGov)
-                        }
-                        OutlinedButton(
-                            onClick = {
-                                val intent =
-                                    Intent(Intent.ACTION_VIEW, Uri.parse("https://www.nami.org/"))
-                                context.startActivity(intent)
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(translation.namiResources)
-                        }
-                    }
-                }
-            }
-        }
         if (totalScore>19 || scores[8]>1) {
             activateSuicideHotline = true
         }
@@ -468,7 +268,6 @@ fun ResourcesScreen(
                     ) {
                         Text(
                             "Learn About Depression")
-
                     }
                     Button(
                         onClick = {
@@ -494,6 +293,25 @@ fun ResourcesScreen(
                 onBackgroundColor = Color(0xFF000000)
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(
+                        onClick = {
+                            val intent = Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("https://www.healthdirect.gov.au/amp/article/losing-interest")
+                            )
+                            context.startActivity(intent)
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.tertiary
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+
+                    ) {
+                        Text(
+                            text = "Local Resources"
+                        )
+
+                    }
                     if (scores[0]>1) {
                         Button(
                             onClick = {
