@@ -200,6 +200,10 @@ abstract class Translation {
     abstract val mayTakeABit: String
     abstract val youCanStillViewResources: String
 
+    abstract val emotionalStateAnalysis: String
+    abstract val recomendations : String
+    abstract val disclaimer : String
+
     // Resources Screen - Additional Content
     abstract val crisisSupport: String
     abstract val crisisSupportDescription: String

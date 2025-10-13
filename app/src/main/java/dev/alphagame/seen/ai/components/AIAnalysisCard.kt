@@ -1,17 +1,17 @@
 // Seen - Mental Health Application
 //     Copyright (C) 2025  Damien Boisvert
 //                   2025  Alexander Cameron
-// 
+//
 //     Seen is free software: you can redistribute it and/or modify
 //     it under the terms of the GNU General Public License as published by
 //     the Free Software Foundation, either version 3 of the License, or
 //     (at your option) any later version.
-// 
+//
 //     Seen is distributed in the hope that it will be useful,
 //     but WITHOUT ANY WARRANTY; without even the implied warranty of
 //     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //     GNU General Public License for more details.
-// 
+//
 //     You should have received a copy of the GNU General Public License
 //     along with Seen.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -45,6 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.alphagame.seen.ai.models.PHQ9Response
+import dev.alphagame.seen.translations.rememberTranslation
 
 @Composable
 fun AIAnalysisCard(
@@ -55,6 +56,7 @@ fun AIAnalysisCard(
     val emotionalState = aiResponse.emotional_state ?: "No analysis available"
     val recommendations = aiResponse.recommendations ?: emptyList()
     val severity = aiResponse.severity ?: "Unknown"
+    val translation = rememberTranslation()
 
     // Determine color based on severity
     val severityColor = when (severity.lowercase()) {
@@ -129,7 +131,7 @@ fun AIAnalysisCard(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "Emotional State Analysis",
+                    text = translation.emotionalStateAnalysis,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
@@ -158,7 +160,7 @@ fun AIAnalysisCard(
                             modifier = Modifier.size(20.dp)
                         )
                         Text(
-                            text = "Recommendations",
+                            text = translation.recomendations,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -195,7 +197,7 @@ fun AIAnalysisCard(
 
             // Disclaimer
             Text(
-                text = "⚠️ This AI analysis is for informational purposes only and should not replace professional medical advice. Please consult with a healthcare provider for proper diagnosis and treatment.",
+                text = translation.disclaimer,
                 fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                 lineHeight = 16.sp,

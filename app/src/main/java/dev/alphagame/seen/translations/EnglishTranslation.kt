@@ -264,6 +264,10 @@ class EnglishTranslation : Translation() {
     override val mayTakeABit = "This may take a few moments"
     override val youCanStillViewResources = "You can still view helpful resources and support information using the button below."
 
+    override val emotionalStateAnalysis = "Emotional State Analysis"
+    override val recomendations = "Recommendations"
+    override val disclaimer = "⚠\uFE0F This AI analysis is for informational purposes only and should not replace professional medical advice. Please consult with a healthcare provider for proper diagnosis and treatment."
+
     // Resources Screen - Additional Content
     override val crisisSupport = "Crisis Support"
     override val crisisSupportDescription = "If you're having thoughts of self-harm or suicide, please reach out immediately."
