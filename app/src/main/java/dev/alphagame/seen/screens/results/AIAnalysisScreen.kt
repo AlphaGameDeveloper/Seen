@@ -61,6 +61,7 @@ import androidx.compose.ui.unit.sp
 import dev.alphagame.seen.FeatureFlags
 import dev.alphagame.seen.ai.components.AIAnalysisCard
 import dev.alphagame.seen.ai.models.PHQ9Response
+import dev.alphagame.seen.translations.rememberTranslation
 
 @Composable
 fun AIAnalysisScreen(
@@ -72,7 +73,7 @@ fun AIAnalysisScreen(
     onBackToResults: () -> Unit,
     onViewResources: () -> Unit
 ) {
-
+    val translation = rememberTranslation()
     val buttonModifier = Modifier
         .border(
             width = 1.dp,
@@ -105,13 +106,13 @@ fun AIAnalysisScreen(
                     IconButton(onClick = onBackToResults) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back to results",
+                            contentDescription = translation.backToResults2,
                             tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
 
                     Text(
-                        text = "AI Analysis",
+                        text = translation.aiAnalysis,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onPrimary
@@ -127,7 +128,7 @@ fun AIAnalysisScreen(
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            text = "Score",
+                            text = translation.score2,
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
                         )
@@ -141,7 +142,7 @@ fun AIAnalysisScreen(
 
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            text = "Level",
+                            text = translation.level,
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
                         )
@@ -180,19 +181,19 @@ fun AIAnalysisScreen(
                             AIAnalysisCard(aiResponse = response)
                         } else {
                             ErrorState(
-                                title = "Incomplete Analysis",
-                                message = "The AI analysis was received but some data was missing."
+                                title = translation.incompleteAnalysis,
+                                message = translation.incompleteAnalysisDescription
                             )
                         }
                     } ?: ErrorState(
-                        title = "No Analysis Data",
-                        message = "The AI analysis completed but no data was received."
+                        title = translation.noAnalysisData,
+                        message = translation.noAnalysisDataDescription
                     )
                 }
 
                 is AIAnalysisState.Error -> {
                     ErrorState(
-                        title = "Analysis Unavailable",
+                        title = translation.analysisUnavailable,
                         message = aiAnalysisState.message
                     )
                 }
@@ -232,7 +233,7 @@ fun AIAnalysisScreen(
                             modifier = Modifier.size(20.dp)
                         )
                         Text(
-                            text = "View Additional Resources",
+                            text = translation.viewSupport,
                             fontWeight = FontWeight.Medium
                         )
                         Icon(

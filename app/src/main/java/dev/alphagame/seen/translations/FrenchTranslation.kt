@@ -284,6 +284,20 @@ class FrenchTranslation : Translation() {
     override val viewAiAnalysis = "Voir l'analyse IA"
     override val viewResourcesAndSupport = "Voir les ressources et le support"
 
+    override val backToResults2 = "Retour aux résultats"
+    override val aiAnalysis = "Analyse IA"
+    override val score2 = "Score"
+    override val level = "Niveau"
+    override val incompleteAnalysis = "Analyse Incomplète"
+    override val incompleteAnalysisDescription = "L'analyse par l'IA a été reçue mais certaines données manquaient."
+    override val noAnalysisData = "Aucune donnée d'analyse"
+    override val noAnalysisDataDescription = "L'analyse par IA est terminée mais aucune donnée n'a été reçue."
+    override val analysisUnavailable = "Analyse indisponible"
+    override val viewSupport = "Voir des ressources supplémentaires"
+    override val aiIsAnalyzing = "L'IA analyse vos réponses..."
+    override val mayTakeABit = "Cela peut prendre quelques instants"
+    override val youCanStillViewResources = "Vous pouvez toujours consulter des ressources utiles et des informations de soutien en utilisant le bouton ci-dessous."
+
     // Resources Screen - Additional Content
     override val crisisSupport = "Support de Crise"
     override val crisisSupportDescription = "Si vous avez des pensées d'automutilation ou de suicide, veuillez chercher de l'aide immédiatement."

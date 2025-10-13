@@ -186,6 +186,20 @@ abstract class Translation {
     abstract val viewAiAnalysis: String
     abstract val viewResourcesAndSupport: String
 
+    abstract val backToResults2: String
+    abstract val aiAnalysis: String
+    abstract val score2: String
+    abstract val level: String
+    abstract val incompleteAnalysis: String
+    abstract val incompleteAnalysisDescription: String
+    abstract val noAnalysisData: String
+    abstract val noAnalysisDataDescription: String
+    abstract val analysisUnavailable: String
+    abstract val viewSupport: String
+    abstract val aiIsAnalyzing: String
+    abstract val mayTakeABit: String
+    abstract val youCanStillViewResources: String
+
     // Resources Screen - Additional Content
     abstract val crisisSupport: String
     abstract val crisisSupportDescription: String

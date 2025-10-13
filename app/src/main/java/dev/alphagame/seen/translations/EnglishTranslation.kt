@@ -250,6 +250,20 @@ class EnglishTranslation : Translation() {
     override val viewAiAnalysis = "View AI Analysis"
     override val viewResourcesAndSupport = "View Resources & Support"
 
+    override val backToResults2 = "Back to results"
+    override val aiAnalysis = "AI Analysis"
+    override val score2 = "Score"
+    override val level = "Level"
+    override val incompleteAnalysis = "Incomplete Analysis"
+    override val incompleteAnalysisDescription = "The AI analysis was received but some data was missing."
+    override val noAnalysisData = "No Analysis Data"
+    override val noAnalysisDataDescription = "The AI analysis completed but no data was received."
+    override val analysisUnavailable = "Analysis Unavailable"
+    override val viewSupport = "View Additional Resources"
+    override val aiIsAnalyzing = "AI is analyzing your responses..."
+    override val mayTakeABit = "This may take a few moments"
+    override val youCanStillViewResources = "You can still view helpful resources and support information using the button below."
+
     // Resources Screen - Additional Content
     override val crisisSupport = "Crisis Support"
     override val crisisSupportDescription = "If you're having thoughts of self-harm or suicide, please reach out immediately."
