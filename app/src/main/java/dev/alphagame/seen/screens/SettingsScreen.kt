@@ -17,7 +17,13 @@
 
 package dev.alphagame.seen.screens
 
+import android.app.AlarmManager
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -79,6 +85,7 @@ import dev.alphagame.seen.components.HealthStatusDots
 import dev.alphagame.seen.components.NoInternetDialog
 import dev.alphagame.seen.components.UpdateDialog
 import dev.alphagame.seen.data.AppVersionInfo
+import dev.alphagame.seen.data.DailyReminderManager
 import dev.alphagame.seen.data.EncryptedDatabaseHelper
 import dev.alphagame.seen.data.PreferencesManager
 import dev.alphagame.seen.data.UpdateCheckManager
@@ -497,6 +504,23 @@ fun SettingsScreen(
                                     updateCheckManager.startBackgroundUpdateChecks()
                                 } else if (!enabled) {
                                     updateCheckManager.stopBackgroundUpdateChecks()
+                                    DailyReminderManager.cancelDailyReminder(context)
+                                }
+
+                                if (enabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                    val alarmManager = context.getSystemService(AlarmManager::class.java)
+                                    if (!alarmManager.canScheduleExactAlarms()) {
+                                        // Show a dialog or direct user to settings
+                                        val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                                        intent.data = Uri.parse("package:" + context.packageName)
+                                        context.startActivity(intent)
+                                        notificationsEnabled = false
+                                        preferencesManager.notificationsEnabled = false
+                                    }
+                                    else {
+                                        DailyReminderManager.scheduleDailyReminder(context)
+                                        Toast.makeText(context, "Great! You'll get a reminder tomorrow at noon!", Toast.LENGTH_SHORT).show()
+                                    }
                                 }
                             }
                         )

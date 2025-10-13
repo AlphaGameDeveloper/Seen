@@ -14,6 +14,7 @@ object DailyReminderManager {
     private const val REQUEST_CODE = 7001
 
     fun scheduleDailyReminder(context: Context) {
+        Log.i(TAG, "Scheduling Daily Reminder :3")
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, DailyReminderReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
@@ -25,7 +26,7 @@ object DailyReminderManager {
 
         val calendar = Calendar.getInstance().apply {
             timeInMillis = System.currentTimeMillis()
-            set(Calendar.HOUR_OF_DAY, 7)
+            set(Calendar.HOUR_OF_DAY, 12)
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
@@ -59,6 +60,7 @@ object DailyReminderManager {
     }
 
     fun cancelDailyReminder(context: Context) {
+        Log.i(TAG, "Cancelling daily reminder :(")
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, DailyReminderReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(

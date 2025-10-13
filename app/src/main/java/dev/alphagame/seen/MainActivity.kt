@@ -156,15 +156,6 @@ fun SeenApplication(
     // Check for updates on startup
     LaunchedEffect(Unit) {
         scope.launch {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                val alarmManager = context.getSystemService(AlarmManager::class.java)
-                if (!alarmManager.canScheduleExactAlarms()) {
-                    // Show a dialog or direct user to settings
-                    val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
-                    intent.data = Uri.parse("package:" + context.packageName)
-                    context.startActivity(intent)
-                }
-            }
             android.util.Log.d("UpdateCheck", "Starting update check...")
             android.util.Log.d("UpdateCheck", "Should check for updates: ${preferencesManager.shouldCheckForUpdates()}")
             android.util.Log.d("UpdateCheck", "Last check time: ${preferencesManager.lastUpdateCheckTime}")
