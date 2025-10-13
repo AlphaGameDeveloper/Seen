@@ -202,6 +202,7 @@ abstract class Translation {
 
     abstract val emotionalStateAnalysis: String
     abstract val recomendations : String
+    abstract val goals : String
     abstract val disclaimer : String
 
     // Resources Screen - Additional Content

@@ -300,6 +300,7 @@ class SpanishTranslation : Translation() {
 
     override val emotionalStateAnalysis = "Análisis del Estado Emocional"
     override val recomendations = "Recomendaciones"
+    override val goals = "Objetivos"
     override val disclaimer = "⚠\uFE0F Este análisis de IA es solo con fines informativos y no debe reemplazar el consejo médico profesional. Por favor, consulte con un proveedor de atención médica para un diagnóstico y tratamiento adecuados."
 
     // Resources Screen - Additional Content

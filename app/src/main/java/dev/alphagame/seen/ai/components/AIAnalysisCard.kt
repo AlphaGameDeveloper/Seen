@@ -55,6 +55,7 @@ fun AIAnalysisCard(
     // Add null safety checks
     val emotionalState = aiResponse.emotional_state ?: "No analysis available"
     val recommendations = aiResponse.recommendations ?: emptyList()
+    val goals = aiResponse.goals ?: emptyList()
     val severity = aiResponse.severity ?: "Unknown"
     val translation = rememberTranslation()
 
@@ -189,6 +190,55 @@ fun AIAnalysisCard(
                                     lineHeight = 20.sp,
                                     modifier = Modifier.weight(1f)
                                 )
+                            }
+                        }
+                    }
+                    if (goals.isNotEmpty()) {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.List,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                                Text(
+                                    text = translation.goals,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                goals.forEachIndexed { index, goal ->
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        Text(
+                                            text = "${index + 1}.",
+                                            fontSize = 14.sp,
+                                            fontWeight = FontWeight.Medium,
+                                            color = MaterialTheme.colorScheme.primary,
+                                            modifier = Modifier.widthIn(min = 20.dp)
+                                        )
+                                        Text(
+                                            text = goal,
+                                            fontSize = 14.sp,
+                                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                                            lineHeight = 20.sp,
+                                            modifier = Modifier.weight(1f)
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
