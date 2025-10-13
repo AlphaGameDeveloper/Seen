@@ -64,6 +64,10 @@
                 <action android:name="dev.alphagame.seen.action.DONT_REMIND" />
             </intent-filter>
         </receiver>
+            <!-- Daily Reminder Receiver -->
+            <receiver
+                android:name=".receivers.DailyReminderReceiver"
+                android:exported="false" />
     </application>
 
 </manifest>
