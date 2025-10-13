@@ -39,7 +39,6 @@ class EnglishTranslation : Translation() {
         "It's ok to not be ok",
         "There is hope, even when your brain tells you there isn't",
         "You are not alone. You are seen.",
-        "Welcome back!",
         "Good to see you again!",
         "Let's begin something great!",
         "Ready to make progress?",

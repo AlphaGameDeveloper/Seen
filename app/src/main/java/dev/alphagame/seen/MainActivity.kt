@@ -431,7 +431,7 @@ fun SeenApplication(
                         Icon(
                             imageVector = Icons.Default.Settings,
                             contentDescription = "Settings",
-                            modifier = Modifier.size(20.dp),
+                            modifier = Modifier.size(30.dp),
                             tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                         )
                     }
