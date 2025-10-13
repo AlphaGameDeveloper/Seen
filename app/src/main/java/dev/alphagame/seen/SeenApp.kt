@@ -29,7 +29,9 @@ class SeenApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        Log.d("SeenApp", "Application starting - encrypted database system initialized")
+            Log.d("SeenApp", "Application starting - encrypted database system initialized")
+            // Schedule daily reminder notification at 7:00 am
+            dev.alphagame.seen.data.DailyReminderManager.scheduleDailyReminder(this)
     }
 
     override fun onTerminate() {
