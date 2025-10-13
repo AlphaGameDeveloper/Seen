@@ -265,7 +265,7 @@ class EnglishTranslation : Translation() {
     override val aboutSadness = "About Sadness/Hopelessness"
     override val aboutSleep = "About Sleep/Fatigue"
     override val aboutFeelingBad = "About Feeling Bad About Yourself"
-    override val aboutConcentration = "About Concentration"
+    override val aboutConcentration = "About Trouble Concentrating"
     override val additionalYouthResources = "Additional Youth Resources"
 
     // Common
