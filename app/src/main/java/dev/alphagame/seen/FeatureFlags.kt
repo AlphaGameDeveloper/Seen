@@ -54,5 +54,7 @@ class FeatureFlags {
 
         const val SETTINGS_BACKGROUND_UPDATE_CHECKS = false;
         const val SETTINGS_ENCRYPTION = false;
+
+        const val AI_SECOND_BACK_BUTTON = false;
     }
 }

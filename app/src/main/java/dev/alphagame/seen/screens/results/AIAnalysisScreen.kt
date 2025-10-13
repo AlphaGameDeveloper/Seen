@@ -58,6 +58,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.alphagame.seen.FeatureFlags
 import dev.alphagame.seen.ai.components.AIAnalysisCard
 import dev.alphagame.seen.ai.models.PHQ9Response
 
@@ -243,20 +244,21 @@ fun AIAnalysisScreen(
                 }
 
                 // Back to Results Button
-                if (false) {
-                OutlinedButton(
-                    onClick = onBackToResults,
-                    shape = RoundedCornerShape(20.dp),
-                    modifier = buttonModifier.border(
-                        width = 0.dp,
-                        color = Color.Transparent
-                    )
-                ) {
-                    Text(
-                        text = "Back to Results",
-                        fontWeight = FontWeight.Medium
-                    )
-                } }
+                if (FeatureFlags.AI_SECOND_BACK_BUTTON) {
+                    OutlinedButton(
+                        onClick = onBackToResults,
+                        shape = RoundedCornerShape(20.dp),
+                        modifier = buttonModifier.border(
+                            width = 0.dp,
+                            color = Color.Transparent
+                        )
+                    ) {
+                        Text(
+                            text = "Back to Results",
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                }
             }
         }
     }
