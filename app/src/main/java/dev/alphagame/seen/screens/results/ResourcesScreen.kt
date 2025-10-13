@@ -164,7 +164,7 @@ fun ResourcesScreen(
                 activateSuicideHotline -> {
                     ResourceCard(
                         title = translation.crisisSupport,
-                        description = "Your responses indicate severe symptoms. Professional help is strongly recommended.",
+                        description = translation.severeSymptoms,
                         icon = Icons.Default.Phone,
                         backgroundColor = resourceColor,
                         onBackgroundColor = Color(0xFF000000)
@@ -195,7 +195,7 @@ fun ResourcesScreen(
                                 ),
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text("About 988")
+                                Text(translation.about988)
                             }
                         }
                     }
@@ -235,7 +235,7 @@ fun ResourcesScreen(
                                 ),
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text("About 988")
+                                Text(translation.about988)
                             }
                         }
                     }
@@ -245,8 +245,8 @@ fun ResourcesScreen(
             //Continue here
 
             ResourceCard(
-                title = "About Depression",
-                description = "It is important to understand how you are feeling, even if you do not have severe symptoms. Here are some resources on the subject of depression.",
+                title = translation.aboutDepression,
+                description = translation.aboutDepressionDescription,
                 icon = Icons.Default.Info,
                 backgroundColor = resourceColor,
                 onBackgroundColor = Color(0xFF000000)
@@ -267,7 +267,7 @@ fun ResourcesScreen(
 
                     ) {
                         Text(
-                            "Learn About Depression")
+                            translation.learnAboutDepression2)
                     }
                     Button(
                         onClick = {
@@ -280,13 +280,13 @@ fun ResourcesScreen(
                         ),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Caring For Your Mental Health")
+                        Text(translation.caringForMentalHealth)
                     }
                 }
             }
             ResourceCard(
-                title = "Recommended Resources",
-                description = "The following resources are recommended based on your responses to the PHQ-9.",
+                title = translation.recommendedResources,
+                description = translation.recommendedResourcesDescription,
                 icon = Icons.Default.Settings,
                 backgroundColor = resourceColor,
                 onBackgroundColor = Color(0xFF000000)
@@ -308,7 +308,7 @@ fun ResourcesScreen(
 
                         ) {
                             Text(
-                                text = "About Losing Interest"
+                                text = translation.aboutLosingInterest
                             )
 
                         }
@@ -329,7 +329,7 @@ fun ResourcesScreen(
 
                         ) {
                             Text(
-                                text = "About Sadness/Hopelessness"
+                                text = translation.aboutSadness
                             )
 
                         }
@@ -350,7 +350,7 @@ fun ResourcesScreen(
 
                         ) {
                             Text(
-                                text = "About Sleep/Fatigue"
+                                text = translation.aboutSleep
                             )
 
                         }
@@ -372,7 +372,7 @@ fun ResourcesScreen(
 
                         ) {
                             Text(
-                                text = "About Feeling Bad About Yourself"
+                                text = translation.aboutFeelingBad
                             )
 
                         }
@@ -393,7 +393,7 @@ fun ResourcesScreen(
 
                         ) {
                             Text(
-                                text = "About Concentration"
+                                text = translation.aboutConcentration
                             )
 
                         }
@@ -413,7 +413,7 @@ fun ResourcesScreen(
 
                     ) {
                         Text(
-                            text = "Additional Youth Resources"
+                            text = translation.additionalYouthResources
                         )
 
                     }
