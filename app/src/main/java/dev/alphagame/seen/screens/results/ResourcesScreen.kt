@@ -98,7 +98,7 @@ fun ResourcesScreen(
             shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
         ) {
             Column(
-                modifier = Modifier.padding(20.dp),
+                modifier = Modifier.padding(40.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Row(
@@ -124,7 +124,7 @@ fun ResourcesScreen(
                     Spacer(modifier = Modifier.width(48.dp))
                 }
 
-                Row(
+                /*Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
@@ -142,7 +142,7 @@ fun ResourcesScreen(
                             color = color
                         )
                     }
-                }
+                } */
             }
         }
         if (totalScore>19 || scores[8]>1) {
