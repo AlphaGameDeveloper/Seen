@@ -114,7 +114,13 @@ class MainActivity : ComponentActivity() {
 
 
                             // Alert the user that the application'll restart
-                            Toast.makeText(context, "The application will restart to apply changes.", Toast.LENGTH_SHORT).show()
+                            val toastMsg = when (newLanguage) {
+                                "en" -> { "The application will restart to apply languages changes." }
+                                "fr" -> { "L'application va maintenant redémarrer pour appliquer les modifications de langue" }
+                                "es" -> { "La aplicación ahora se reiniciará para aplicar los cambios de idioma." }
+                                else -> { "Womp womp language to bye bye :3" }
+                            }
+                            Toast.makeText(context, toastMsg, Toast.LENGTH_SHORT).show()
                             recreate()
                         }
                     )

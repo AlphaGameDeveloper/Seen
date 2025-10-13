@@ -96,6 +96,7 @@ import dev.alphagame.seen.health.HealthStatusManager
 import dev.alphagame.seen.translations.Translation
 import dev.alphagame.seen.translations.rememberTranslation
 import kotlinx.coroutines.launch
+import androidx.core.net.toUri
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -512,14 +513,14 @@ fun SettingsScreen(
                                     if (!alarmManager.canScheduleExactAlarms()) {
                                         // Show a dialog or direct user to settings
                                         val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
-                                        intent.data = Uri.parse("package:" + context.packageName)
+                                        intent.data = ("package:" + context.packageName).toUri()
                                         context.startActivity(intent)
                                         notificationsEnabled = false
                                         preferencesManager.notificationsEnabled = false
                                     }
                                     else {
                                         DailyReminderManager.scheduleDailyReminder(context)
-                                        Toast.makeText(context, "Great! You'll get a reminder tomorrow at noon!", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(context, "You will now receive reminder notifications at noon.", Toast.LENGTH_SHORT).show()
                                     }
                                 }
                             }
