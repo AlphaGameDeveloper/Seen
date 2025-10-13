@@ -214,10 +214,20 @@ fun MoodHistoryScreen(
             //Function to determine what color the numbers will use
             @Composable
             fun findColor(): Int {
-                if (preferencesManager.themeMode == "dark") {
-                    return 0xFFFFFFFF.toInt()
-                } else {
-                    return 0xFF000000.toInt()
+                if (preferencesManager.themeMode != "auto") {
+                    return if (preferencesManager.themeMode == "dark") {
+                        0xFFFFFFFF.toInt()
+                    } else {
+                        0xFF000000.toInt()
+                    }
+                }
+                else {
+                    val isDarkMode = androidx.compose.foundation.isSystemInDarkTheme()
+                    return if (isDarkMode) {
+                        0xFFFFFFFF.toInt()
+                    } else {
+                        0xFF000000.toInt()
+                    }
                 }
             }
             Log.e("MoodHistoryScreen", findColor().toString())
