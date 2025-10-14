@@ -70,7 +70,7 @@ fun MultiScreenResultFlow(
         totalScore <= 4 -> Triple("Minimal", translation.resultMinimal, Color(0xFF6ECB63))
         totalScore <= 9 -> Triple("Mild", translation.resultMild, Color(0xFFFFD700))
         totalScore <= 14 -> Triple("Moderate", translation.resultModerate, Color(0xFFFFA500))
-        totalScore <= 19 -> Triple("Moderately Severe", translation.resultSevere, Color(0xFFFF6347))
+        totalScore <= 19 -> Triple("Moderately Severe", translation.phq9SeverityModeratelySevere, Color(0xFFFF6347))
         else -> Triple("Severe", translation.resultSevere, Color(0xFFFF3C38))
     }
 

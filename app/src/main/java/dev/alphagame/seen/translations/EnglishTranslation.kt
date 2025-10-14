@@ -73,7 +73,7 @@ class EnglishTranslation : Translation() {
     // Result Screen
     override val resultTitle = "Assessment Complete"
     override val resultScore = "Your Score"
-    override val resultMinimal = "No Signs of Depression"
+    override val resultMinimal = "Feeling Well"
     override val resultMild = "Feeling a Little Down"
     override val resultModerate = "Feeling Down"
     override val resultSevere = "Really Struggling"
@@ -152,7 +152,7 @@ class EnglishTranslation : Translation() {
     override val phq9SeverityMinimal = "Minimal Depression"
     override val phq9SeverityMild = "Mild Depression"
     override val phq9SeverityModerate = "Having a Hard Time"
-    override val phq9SeverityModeratelySevere = "Moderately Severe Depression"
+    override val phq9SeverityModeratelySevere = "Having a Hard Time"
     override val phq9SeveritySevere = "Severe Depression"
     override val phq9SeverityUnknown = "Unknown"
     override val deletePHQ9EntryTitle = "Delete PHQ9 Entry?"
