@@ -520,7 +520,13 @@ fun SettingsScreen(
                                     }
                                     else {
                                         DailyReminderManager.scheduleDailyReminder(context)
-                                        Toast.makeText(context, "You will now receive reminder notifications at noon.", Toast.LENGTH_SHORT).show()
+                                        if (currentLanguage == "en") {
+                                            Toast.makeText(context, "You will now receive reminder notifications at noon.", Toast.LENGTH_SHORT).show()
+                                        } else if (currentLanguage == "fr") {
+                                            Toast.makeText(context, "Vous recevrez désormais des notifications de rappel à midi.", Toast.LENGTH_SHORT).show()
+                                        } else {
+                                            Toast.makeText(context, "Ahora recibirás notificaciones de recordatorio al mediodía.", Toast.LENGTH_SHORT).show()
+                                        }
                                     }
                                 }
                             }
