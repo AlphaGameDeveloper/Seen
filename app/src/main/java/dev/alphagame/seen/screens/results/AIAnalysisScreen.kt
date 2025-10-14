@@ -150,7 +150,7 @@ fun AIAnalysisScreen(
                             text = levelText,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold,
-                            color = color,
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
                             textAlign = TextAlign.Center
                         )
                     }

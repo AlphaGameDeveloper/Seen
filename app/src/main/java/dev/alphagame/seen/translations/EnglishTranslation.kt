@@ -37,13 +37,14 @@ class EnglishTranslation : Translation() {
     override val welcomeScreenMessages = listOf(
         "Take a moment to check in with yourself",
         "It's ok to not be ok",
-        "There is hope, even when your brain tells you there isn't",
+        "There is hope, even when your brain tells you theres not",
         "You are not alone. You are seen.",
         "Good to see you again!",
         "Let's begin something great!",
         "Ready to make progress?",
         "Hope you're having a good day!",
-        "Let's make today count!"
+        "Let's make today count!",
+        "You are stronger than you think"
     )
 
     // PHQ-9 Questions
@@ -72,10 +73,10 @@ class EnglishTranslation : Translation() {
     // Result Screen
     override val resultTitle = "Assessment Complete"
     override val resultScore = "Your Score"
-    override val resultMinimal = "Minimal Depression"
-    override val resultMild = "Mild Depression"
-    override val resultModerate = "Moderate Depression"
-    override val resultSevere = "Severe Depression"
+    override val resultMinimal = "No Signs of Depression"
+    override val resultMild = "Feeling a Little Down"
+    override val resultModerate = "Feeling Down"
+    override val resultSevere = "Really Struggling"
     override val resultDescription = "This assessment provides insights into your current mental health state. Consider consulting with a healthcare professional for proper diagnosis and support."
     override val retakeQuiz = "Retake Assessment"
     override val saveResult = "Save Result"
@@ -150,7 +151,7 @@ class EnglishTranslation : Translation() {
     override val deletePHQ9ResponsesTitle = "Delete PHQ-9 Responses"
     override val phq9SeverityMinimal = "Minimal Depression"
     override val phq9SeverityMild = "Mild Depression"
-    override val phq9SeverityModerate = "Moderate Depression"
+    override val phq9SeverityModerate = "Having a Hard Time"
     override val phq9SeverityModeratelySevere = "Moderately Severe Depression"
     override val phq9SeveritySevere = "Severe Depression"
     override val phq9SeverityUnknown = "Unknown"
