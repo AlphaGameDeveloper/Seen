@@ -222,6 +222,7 @@ abstract class Translation {
     abstract val aboutFeelingBad: String
     abstract val aboutConcentration: String
     abstract val additionalYouthResources: String
+    abstract val wellnessResources: String
 
     // Common
     abstract val yes: String

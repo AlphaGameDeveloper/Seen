@@ -243,31 +243,31 @@ class EnglishTranslation : Translation() {
     override val yourScore = "Your Score"
 
     // AI Analysis & Results
-    override val aiAnalysisInProgress = "AI analysis in progress..."
-    override val aiAnalysisReady = "AI analysis ready! Tap below to view insights."
-    override val aiAnalysisUnavailable = "AI analysis unavailable. View basic resources instead."
-    override val preparingAiAnalysis = "Preparing AI analysis..."
-    override val viewAiAnalysis = "View AI Analysis"
+    override val aiAnalysisInProgress = "AI overview in progress..."
+    override val aiAnalysisReady = "AI overview ready! Tap below to view insights."
+    override val aiAnalysisUnavailable = "AI overview unavailable. View basic resources instead."
+    override val preparingAiAnalysis = "Preparing AI overview..."
+    override val viewAiAnalysis = "View AI Overview"
     override val viewResourcesAndSupport = "View Resources & Support"
 
     override val backToResults2 = "Back to results"
-    override val aiAnalysis = "AI Analysis"
+    override val aiAnalysis = "AI Overview"
     override val score2 = "Score"
     override val level = "Level"
-    override val incompleteAnalysis = "Incomplete Analysis"
-    override val incompleteAnalysisDescription = "The AI analysis was received but some data was missing."
-    override val noAnalysisData = "No Analysis Data"
-    override val noAnalysisDataDescription = "The AI analysis completed but no data was received."
-    override val analysisUnavailable = "Analysis Unavailable"
+    override val incompleteAnalysis = "Incomplete Overview"
+    override val incompleteAnalysisDescription = "The AI overview was received but some data was missing."
+    override val noAnalysisData = "No Overview Data"
+    override val noAnalysisDataDescription = "The AI overview completed but no data was received."
+    override val analysisUnavailable = "Overview Unavailable"
     override val viewSupport = "View Additional Resources"
-    override val aiIsAnalyzing = "AI is analyzing your responses..."
+    override val aiIsAnalyzing = "AI is reviewing your responses..."
     override val mayTakeABit = "This may take a few moments"
     override val youCanStillViewResources = "You can still view helpful resources and support information using the button below."
 
-    override val emotionalStateAnalysis = "Emotional State Analysis"
+    override val emotionalStateAnalysis = "Emotional State Overview"
     override val recomendations = "Recommendations"
     override val goals = "Goals"
-    override val disclaimer = "⚠\uFE0F This AI analysis is for informational purposes only and should not replace professional medical advice. Please consult with a healthcare provider for proper diagnosis and treatment."
+    override val disclaimer = "⚠\uFE0F This AI overview is for informational purposes only and should not replace professional medical advice. Please consult with a healthcare provider for proper diagnosis and treatment."
 
     // Resources Screen - Additional Content
     override val crisisSupport = "Crisis Support"
@@ -286,6 +286,7 @@ class EnglishTranslation : Translation() {
     override val aboutFeelingBad = "About Feeling Bad About Yourself"
     override val aboutConcentration = "About Trouble Concentrating"
     override val additionalYouthResources = "Additional Youth Resources"
+    override val wellnessResources = "Find a Local Wellness Center"
 
     // Common
     override val yes = "Yes"

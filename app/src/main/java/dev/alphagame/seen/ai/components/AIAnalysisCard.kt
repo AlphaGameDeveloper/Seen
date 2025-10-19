@@ -99,7 +99,7 @@ fun AIAnalysisCard(
                     modifier = Modifier.size(24.dp)
                 )
                 Text(
-                    text = "AI Analysis",
+                    text = translation.aiAnalysis,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
