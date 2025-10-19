@@ -1,17 +1,17 @@
 // Seen - Mental Health Application
 //     Copyright (C) 2025  Damien Boisvert
 //                   2025  Alexander Cameron
-// 
+//
 //     Seen is free software: you can redistribute it and/or modify
 //     it under the terms of the GNU General Public License as published by
 //     the Free Software Foundation, either version 3 of the License, or
 //     (at your option) any later version.
-// 
+//
 //     Seen is distributed in the hope that it will be useful,
 //     but WITHOUT ANY WARRANTY; without even the implied warranty of
 //     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //     GNU General Public License for more details.
-// 
+//
 //     You should have received a copy of the GNU General Public License
 //     along with Seen.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -28,8 +28,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import dev.alphagame.seen.data.DatabaseEncryption
-import dev.alphagame.seen.data.EncryptedDatabaseHelper
+import dev.alphagame.seen.encryption.DatabaseEncryptionAES
+import dev.alphagame.seen.encryption.EncryptedDatabaseHelper
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -44,8 +44,8 @@ fun EncryptionDebugScreen(
 
     LaunchedEffect(Unit) {
         try {
-            val encryptedDbPath = DatabaseEncryption.getEncryptedDbPath(context)
-            val tempDbPath = DatabaseEncryption.getTempDbPath(context)
+            val encryptedDbPath = DatabaseEncryptionAES.getEncryptedDbPath(context)
+            val tempDbPath = DatabaseEncryptionAES.getTempDbPath(context)
             val encryptedFile = File(encryptedDbPath)
             val tempFile = File(tempDbPath)
 
@@ -148,7 +148,7 @@ fun EncryptionDebugScreen(
                 onClick = {
                     // Clean up temp files
                     try {
-                        DatabaseEncryption.cleanupTempDb(context)
+                        DatabaseEncryptionAES.cleanupTempDb(context)
                         encryptionInfo = "Temporary files cleaned up!"
                     } catch (e: Exception) {
                         encryptionInfo = "Cleanup failed: ${e.message}"

@@ -86,7 +86,6 @@ import dev.alphagame.seen.components.NoInternetDialog
 import dev.alphagame.seen.components.UpdateDialog
 import dev.alphagame.seen.data.AppVersionInfo
 import dev.alphagame.seen.data.DailyReminderManager
-import dev.alphagame.seen.data.EncryptedDatabaseHelper
 import dev.alphagame.seen.data.PreferencesManager
 import dev.alphagame.seen.data.UpdateCheckManager
 import dev.alphagame.seen.data.UpdateChecker
@@ -97,6 +96,7 @@ import dev.alphagame.seen.translations.Translation
 import dev.alphagame.seen.translations.rememberTranslation
 import kotlinx.coroutines.launch
 import androidx.core.net.toUri
+import dev.alphagame.seen.encryption.EncryptedDatabaseHelper
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

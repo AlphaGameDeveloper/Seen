@@ -1,25 +1,26 @@
 // Seen - Mental Health Application
 //     Copyright (C) 2025  Damien Boisvert
 //                   2025  Alexander Cameron
-// 
+//
 //     Seen is free software: you can redistribute it and/or modify
 //     it under the terms of the GNU General Public License as published by
 //     the Free Software Foundation, either version 3 of the License, or
 //     (at your option) any later version.
-// 
+//
 //     Seen is distributed in the hope that it will be useful,
 //     but WITHOUT ANY WARRANTY; without even the implied warranty of
 //     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //     GNU General Public License for more details.
-// 
+//
 //     You should have received a copy of the GNU General Public License
 //     along with Seen.  If not, see <https://www.gnu.org/licenses/>.
 
-package dev.alphagame.seen.data
+package dev.alphagame.seen.encryption
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
+import dev.alphagame.seen.data.DatabaseHelper
 import java.io.File
 
 /**
@@ -30,7 +31,7 @@ import java.io.File
  * - Stores encrypted database in app's private storage
  * - Uses temporary files for the decrypted database
  */
-class EncryptedDatabaseHelper(private val context: Context) : DatabaseHelper(context, DatabaseEncryption.getTempDbPath(context), null, DATABASE_VERSION) {
+class EncryptedDatabaseHelper(private val context: Context) : DatabaseHelper(context, DatabaseEncryptionAES.getTempDbPath(context), null, DATABASE_VERSION) {
 
     private val TAG = "EncryptedDatabaseHelper"
     init {
@@ -42,14 +43,14 @@ class EncryptedDatabaseHelper(private val context: Context) : DatabaseHelper(con
      * Decrypts the encrypted database file to a temporary location
      */
     private fun decryptDatabase() {
-        val encryptedDbFile = File(DatabaseEncryption.getEncryptedDbPath(context))
-        val tempDbFile = File(DatabaseEncryption.getTempDbPath(context))
+        val encryptedDbFile = File(DatabaseEncryptionAES.getEncryptedDbPath(context))
+        val tempDbFile = File(DatabaseEncryptionAES.getTempDbPath(context))
 
         // Ensure cache directory exists
         context.cacheDir.mkdirs()
 
         try {
-            DatabaseEncryption.decryptFile(encryptedDbFile, tempDbFile)
+            DatabaseEncryptionAES.decryptFile(encryptedDbFile, tempDbFile)
         } catch (e: Exception) {
             // If decryption fails, we'll start with a fresh database
             android.util.Log.w("EncryptedDatabaseHelper", "Could not decrypt database, starting fresh: ${e.message}")
@@ -61,8 +62,8 @@ class EncryptedDatabaseHelper(private val context: Context) : DatabaseHelper(con
      */
     private fun encryptAndSaveDatabase() {
         Log.i(TAG, "Encrypting & saving database...")
-        val tempDbFile = File(DatabaseEncryption.getTempDbPath(context))
-        val encryptedDbFile = File(DatabaseEncryption.getEncryptedDbPath(context))
+        val tempDbFile = File(DatabaseEncryptionAES.getTempDbPath(context))
+        val encryptedDbFile = File(DatabaseEncryptionAES.getEncryptedDbPath(context))
 
         // Ensure files directory exists
         context.filesDir.mkdirs()
@@ -72,7 +73,7 @@ class EncryptedDatabaseHelper(private val context: Context) : DatabaseHelper(con
             close()
 
             // Encrypt the temporary database file
-            DatabaseEncryption.encryptFile(tempDbFile, encryptedDbFile)
+            DatabaseEncryptionAES.encryptFile(tempDbFile, encryptedDbFile)
         } catch (e: Exception) {
             android.util.Log.e("EncryptedDatabaseHelper", "Failed to encrypt database: ${e.message}", e)
             throw e
