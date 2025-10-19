@@ -398,6 +398,27 @@ fun ResourcesScreen(
 
                         }
                     }
+
+                    Button(
+                        onClick = {
+                            val intent = Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("https://www.schoolhealthcenters.org/resource/sbhcs-by-county/")
+                            )
+                            context.startActivity(intent)
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.tertiary
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+
+                    ) {
+                        Text(
+                            text = translation.wellnessResources
+                        )
+
+                    }
+
                     Button(
                         onClick = {
                             val intent = Intent(

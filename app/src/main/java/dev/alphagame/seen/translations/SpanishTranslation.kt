@@ -320,6 +320,7 @@ class SpanishTranslation : Translation() {
     override val aboutFeelingBad = "About Feeling Bad About Yourself"
     override val aboutConcentration = "Acerca de la dificultad para concentrarse"
     override val additionalYouthResources = "Recursos adicionales para jóvenes"
+    override val wellnessResources = "Encuentra un centro de bienestar local"
 
     // Health Status
     override val serviceHealthStatus = "Estado de salud de servicios"

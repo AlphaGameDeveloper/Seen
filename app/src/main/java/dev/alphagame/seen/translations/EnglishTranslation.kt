@@ -286,6 +286,7 @@ class EnglishTranslation : Translation() {
     override val aboutFeelingBad = "About Feeling Bad About Yourself"
     override val aboutConcentration = "About Trouble Concentrating"
     override val additionalYouthResources = "Additional Youth Resources"
+    override val wellnessResources = "Find a Local Wellness Center"
 
     // Common
     override val yes = "Yes"
