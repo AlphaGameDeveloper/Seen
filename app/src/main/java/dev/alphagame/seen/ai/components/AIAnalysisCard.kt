@@ -99,7 +99,7 @@ fun AIAnalysisCard(
                     modifier = Modifier.size(24.dp)
                 )
                 Text(
-                    text = "AI Analysis",
+                    text = translation.aiAnalysis,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
@@ -109,7 +109,7 @@ fun AIAnalysisCard(
             HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
 
             // Severity Level
-            Row(
+"""            Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -125,7 +125,7 @@ fun AIAnalysisCard(
                     fontWeight = FontWeight.SemiBold,
                     color = severityColor
                 )
-            }
+            }"""
 
             // Emotional State Analysis
             Column(
