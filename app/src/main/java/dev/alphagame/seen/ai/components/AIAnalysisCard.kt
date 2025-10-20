@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.alphagame.seen.FeatureFlags
 import dev.alphagame.seen.ai.models.PHQ9Response
 import dev.alphagame.seen.translations.rememberTranslation
 
@@ -109,24 +110,25 @@ fun AIAnalysisCard(
             HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
 
             // Severity Level
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Warning,
-                    contentDescription = null,
-                    tint = severityColor,
-                    modifier = Modifier.size(20.dp)
-                )
-                Text(
-                    text = "Severity: $severity",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = severityColor
-                )
+            if (FeatureFlags.AI_SEVERITY_LEVEL) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Warning,
+                        contentDescription = null,
+                        tint = severityColor,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Text(
+                        text = "Severity: $severity",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = severityColor
+                    )
+                }
             }
-
             // Emotional State Analysis
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)

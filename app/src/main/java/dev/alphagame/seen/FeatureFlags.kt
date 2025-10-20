@@ -56,5 +56,6 @@ class FeatureFlags {
         const val SETTINGS_ENCRYPTION = false;
 
         const val AI_SECOND_BACK_BUTTON = false;
+        const val AI_SEVERITY_LEVEL = false;
     }
 }
