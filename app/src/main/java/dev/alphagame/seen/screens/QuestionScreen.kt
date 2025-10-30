@@ -1,17 +1,17 @@
 // Seen - Mental Health Application
 //     Copyright (C) 2025  Damien Boisvert
 //                   2025  Alexander Cameron
-// 
+//
 //     Seen is free software: you can redistribute it and/or modify
 //     it under the terms of the GNU General Public License as published by
 //     the Free Software Foundation, either version 3 of the License, or
 //     (at your option) any later version.
-// 
+//
 //     Seen is distributed in the hope that it will be useful,
 //     but WITHOUT ANY WARRANTY; without even the implied warranty of
 //     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //     GNU General Public License for more details.
-// 
+//
 //     You should have received a copy of the GNU General Public License
 //     along with Seen.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -35,6 +35,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -98,7 +99,7 @@ fun QuestionScreen(
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
                 IconButton(onClick = onBack) {
                     Icon(
-                        imageVector = Icons.Filled.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
                         tint = MaterialTheme.colorScheme.onBackground
                     )
