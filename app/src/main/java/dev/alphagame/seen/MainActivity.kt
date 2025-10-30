@@ -63,7 +63,6 @@ import dev.alphagame.seen.data.PreferencesManager
 import dev.alphagame.seen.data.UpdateCheckManager
 import dev.alphagame.seen.data.UpdateChecker
 import dev.alphagame.seen.data.UpdateInfo
-import dev.alphagame.seen.onboarding.EnhancedOnboardingScreen
 import dev.alphagame.seen.screens.DatabaseDebugScreen
 import dev.alphagame.seen.screens.EncryptionDebugScreen
 import dev.alphagame.seen.screens.MoodHistoryScreen
@@ -142,11 +141,7 @@ fun SeenApplication(
     val questions = PHQ9Data.questions
     val options = PHQ9Data.options
 
-    var currentScreen by remember {
-        mutableStateOf(
-            if (!preferencesManager.isOnboardingCompleted && FeatureFlags.ENABLE_ONBOARDING) "onboarding" else "welcome"
-        )
-    }
+    var currentScreen by remember { mutableStateOf("welcome") }
     var currentQuestion by remember { mutableIntStateOf(0) }
     val scores = remember { mutableStateListOf<Int>() }
     val navigationStack = remember { mutableStateListOf<String>() }
@@ -239,21 +234,13 @@ fun SeenApplication(
     ) {
         // Handle Android back button
         BackHandler(
-            enabled = currentScreen != "welcome" && currentScreen != "onboarding"
+            enabled = currentScreen != "welcome"
         ) {
             navigateBack()
         }
 
         // Main content
         when (currentScreen) {
-            "onboarding" -> {
-                EnhancedOnboardingScreen(
-                    onOnboardingComplete = {
-                        preferencesManager.isOnboardingCompleted = true
-                        currentScreen = "welcome"
-                    }
-                )
-            }
             "welcome" -> {
                 WelcomeScreen(
                     onStartQuiz = {
@@ -354,48 +341,10 @@ fun SeenApplication(
                     }
                 )
             }
-            "info_onboarding" -> {
-                EnhancedOnboardingScreen(
-                    onOnboardingComplete = {
-                        navigateBack()
-                    }
-                )
-            }
         }
 
         // Settings button - only show on welcome screen
         if (currentScreen == "welcome") {
-            // Info button in top left corner
-
-            if (FeatureFlags.UI_ONBOARDING_BUTTON) {
-                IconButton(
-                    onClick = { navigateTo("info_onboarding") },
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .statusBarsPadding()
-                        .padding(16.dp)
-                        .size(40.dp)
-                ) {
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
-                        shadowElevation = 4.dp
-                    ) {
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Info,
-                                contentDescription = "Info",
-                                modifier = Modifier.size(20.dp),
-                                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                            )
-                        }
-                    }
-                }
-            }
             // Settings button in bottom left corner
             IconButton(
                 onClick = { navigateTo("settings") },

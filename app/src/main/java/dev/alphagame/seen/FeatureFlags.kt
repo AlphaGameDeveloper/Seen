@@ -31,8 +31,7 @@ class FeatureFlags {
 
         const val ONBOARDING_NO_ADS = false;
 
-        const val UI_ONBOARDING_BUTTON = false;
-        const val UI_JOURNAL_ADD_BUTTON = false;
+         const val UI_JOURNAL_ADD_BUTTON = false;
         const val UI_MOOD_HISTORY_GLOBAL_DELETE = false;
 
         const val UI_BUILD_STRING = true;
@@ -46,8 +45,6 @@ class FeatureFlags {
         const val SETTINGS_UPDATE_BUTTON = false
 
         const val HOME_SEEN_LOGO = true;
-
-        const val ENABLE_ONBOARDING = false;
 
         const val MOOD_HISTORY_TODAY_AT_A_GLANCE_CARD = true;
         const val WELCOME_ANIMATED_SUBTITLE = true;
