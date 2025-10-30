@@ -24,6 +24,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -331,14 +332,15 @@ fun SeenApplication(
                 DatabaseDebugScreen(
                     onBackClick = {
                         navigateBack()
-                    }
+                    },
+                    onEncryption = { navigateTo("debug_encryption") }
                 )
             }
             "debug_encryption" -> {
                 EncryptionDebugScreen(
                     onBackToHome = {
                         navigateBack()
-                    }
+                    },
                 )
             }
         }
@@ -401,7 +403,6 @@ fun SeenApplication(
                     .align(Alignment.TopEnd)
                     .padding(16.dp)
                     .size(110.dp)
-
             ) {
                 Text(
                     text = "Debug Build",

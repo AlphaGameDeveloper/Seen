@@ -30,6 +30,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import dev.alphagame.seen.encryption.DatabaseEncryptionAES
 import dev.alphagame.seen.encryption.EncryptedDatabaseHelper
+import dev.alphagame.seen.security.KeyManager
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -37,7 +38,7 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EncryptionDebugScreen(
-    onBackToHome: () -> Unit
+    onBackToHome: () -> Unit,
 ) {
     val context = LocalContext.current
     var encryptionInfo by remember { mutableStateOf("Loading...") }
@@ -74,9 +75,10 @@ fun EncryptionDebugScreen(
                 append("\n")
 
                 append("🔑 Encryption Details:\n")
-                append("Algorithm: XOR Cipher\n")
-                append("Key: 0x22 (hex)\n")
-                append("Key: ${0x22} (decimal)\n")
+                append("Algorithm: AES-256\n")
+                append("Key:\n")
+                append(KeyManager.getOrCreateAesKey().toString())
+                append("Key Manager: ${KeyManager.toString()} (workingo)\n")
                 append("\n")
 
                 append("📋 System Info:\n")

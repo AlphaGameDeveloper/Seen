@@ -1,17 +1,17 @@
 // Seen - Mental Health Application
 //     Copyright (C) 2025  Damien Boisvert
 //                   2025  Alexander Cameron
-// 
+//
 //     Seen is free software: you can redistribute it and/or modify
 //     it under the terms of the GNU General Public License as published by
 //     the Free Software Foundation, either version 3 of the License, or
 //     (at your option) any later version.
-// 
+//
 //     Seen is distributed in the hope that it will be useful,
 //     but WITHOUT ANY WARRANTY; without even the implied warranty of
 //     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //     GNU General Public License for more details.
-// 
+//
 //     You should have received a copy of the GNU General Public License
 //     along with Seen.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -34,6 +34,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -70,7 +71,8 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatabaseDebugScreen(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onEncryption: () -> Unit
 ) {
     val context = LocalContext.current
     val notesManager = remember { NotesManager(context) }
@@ -221,6 +223,12 @@ fun DatabaseDebugScreen(
             // Footer spacer
             item {
                 Spacer(modifier = Modifier.height(32.dp))
+            }
+
+            item {
+                Button(onClick = onEncryption) {
+                    Text(text = "Encryption Debug Information")
+                }
             }
         }
     }
