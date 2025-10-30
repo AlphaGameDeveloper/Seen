@@ -25,7 +25,6 @@ import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
 import dev.alphagame.seen.R
-import dev.alphagame.seen.analytics.AnalyticsManager
 import dev.alphagame.seen.data.Mood
 import dev.alphagame.seen.data.WidgetMoodManager
 import java.text.SimpleDateFormat
@@ -62,11 +61,7 @@ class MoodWidgetProvider : AppWidgetProvider() {
                     val widgetMoodManager = WidgetMoodManager(context)
                     widgetMoodManager.saveMood(mood)
 
-                    // Track mood widget usage
-                    val analyticsManager = AnalyticsManager(context)
-                    analyticsManager.trackEvent("mood_logged_via_widget", mapOf(
-                        "mood" to mood.label
-                    ))
+                    // Mood logged via widget — analytics removed
 
                     // Update all widgets
                     val appWidgetManager = AppWidgetManager.getInstance(context)

@@ -50,7 +50,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.alphagame.seen.FeatureFlags
-import dev.alphagame.seen.analytics.AnalyticsManager
 import dev.alphagame.seen.data.LogoSelector
 import dev.alphagame.seen.data.PreferencesManager
 import dev.alphagame.seen.data.WelcomeScreenMessage
@@ -65,13 +64,11 @@ fun WelcomeScreen(
 ) {
     val context = LocalContext.current
     val translation = rememberTranslation()
-    val analyticsManager = remember { AnalyticsManager(context) }
     var clickCount by remember { mutableIntStateOf(0) }
     val preferencesManager = remember { PreferencesManager(context) }
 
     // Track welcome screen access
     LaunchedEffect(Unit) {
-        analyticsManager.trackEvent("welcome_screen_accessed")
     }
 
     // Reset click count after 30 seconds of inactivity
@@ -148,8 +145,6 @@ fun WelcomeScreen(
         // Start Button
         Button(
             onClick = {
-                // Track PHQ-9 start from welcome screen
-                analyticsManager.trackEvent("phq9_started_from_welcome")
                 onStartQuiz()
             },
             modifier = Modifier
@@ -175,7 +170,6 @@ fun WelcomeScreen(
         Button(
             onClick = {
                 // Track notes screen access from welcome
-                analyticsManager.trackEvent("notes_accessed_from_welcome")
                 onGoToNotes()
             },
             modifier = Modifier
@@ -201,7 +195,6 @@ fun WelcomeScreen(
         Button(
             onClick = {
                 // Track mood history access from welcome
-                analyticsManager.trackEvent("mood_history_accessed_from_welcome")
                 onGoToMoodHistory()
             },
             modifier = Modifier

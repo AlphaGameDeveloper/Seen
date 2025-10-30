@@ -17,19 +17,13 @@
 
 package dev.alphagame.seen
 
-import android.app.AlarmManager
-import android.content.Intent
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -63,7 +57,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
-import dev.alphagame.seen.analytics.AnalyticsManager
 import dev.alphagame.seen.components.UpdateDialog
 import dev.alphagame.seen.data.PHQ9Data
 import dev.alphagame.seen.data.PreferencesManager
@@ -137,7 +130,6 @@ fun SeenApplication(
 ) {
     val context = LocalContext.current
     val preferencesManager = remember { PreferencesManager(context) }
-    val analyticsManager = remember { AnalyticsManager(context) }
     val translation = rememberTranslation()
     val updateChecker = remember { UpdateChecker(context) }
     val updateCheckManager = remember { UpdateCheckManager(context) }
@@ -162,62 +154,62 @@ fun SeenApplication(
     // Check for updates on startup
     LaunchedEffect(Unit) {
         scope.launch {
-            android.util.Log.d("UpdateCheck", "Starting update check...")
-            android.util.Log.d("UpdateCheck", "Should check for updates: ${preferencesManager.shouldCheckForUpdates()}")
-            android.util.Log.d("UpdateCheck", "Last check time: ${preferencesManager.lastUpdateCheckTime}")
-            android.util.Log.d("UpdateCheck", "Current time: ${System.currentTimeMillis()}")
+            Log.d("UpdateCheck", "Starting update check...")
+            Log.d("UpdateCheck", "Should check for updates: ${preferencesManager.shouldCheckForUpdates()}")
+            Log.d("UpdateCheck", "Last check time: ${preferencesManager.lastUpdateCheckTime}")
+            Log.d("UpdateCheck", "Current time: ${System.currentTimeMillis()}")
 
             // Start background update checks if enabled
             if (preferencesManager.backgroundUpdateChecksEnabled && preferencesManager.notificationsEnabled) {
-                android.util.Log.d("UpdateCheck", "Starting background update checks")
+                Log.d("UpdateCheck", "Starting background update checks")
                 updateCheckManager.startBackgroundUpdateChecks()
             } else {
-                android.util.Log.d("UpdateCheck", "Background update checks not started:")
-                android.util.Log.d("UpdateCheck", "  - backgroundUpdateChecksEnabled: ${preferencesManager.backgroundUpdateChecksEnabled}")
-                android.util.Log.d("UpdateCheck", "  - notificationsEnabled: ${preferencesManager.notificationsEnabled}")
+                Log.d("UpdateCheck", "Background update checks not started:")
+                Log.d("UpdateCheck", "  - backgroundUpdateChecksEnabled: ${preferencesManager.backgroundUpdateChecksEnabled}")
+                Log.d("UpdateCheck", "  - notificationsEnabled: ${preferencesManager.notificationsEnabled}")
             }
 
             // Test the version checker directly
             try {
-                android.util.Log.d("UpdateCheck", "Testing VersionChecker directly...")
+                Log.d("UpdateCheck", "Testing VersionChecker directly...")
                 val versionChecker = dev.alphagame.seen.data.VersionChecker(context)
                 val latestVersion = versionChecker.checkLatestVersion()
-                android.util.Log.d("UpdateCheck", "Latest version from server: $latestVersion")
+                Log.d("UpdateCheck", "Latest version from server: $latestVersion")
                 val isUpdateAvailable = versionChecker.isUpdateAvailable()
-                android.util.Log.d("UpdateCheck", "Is update available: $isUpdateAvailable")
+                Log.d("UpdateCheck", "Is update available: $isUpdateAvailable")
             } catch (e: Exception) {
-                android.util.Log.e("UpdateCheck", "Error testing VersionChecker", e)
+                Log.e("UpdateCheck", "Error testing VersionChecker", e)
             }
 
             // For debugging - always check for updates (remove the shouldCheckForUpdates condition temporarily)
             // if (preferencesManager.shouldCheckForUpdates()) {
                 try {
-                    android.util.Log.d("UpdateCheck", "Calling updateChecker.checkForUpdates()...")
+                    Log.d("UpdateCheck", "Calling updateChecker.checkForUpdates()...")
                     val update = updateChecker.checkForUpdates()
-                    android.util.Log.d("UpdateCheck", "Update result: $update")
+                    Log.d("UpdateCheck", "Update result: $update")
 
                     if (update != null && update.isUpdateAvailable) {
-                        android.util.Log.d("UpdateCheck", "Update available: ${update.latestVersion}")
+                        Log.d("UpdateCheck", "Update available: ${update.latestVersion}")
                         // Don't show dialog if user already skipped this version (unless it's a force update)
                         val skippedVersion = preferencesManager.skippedVersion
-                        android.util.Log.d("UpdateCheck", "Skipped version: $skippedVersion")
+                        Log.d("UpdateCheck", "Skipped version: $skippedVersion")
 
                         if (update.isForceUpdate || skippedVersion != update.latestVersion) {
-                            android.util.Log.d("UpdateCheck", "Showing update dialog")
+                            Log.d("UpdateCheck", "Showing update dialog")
                             updateInfo = update
                             showUpdateDialog = true
                         } else {
-                            android.util.Log.d("UpdateCheck", "Update skipped (user already dismissed this version)")
+                            Log.d("UpdateCheck", "Update skipped (user already dismissed this version)")
                             updateInfo = update
                             showUpdateDialog = false
                         }
                     } else {
-                        android.util.Log.d("UpdateCheck", "No update available")
+                        Log.d("UpdateCheck", "No update available")
                     }
                     preferencesManager.lastUpdateCheckTime = System.currentTimeMillis()
                 } catch (e: Exception) {
                     // Silently fail update check - don't interrupt user experience
-                    android.util.Log.e("UpdateCheck", "Failed to check for updates", e)
+                    Log.e("UpdateCheck", "Failed to check for updates", e)
                 }
             // }
         }
@@ -265,21 +257,17 @@ fun SeenApplication(
             "welcome" -> {
                 WelcomeScreen(
                     onStartQuiz = {
-                        analyticsManager.trackEvent(AnalyticsManager.EVENT_PHQ9_STARTED)
                         navigateTo("quiz")
                         currentQuestion = 0
                         scores.clear()
                     },
                     onGoToNotes = {
-                        analyticsManager.trackFeatureUsed("notes_screen")
                         navigateTo("notes")
                     },
                     onGoToMoodHistory = {
-                        analyticsManager.trackEvent(AnalyticsManager.EVENT_MOOD_HISTORY_VIEWED)
                         navigateTo("mood_history")
                     },
                     onSecretDebugScreen = {
-                        analyticsManager.trackFeatureUsed("debug_screen")
                         navigateTo("debug_database")
                     }
                 )
@@ -305,7 +293,6 @@ fun SeenApplication(
                                     totalScore <= 19 -> "Moderately Severe"
                                     else -> "Severe"
                                 }
-                                analyticsManager.trackPHQ9Completion(totalScore, severity, false)
                             }
                         }
                         ,
@@ -340,7 +327,6 @@ fun SeenApplication(
             "settings" -> {
                 SettingsScreen(
                     onBackToHome = {
-                        analyticsManager.trackEvent(AnalyticsManager.EVENT_SETTINGS_OPENED)
                         navigateBack()
                     },
                     onThemeChanged = onThemeChanged,
@@ -478,9 +464,9 @@ fun SeenApplication(
         }
 
         // Update Dialog
-        android.util.Log.d("UpdateCheck", "Rendering UI - showUpdateDialog: $showUpdateDialog, updateInfo: $updateInfo")
+        Log.d("UpdateCheck", "Rendering UI - showUpdateDialog: $showUpdateDialog, updateInfo: $updateInfo")
         if (showUpdateDialog && updateInfo != null) {
-            android.util.Log.d("UpdateCheck", "Showing UpdateDialog")
+            Log.d("UpdateCheck", "Showing UpdateDialog")
             UpdateDialog(
                 updateInfo = updateInfo!!,
                 onDismiss = {

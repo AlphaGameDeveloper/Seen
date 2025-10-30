@@ -80,7 +80,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.alphagame.seen.BuildConfig
 import dev.alphagame.seen.FeatureFlags
-import dev.alphagame.seen.analytics.AnalyticsManager
 import dev.alphagame.seen.components.HealthStatusDots
 import dev.alphagame.seen.components.NoInternetDialog
 import dev.alphagame.seen.components.UpdateDialog
@@ -108,7 +107,7 @@ fun SettingsScreen(
     val context = LocalContext.current
     val hapticFeedback = LocalHapticFeedback.current
     val preferencesManager = remember { PreferencesManager(context) }
-    val analyticsManager = remember { AnalyticsManager(context) }
+    // AnalyticsManager removed; prefer using PreferencesManager for analytics preference
     val healthStatusManager = remember { HealthStatusManager(context) }
     val databaseHelper = remember { EncryptedDatabaseHelper(context) }
     val widgetMoodManager = remember { WidgetMoodManager(context) }
@@ -134,7 +133,7 @@ fun SettingsScreen(
 
         // Track settings screen access (only on first load, not on refreshes)
         if (refreshKey == 0) {
-            analyticsManager.trackEvent("settings_screen_accessed")
+            // Analytics tracking removed
             // Check health status when screen is first accessed
             healthStatusManager.checkAllServices()
         }
@@ -697,21 +696,9 @@ fun SettingsScreen(
                                 checked = analyticsEnabled,
                                 onCheckedChange = { enabled ->
                                     hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-                                    // Track analytics setting change
-                                    analyticsManager.trackSettingChanged(
-                                        "analytics_enabled",
-                                        analyticsEnabled.toString(),
-                                        enabled.toString()
-                                    )
+                                    // Update analytics preference
                                     analyticsEnabled = enabled
                                     preferencesManager.analyticsEnabled = enabled
-
-                                    // Enable or disable analytics in the manager
-                                    if (enabled) {
-                                        analyticsManager.enableAnalytics()
-                                    } else {
-                                        analyticsManager.disableAnalytics()
-                                    }
                                 }
                             )
                         }
@@ -773,12 +760,8 @@ fun SettingsScreen(
                                 checked = true,
                                 onCheckedChange = { enabled ->
                                     hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-                                    // Track PHQ-9 data storage setting change
-                                    analyticsManager.trackSettingChanged(
-                                        "phq9_data_storage",
-                                        phq9DataStorageEnabled.toString(),
-                                        enabled.toString()
-                                    )
+                                    // PHQ-9 data storage preference changed
+                                    // analytics tracking removed
                                     phq9DataStorageEnabled = enabled
                                     preferencesManager.isPhq9DataStorageEnabled = enabled
                                 }
@@ -952,8 +935,7 @@ fun SettingsScreen(
             confirmButton = {
                 Button(
                     onClick = {
-                        // Track data deletion action
-                        analyticsManager.trackEvent("all_data_deleted")
+                        // Track data deletion action (analytics removed)
 
                         // Clear all data from database
                         databaseHelper.clearAllData()

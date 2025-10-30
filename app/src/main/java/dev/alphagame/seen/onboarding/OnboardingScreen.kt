@@ -1,17 +1,17 @@
 // Seen - Mental Health Application
 //     Copyright (C) 2025  Damien Boisvert
 //                   2025  Alexander Cameron
-// 
+//
 //     Seen is free software: you can redistribute it and/or modify
 //     it under the terms of the GNU General Public License as published by
 //     the Free Software Foundation, either version 3 of the License, or
 //     (at your option) any later version.
-// 
+//
 //     Seen is distributed in the hope that it will be useful,
 //     but WITHOUT ANY WARRANTY; without even the implied warranty of
 //     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //     GNU General Public License for more details.
-// 
+//
 //     You should have received a copy of the GNU General Public License
 //     along with Seen.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -42,7 +42,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
-import dev.alphagame.seen.analytics.AnalyticsManager
+
 import dev.alphagame.seen.data.PreferencesManager
 import dev.alphagame.seen.data.UpdateCheckManager
 import dev.alphagame.seen.onboarding.components.ConfigurationFlow
@@ -58,7 +58,7 @@ fun EnhancedOnboardingScreen(
     val context = LocalContext.current
     val preferencesManager = remember { PreferencesManager(context) }
     val updateCheckManager = remember { UpdateCheckManager(context) }
-    val analyticsManager = remember { AnalyticsManager(context) }
+
 
     var currentStage by remember { mutableStateOf(OnboardingStage.WELCOME_CAROUSEL) }
     var currentConfigStep by remember { mutableStateOf(ConfigurationStep.AI_FEATURES) }
@@ -68,14 +68,15 @@ fun EnhancedOnboardingScreen(
     var notificationsEnabled by remember { mutableStateOf(preferencesManager.notificationsEnabled) }
     var remindersEnabled by remember { mutableStateOf(preferencesManager.notificationsEnabled) } // Default to same as notifications
     var updateChecksEnabled by remember { mutableStateOf(preferencesManager.backgroundUpdateChecksEnabled) }
-    var analyticsEnabled by remember { mutableStateOf(preferencesManager.analyticsEnabled) }
+
     var selectedTheme by remember { mutableStateOf(preferencesManager.themeMode) }
     var selectedLanguage by remember { mutableStateOf(preferencesManager.language) }
     var dataStorageEnabled by remember { mutableStateOf(preferencesManager.isPhq9DataStorageEnabled) }
+    var analyticsEnabled by remember { mutableStateOf(preferencesManager.analyticsEnabled) }
 
     // Track onboarding start
     LaunchedEffect(Unit) {
-        analyticsManager.trackEvent(AnalyticsManager.EVENT_ONBOARDING_STARTED)
+
     }
 
     // Translation that reacts to language changes
@@ -122,6 +123,8 @@ fun EnhancedOnboardingScreen(
             preferencesManager.backgroundUpdateChecksEnabled = false
         }
     }
+
+    // AnalyticsManager removed — analytics preference is still respected via PreferencesManager
 
     // Welcome carousel pages
     val welcomePages = listOf(
@@ -175,7 +178,7 @@ fun EnhancedOnboardingScreen(
                     notificationsEnabled = notificationsEnabled,
                     remindersEnabled = remindersEnabled,
                     updateChecksEnabled = updateChecksEnabled,
-                    analyticsEnabled = analyticsEnabled,
+
                     selectedTheme = selectedTheme,
                     selectedLanguage = selectedLanguage,
                     dataStorageEnabled = dataStorageEnabled,
@@ -226,16 +229,10 @@ fun EnhancedOnboardingScreen(
                             updateCheckManager.stopBackgroundUpdateChecks()
                         }
                     },
+                    analyticsEnabled = analyticsEnabled,
                     onAnalyticsEnabledChange = {
                         analyticsEnabled = it
                         preferencesManager.analyticsEnabled = it
-
-                        // Enable or disable analytics in the manager
-                        if (it) {
-                            analyticsManager.enableAnalytics()
-                        } else {
-                            analyticsManager.disableAnalytics()
-                        }
                     },
                     onThemeChange = {
                         selectedTheme = it
@@ -258,15 +255,8 @@ fun EnhancedOnboardingScreen(
                             ConfigurationStep.LANGUAGE_SETTINGS -> currentConfigStep = ConfigurationStep.DATA_PRIVACY
                             ConfigurationStep.DATA_PRIVACY -> currentConfigStep = ConfigurationStep.COMPLETE
                             ConfigurationStep.COMPLETE -> {
-                                // Track onboarding completion
-                                analyticsManager.trackEvent(AnalyticsManager.EVENT_ONBOARDING_COMPLETED, mapOf(
-                                    "ai_enabled" to aiEnabled,
-                                    "notifications_enabled" to notificationsEnabled,
-                                    "analytics_enabled" to analyticsEnabled,
-                                    "theme" to selectedTheme,
-                                    "language" to selectedLanguage,
-                                    "data_storage_enabled" to dataStorageEnabled
-                                ))
+                                // Mark onboarding completed and track settings
+                                preferencesManager.isOnboardingCompleted = true
 
                                 // All settings are already applied immediately when changed
                                 // Just complete the onboarding
@@ -287,7 +277,7 @@ fun EnhancedOnboardingScreen(
                     },
                     onSkip = {
                         // Track onboarding skip
-                        analyticsManager.trackEvent(AnalyticsManager.EVENT_ONBOARDING_SKIPPED)
+
                         onOnboardingComplete()
                     }
                 )

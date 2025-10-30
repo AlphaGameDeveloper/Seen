@@ -73,7 +73,6 @@ import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
 import com.patrykandpatrick.vico.core.common.component.TextComponent
 import dev.alphagame.seen.FeatureFlags
-import dev.alphagame.seen.analytics.AnalyticsManager
 import dev.alphagame.seen.data.Mood
 import dev.alphagame.seen.data.MoodEntry
 import dev.alphagame.seen.data.NotesManager
@@ -96,7 +95,6 @@ fun MoodHistoryScreen(
     val translation = rememberTranslation()
     val notesManager = remember { NotesManager(context) }
     val widgetMoodManager = remember { WidgetMoodManager(context) }
-    val analyticsManager = remember { AnalyticsManager(context) }
     var moodEntries by remember { mutableStateOf<List<MoodEntry>>(emptyList()) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showPHQ9DeleteDialog by remember { mutableStateOf(false) }
@@ -109,9 +107,6 @@ fun MoodHistoryScreen(
         moodEntries = widgetMoodManager.getMoodEntries()
         // Track mood history screen access
         phq9Results = notesManager.getPHQ9Responses()
-        analyticsManager.trackEvent("mood_history_accessed", mapOf(
-            "total_entries" to moodEntries.size.toString()
-        ))
     }
 
     Column(
@@ -298,9 +293,6 @@ fun MoodHistoryScreen(
                         translation = translation,
                         onDeleteClick = { entryToDelete ->
                             // Track individual mood entry deletion
-                            analyticsManager.trackEvent("mood_entry_deleted", mapOf(
-                                "mood" to entryToDelete.mood.label
-                            ))
                             widgetMoodManager.deleteMoodEntry(entryToDelete.timestamp)
                             moodEntries = widgetMoodManager.getMoodEntries()
                         }
@@ -360,11 +352,6 @@ fun MoodHistoryScreen(
                         PHQ9DeletionItem(
                             onDeleteClick = { entryToDelete ->
                                 // Track individual PHQ-9 entry deletion
-                                analyticsManager.trackEvent(
-                                    "phq9_entry_deleted", mapOf(
-                                        "score" to entryToDelete.total.toString()
-                                    )
-                                )
                                 notesManager.deletePHQ9Response(entryToDelete.id)
                                 phq9Results = notesManager.getPHQ9Responses()
                                             },
@@ -386,10 +373,6 @@ fun MoodHistoryScreen(
                 TextButton(
                     onClick = {
                         val entriesToDelete = moodEntries.size
-                        // Track mood history clearing
-                        analyticsManager.trackEvent("mood_history_cleared", mapOf(
-                            "entries_deleted" to entriesToDelete.toString()
-                        ))
                         widgetMoodManager.clearAllMoods()
                         moodEntries = emptyList()
                         showDeleteDialog = false

@@ -233,7 +233,7 @@ Version not found
 - **Update History**: Track and display update notification history
 - **Beta Channel Support**: Allow users to opt into beta releases
 
-### Monitoring & Analytics
+### Monitoring
 - **Usage Metrics**: Track background check success rates
 - **Performance Monitoring**: Monitor battery and network impact
 - **User Engagement**: Track notification open rates

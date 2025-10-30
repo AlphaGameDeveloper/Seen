@@ -240,12 +240,12 @@ class FrenchTranslation : Translation() {
     override val onboardingReadyToUse = "Commencer à utiliser Seen"
 
     // Analytics
-    override val onboardingAnalyticsTitle = "Aidez à améliorer Seen"
-    override val onboardingAnalyticsDesc = "Partagez des données d'utilisation anonymes pour nous aider à améliorer Seen pour tous"
-    override val onboardingAnalyticsEnabled = "📈 Partager les données d'utilisation"
-    override val onboardingAnalyticsDisabled = "🥺 Garder les données privées"
-    override val analyticsPrivacyNote = "Nous ne collectons que des statistiques d'utilisation anonymes pour améliorer l'application. Aucune donnée de santé personnelle n'est jamais partagée."
-    override val analyticsDataUsage = "Les données collectées incluent les modèles d'utilisation de l'application, les interactions avec les fonctionnalités et les rapports de plantage. Toutes les données sont anonymes et ne peuvent pas être liées à vous."
+    override val onboardingAnalyticsTitle = ""
+    override val onboardingAnalyticsDesc = ""
+    override val onboardingAnalyticsEnabled = ""
+    override val onboardingAnalyticsDisabled = ""
+    override val analyticsPrivacyNote = ""
+    override val analyticsDataUsage = ""
 
     // Settings Screen - Additional Sections
     override val notifications = "Notifications"
@@ -324,7 +324,7 @@ class FrenchTranslation : Translation() {
 
     // Health Status
     override val serviceHealthStatus = "État de santé des services"
-    override val analyticsService = "Analytiques"
+    override val analyticsService = ""
     override val releasesService = "Versions"
     override val aiService = "IA"
     override val healthyStatus = "Sain"

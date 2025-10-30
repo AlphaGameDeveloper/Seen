@@ -71,7 +71,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.alphagame.seen.FeatureFlags
-import dev.alphagame.seen.analytics.AnalyticsManager
 import dev.alphagame.seen.components.NoteItem
 import dev.alphagame.seen.data.Mood
 import dev.alphagame.seen.data.Note
@@ -85,7 +84,6 @@ fun NotesScreen(onBackToHome: () -> Unit) {
     val translation = rememberTranslation()
     val configuration = LocalConfiguration.current
     val notesManager = remember { NotesManager(context) }
-    val analyticsManager = remember { AnalyticsManager(context) }
     var noteText by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf(listOf<Note>()) }
     var selectedMood by remember { mutableStateOf<Mood?>(null) }
@@ -104,9 +102,7 @@ fun NotesScreen(onBackToHome: () -> Unit) {
 
     // Load notes when screen opens
     LaunchedEffect(Unit) {
-        notes = notesManager.getAllNotes()
-        // Track notes screen access
-        analyticsManager.trackEvent("notes_screen_accessed")
+    notes = notesManager.getAllNotes()
     }
 
     Box(
@@ -187,12 +183,7 @@ fun NotesScreen(onBackToHome: () -> Unit) {
                             onSaveNote = {
                                 if (noteText.isNotBlank()) {
                                     notesManager.saveNote(noteText.trim(), selectedMood?.label)
-                                    // Track note creation
-                                    analyticsManager.trackEvent("note_created", mapOf(
-                                        "has_mood" to (selectedMood != null).toString(),
-                                        "mood" to (selectedMood?.label ?: "none"),
-                                        "note_length" to noteText.trim().length.toString()
-                                    ))
+                                    // Note created
                                     noteText = ""
                                     selectedMood = null
                                     notes = notesManager.getAllNotes()
@@ -210,12 +201,6 @@ fun NotesScreen(onBackToHome: () -> Unit) {
                     NoteItem(
                         note = note,
                         onDelete = {
-                            // Track note deletion
-                            analyticsManager.trackEvent("note_deleted", mapOf(
-                                "note_id" to note.id.toString(),
-                                "had_mood" to (note.mood?.isNotEmpty() == true).toString(),
-                                "note_length" to note.content.length.toString()
-                            ))
                             isDeletingNote = true
                             currentlyDeletingNoteId = note.id
 //                            notesManager.deleteNote(note.id)

@@ -45,7 +45,6 @@ class AIManager(private val context: Context) {
         .build()
 
     private val gson = Gson()
-    private val analyticsManager by lazy { dev.alphagame.seen.analytics.AnalyticsManager(context) }
 
     companion object {
         private const val TAG = "AIManager"
@@ -66,18 +65,6 @@ class AIManager(private val context: Context) {
         notes: String? = null,
         moodEntries: List<String>? = null
     ): Result<PHQ9Response> {
-        // Track AI analysis request
-        analyticsManager.trackEvent("ai_analysis_requested", mapOf(
-            "total_score" to totalScore,
-            "severity" to when {
-                totalScore <= 4 -> "Minimal"
-                totalScore <= 9 -> "Mild"
-                totalScore <= 14 -> "Moderate"
-                totalScore <= 19 -> "Moderately Severe"
-                else -> "Severe"
-            }
-        ))
-
         return withContext(Dispatchers.IO) {
             try {
                 // Validate input
@@ -166,23 +153,13 @@ class AIManager(private val context: Context) {
 
                 Log.i(TAG, "Successfully received AI analysis - Severity: ${aiResponse.severity ?: "Unknown"}")
 
-                // Track successful AI analysis
-                analyticsManager.trackEvent("ai_analysis_received", mapOf(
-                    "ai_severity" to (aiResponse.severity ?: "Unknown"),
-                    "has_recommendations" to (aiResponse.recommendations?.isNotEmpty() == true),
-                    "recommendations_count" to (aiResponse.recommendations?.size ?: 0),
-                    "total_score" to totalScore
-                ))
-
                 return@withContext Result.success(aiResponse)
 
             } catch (e: JsonSyntaxException) {
                 Log.e(TAG, "Failed to parse JSON response", e)
-                analyticsManager.trackError("ai_analysis_parse_error", e.message ?: "JSON parsing failed")
                 return@withContext Result.failure(e)
             } catch (e: Exception) {
                 Log.e(TAG, "Unexpected error during AI API request", e)
-                analyticsManager.trackError("ai_analysis_network_error", e.message ?: "Network request failed")
                 return@withContext Result.failure(e)
             }
         }

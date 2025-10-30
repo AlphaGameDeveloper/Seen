@@ -1,17 +1,17 @@
 // Seen - Mental Health Application
 //     Copyright (C) 2025  Damien Boisvert
 //                   2025  Alexander Cameron
-// 
+//
 //     Seen is free software: you can redistribute it and/or modify
 //     it under the terms of the GNU General Public License as published by
 //     the Free Software Foundation, either version 3 of the License, or
 //     (at your option) any later version.
-// 
+//
 //     Seen is distributed in the hope that it will be useful,
 //     but WITHOUT ANY WARRANTY; without even the implied warranty of
 //     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //     GNU General Public License for more details.
-// 
+//
 //     You should have received a copy of the GNU General Public License
 //     along with Seen.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -66,7 +66,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
-import dev.alphagame.seen.analytics.AnalyticsManager
 import dev.alphagame.seen.data.PreferencesManager
 import dev.alphagame.seen.data.UpdateCheckManager
 import dev.alphagame.seen.onboarding.ConfigurationStep
@@ -84,7 +83,6 @@ fun EnhancedOnboardingScreen(
     val context = LocalContext.current
     val preferencesManager = remember { PreferencesManager(context) }
     val updateCheckManager = remember { UpdateCheckManager(context) }
-    val analyticsManager = remember { AnalyticsManager(context) }
 
     var currentStage by remember { mutableStateOf(OnboardingStage.WELCOME_CAROUSEL) }
     var currentConfigStep by remember { mutableStateOf(ConfigurationStep.AI_FEATURES) }
@@ -102,11 +100,6 @@ fun EnhancedOnboardingScreen(
     // Translation that reacts to language changes
     val translation = remember(selectedLanguage) {
         Translation.getTranslation(selectedLanguage)
-    }
-
-    // Track onboarding start
-    LaunchedEffect(Unit) {
-        analyticsManager.trackEvent(AnalyticsManager.EVENT_ONBOARDING_STARTED)
     }
 
     // Check actual notification permission status on initialization
@@ -212,12 +205,16 @@ fun EnhancedOnboardingScreen(
                     onNotificationsEnabledChange = { enabled ->
                         if (enabled) {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                when (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)) {
+                                when (ContextCompat.checkSelfPermission(
+                                    context,
+                                    Manifest.permission.POST_NOTIFICATIONS
+                                )) {
                                     PackageManager.PERMISSION_GRANTED -> {
                                         // Permission already granted, just update state without showing dialog
                                         notificationsEnabled = true
                                         preferencesManager.notificationsEnabled = true
                                     }
+
                                     else -> {
                                         notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                                     }
@@ -243,24 +240,14 @@ fun EnhancedOnboardingScreen(
                     },
                     onUpdateChecksEnabledChange = {
                         updateChecksEnabled = it
-                        preferencesManager.backgroundUpdateChecksEnabled = it && notificationsEnabled
+                        preferencesManager.backgroundUpdateChecksEnabled =
+                            it && notificationsEnabled
 
                         // Start or stop background update checks immediately
                         if (it && notificationsEnabled) {
                             updateCheckManager.startBackgroundUpdateChecks()
                         } else {
                             updateCheckManager.stopBackgroundUpdateChecks()
-                        }
-                    },
-                    onAnalyticsEnabledChange = {
-                        analyticsEnabled = it
-                        preferencesManager.analyticsEnabled = it
-
-                        // Enable or disable analytics in the manager
-                        if (it) {
-                            analyticsManager.enableAnalytics()
-                        } else {
-                            analyticsManager.disableAnalytics()
                         }
                     },
                     onThemeChange = {
@@ -277,23 +264,25 @@ fun EnhancedOnboardingScreen(
                     },
                     onNext = {
                         when (currentConfigStep) {
-                            ConfigurationStep.AI_FEATURES -> currentConfigStep = ConfigurationStep.NOTIFICATIONS
-                            ConfigurationStep.NOTIFICATIONS -> currentConfigStep = ConfigurationStep.ANALYTICS
-                            ConfigurationStep.ANALYTICS -> currentConfigStep = ConfigurationStep.THEME_SETTINGS
-                            ConfigurationStep.THEME_SETTINGS -> currentConfigStep = ConfigurationStep.LANGUAGE_SETTINGS
-                            ConfigurationStep.LANGUAGE_SETTINGS -> currentConfigStep = ConfigurationStep.DATA_PRIVACY
-                            ConfigurationStep.DATA_PRIVACY -> currentConfigStep = ConfigurationStep.COMPLETE
-                            ConfigurationStep.COMPLETE -> {
-                                // Track onboarding completion
-                                analyticsManager.trackEvent(AnalyticsManager.EVENT_ONBOARDING_COMPLETED, mapOf(
-                                    "ai_enabled" to aiEnabled,
-                                    "notifications_enabled" to notificationsEnabled,
-                                    "analytics_enabled" to analyticsEnabled,
-                                    "theme" to selectedTheme,
-                                    "language" to selectedLanguage,
-                                    "data_storage_enabled" to dataStorageEnabled
-                                ))
+                            ConfigurationStep.AI_FEATURES -> currentConfigStep =
+                                ConfigurationStep.NOTIFICATIONS
 
+                            ConfigurationStep.NOTIFICATIONS -> currentConfigStep =
+                                ConfigurationStep.ANALYTICS
+
+                            ConfigurationStep.ANALYTICS -> currentConfigStep =
+                                ConfigurationStep.THEME_SETTINGS
+
+                            ConfigurationStep.THEME_SETTINGS -> currentConfigStep =
+                                ConfigurationStep.LANGUAGE_SETTINGS
+
+                            ConfigurationStep.LANGUAGE_SETTINGS -> currentConfigStep =
+                                ConfigurationStep.DATA_PRIVACY
+
+                            ConfigurationStep.DATA_PRIVACY -> currentConfigStep =
+                                ConfigurationStep.COMPLETE
+
+                            ConfigurationStep.COMPLETE -> {
                                 // All settings are already applied immediately when changed
                                 // Just complete the onboarding
                                 onOnboardingComplete()
@@ -302,20 +291,30 @@ fun EnhancedOnboardingScreen(
                     },
                     onBack = {
                         when (currentConfigStep) {
-                            ConfigurationStep.AI_FEATURES -> currentStage = OnboardingStage.WELCOME_CAROUSEL
-                            ConfigurationStep.NOTIFICATIONS -> currentConfigStep = ConfigurationStep.AI_FEATURES
-                            ConfigurationStep.ANALYTICS -> currentConfigStep = ConfigurationStep.NOTIFICATIONS
-                            ConfigurationStep.THEME_SETTINGS -> currentConfigStep = ConfigurationStep.ANALYTICS
-                            ConfigurationStep.LANGUAGE_SETTINGS -> currentConfigStep = ConfigurationStep.THEME_SETTINGS
-                            ConfigurationStep.DATA_PRIVACY -> currentConfigStep = ConfigurationStep.LANGUAGE_SETTINGS
-                            ConfigurationStep.COMPLETE -> currentConfigStep = ConfigurationStep.DATA_PRIVACY
+                            ConfigurationStep.AI_FEATURES -> currentStage =
+                                OnboardingStage.WELCOME_CAROUSEL
+
+                            ConfigurationStep.NOTIFICATIONS -> currentConfigStep =
+                                ConfigurationStep.AI_FEATURES
+
+                            ConfigurationStep.ANALYTICS -> currentConfigStep =
+                                ConfigurationStep.NOTIFICATIONS
+
+                            ConfigurationStep.THEME_SETTINGS -> currentConfigStep =
+                                ConfigurationStep.ANALYTICS
+
+                            ConfigurationStep.LANGUAGE_SETTINGS -> currentConfigStep =
+                                ConfigurationStep.THEME_SETTINGS
+
+                            ConfigurationStep.DATA_PRIVACY -> currentConfigStep =
+                                ConfigurationStep.LANGUAGE_SETTINGS
+
+                            ConfigurationStep.COMPLETE -> currentConfigStep =
+                                ConfigurationStep.DATA_PRIVACY
                         }
                     },
-                    onSkip = {
-                        // Track onboarding skip
-                        analyticsManager.trackEvent(AnalyticsManager.EVENT_ONBOARDING_SKIPPED)
-                        onOnboardingComplete()
-                    }
+                    onAnalyticsEnabledChange = {},
+                    onSkip = {}
                 )
             }
         }

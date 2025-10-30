@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Seen app includes a health status monitoring system that provides real-time visibility into the status of backend services. This feature displays three colored dots in the Settings screen header, representing the health of Analytics, Releases, and AI services.
+The Seen app includes a health status monitoring system that provides real-time visibility into the status of backend services. This feature displays colored dots in the Settings screen header, representing the health of backend services such as Releases and AI.
 
 ## Feature Components
 
@@ -20,7 +20,6 @@ The Seen app includes a health status monitoring system that provides real-time 
 - Automatic resource cleanup
 
 **Health Check Endpoints:**
-- Analytics: `https://seen.alphagame.dev/api/analytics/health`
 - Releases: `https://seen.alphagame.dev/releases/health`
 - AI: `https://seen.alphagame.dev/api/ai/health`
 
@@ -98,7 +97,6 @@ private val client = OkHttpClient.Builder()
 ### 3. State Management
 ```kotlin
 // Reactive state using StateFlow
-val analyticsHealthState: StateFlow<HealthStatus>
 val releasesHealthState: StateFlow<HealthStatus>
 val aiHealthState: StateFlow<HealthStatus>
 ```
