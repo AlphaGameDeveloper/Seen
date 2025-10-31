@@ -18,7 +18,9 @@
 package dev.alphagame.seen
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import dev.alphagame.seen.encryption.DatabaseEncryptionAES
 
 /**
@@ -29,13 +31,14 @@ class SeenApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-            Log.d("SeenApp", "Application starting - encrypted database system initialized")
-            // Schedule daily reminder notification at 7:00 am
-            dev.alphagame.seen.data.DailyReminderManager.scheduleDailyReminder(this)
+        Log.d("SeenApp", "Application starting - encrypted database system initialized")
+        // Schedule daily reminder notification at 7:00 am
+        dev.alphagame.seen.data.DailyReminderManager.scheduleDailyReminder(this)
     }
 
     override fun onTerminate() {
         super.onTerminate()
+        Log.i("SeenApplication", "Closing app :3")
         // Clean up temporary database files when app terminates
         try {
             DatabaseEncryptionAES.cleanupTempDb(this)
@@ -47,6 +50,7 @@ class SeenApp : Application() {
 
     override fun onLowMemory() {
         super.onLowMemory()
+        Log.wtf("SeenApplication", "MEMORY IS LOW. THIS IS REALLY BAD.")
         // Also clean up on low memory situations (optional)
         try {
             DatabaseEncryptionAES.cleanupTempDb(this)
