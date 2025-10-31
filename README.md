@@ -13,6 +13,19 @@
     <img src="https://img.shields.io/badge/Platform-Android-3DDC84.svg" alt="Android Platform Badge" />
     <!-- badge: Made In Novato -->
     <img src="https://img.shields.io/badge/Made%20In-Novato-FF5733.svg" alt="Made In Novato Badge" />
+    <!-- badge: congressional app challenge 2025 -->
+    <img src="https://img.shields.io/badge/Congressional%20App%20Challenge-2025-4CAF50.svg" alt="Congressional App Challenge 2025 Badge" />
+    <br />
+    <!-- repo stats -->
+    <img src="https://img.shields.io/github/v/release/AlphaGameDeveloper/Seen" alt="GitHub Latest Release" />
+    <img src="https://img.shields.io/github/issues/AlphaGameDeveloper/Seen" alt="GitHub Issues" />
+    <img src="https://img.shields.io/github/contributors/AlphaGameDeveloper/Seen" alt="GitHub Contributors" />
+    <img src="https://img.shields.io/github/downloads/AlphaGameDeveloper/Seen/total" alt="GitHub Downloads" />
+    <img src="https://img.shields.io/github/repo-size/AlphaGameDeveloper/Seen" alt="GitHub Repo Size" />
+    <br />
+    <!-- showcasing our nonexistant popularity -->
+    <img src="https://img.shields.io/github/stars/AlphaGameDeveloper/Seen" alt="GitHub Repo Stars" />
+    <img src="https://img.shields.io/github/forks/AlphaGameDeveloper/Seen" alt="GitHub Repo Forks" />
 </p>
 
 ## About
@@ -20,12 +33,16 @@ Seen was created for the Congressional App Challenge, 2025.  2<sup>nd</sup> dist
 
 Seen is a mental health application, leveraging AI to provide users with a private space to reflect on their thoughts and emotions. The app offers mood tracking, journaling, and AI-powered insights to help users better understand and manage their mental well-being.
 
+[Click here to download the latest APK release.](https://github.com/AlphaGameDeveloper/Seen/releases/latest)
+
 ## Congressional App Challenge
 
 Seen was created as an entry for the Congressional App Challenge, a competition that encourages students to learn coding and computer science by creating their own apps. The challenge is sponsored by members of the U.S. House of Representatives, and winners are recognized for their achievements in technology and innovation.
 
 ### AI Disclosure
 This project was developed with the assistance of AI tools; Specifically, GitHub Copilot was used to help generate code snippets and provide suggestions during development. All code and content were reviewed and modified to ensure accuracy and safety.
+
+Our stance on AI usage, especially in programming, is that it is a tool to assist developers--Not replace them.  AI can't make a full app (Ahem, `US-EAST-1`...), but it can help accelerate the development process so the human can focus on the creative and critical aspects of app development.  It's one of cautious optimism.  But rest assured-- human developers are still very much in charge here, and it was reviewed to to hell and back.
 
 <details>
     <summary>What was AI used for?</summary>
@@ -59,7 +76,7 @@ AI use is scattered throughout the codebase, thanks to GitHub Copilot's deep int
 Seen's tech stack includes:
 - **Frontend**: The Android application is built using:
     - **Kotlin**: The primary programming language used for Android development.
-    - **Jetpack Compose**: For building the user interface in a declarative way.
+    - **Jetpack Compose**: For building the user interface in a declarative way. (Screw XML)
     - **SQLite**: For local data storage.
 - **Backend**: The server the app talks to is built using:
     - **Python**: The primary programming language for the backend.
@@ -67,10 +84,10 @@ Seen's tech stack includes:
     - **OpenRouter**: For AI model hosting and management.
 
 <details>
-<summary>
-Privacy
-</summary>
-To keep our privacy-first approach, we make sure that all data is stored on the app, and only required information is sent to the backend for AI processing. The backend server handles requests from the app, processes them using AI models hosted on OpenRouter, and sends back the results.  After that, the backend forgets all user data to ensure privacy.
+    <summary>
+        Privacy
+    </summary>
+    To keep our privacy-first approach, we make sure that all data is stored on the app, and only required information is sent to the backend for AI processing. The backend server handles requests from the app, processes them using AI models hosted on OpenRouter, and sends back the results.  After that, the backend forgets all user data to ensure privacy.
 </details>
 
 ## Why isn't this on Google Play Store?
@@ -79,24 +96,24 @@ Tl;dr: Google Play Store has strict policies regarding apps that deal with menta
 However, pre-built APKs are available for download in the [Releases](https://github.com/AlphaGameDeveloper/Seen/releases) section. You can also build the app from source by following the instructions below.
 
 <details>
-<summary>
-Instructions for installing APKs from unknown sources
-</summary>
-<h3>Installing the Seen APK</h3>
-To install the Seen APK on your Android device, follow these steps:
-<ol>
-<li>Download the APK file from the <a href="https://github.com/AlphaGameDeveloper/Seen/releases">Releases</a> section.</li>
-<li>Enable installation from unknown sources:
+    <summary>
+        Instructions for installing APKs from unknown sources
+    </summary>
+    <h3>Installing the Seen APK</h3>
+    To install the Seen APK on your Android device, follow these steps:
     <ol>
-        <li>Go to your device's Settings.</li>
-        <li>Navigate to Security or Apps & notifications.</li>
-        <li>Find the option for "Install unknown apps" or "Unknown sources" and enable it for the app you will use to install the APK (e.g., your browser or file manager).</li>
+        <li>Download the APK file from the <a href="https://github.com/AlphaGameDeveloper/Seen/releases">Releases</a> section.</li>
+        <li>Enable installation from unknown sources:
+            <ol>
+                <li>Go to your device's Settings.</li>
+                <li>Navigate to Security or Apps & notifications.</li>
+                <li>Find the option for "Install unknown apps" or "Unknown sources" and enable it for the app you will use to install the APK (e.g., your browser or file manager).</li>
+            </ol>
+        </li>
+        <li>Locate the downloaded APK file using a file manager app.</li>
+        <li>Tap on the APK file to begin the installation process.</li>
+        <li>Follow the on-screen prompts to complete the installation.</li>
     </ol>
-</li>
-<li>Locate the downloaded APK file using a file manager app.</li>
-<li>Tap on the APK file to begin the installation process.</li>
-<li>Follow the on-screen prompts to complete the installation.</li>
-</ol>
 </details>
 
 ## Building from Source
@@ -106,16 +123,25 @@ To build Seen from source, follow these steps:
     git clone https://github.com/AlphaGameDeveloper/Seen.git
     cd Seen
     ```
-2. Open the project in Android Studio.
+2. Open the project in [Android Studio](https://developer.android.com/studio).
 3. Sync the project with Gradle files.
 4. Connect an Android device or start an emulator.
 5. Run the app from Android Studio.
+
+... Or you can not use Android Studio and build it using Gradle from the command line, if you're that kind of person--I won't judge:
+```bash
+./gradlew build
+```
+
+The final APK will be located in `app/build/outputs/apk/debug/app-debug.apk` (or something like that).
+
+The bulk of development was done in Java 17, so I would recommend using that.
 
 ## Credits
 Seen is developed by [Damien Boisvert](https://github.com/AlphaGameDeveloper) and [Alexander Cameron](https://github.com/AManOMG8) for the Congressional App Challenge 2025, 2<sup>nd</sup> district of California.  Licensed under GPL v3, Some Rights Reserved.
 
 ## ⚠️ Disclaimer
-Seen is **not** a substitute for professional mental health care. If you are experiencing a mental health crisis, please seek help from a qualifimmmmed professional or contact emergency services immediately.
+Seen is **not** a substitute for professional mental health care. If you are experiencing a mental health crisis, please seek help from a qualified professional or contact emergency services immediately.
 - 988 Suicide & Crisis Lifeline: Call or text 988
 - National Alliance on Mental Illness (NAMI): Call 1-800-950-NAMI (6264)
 
